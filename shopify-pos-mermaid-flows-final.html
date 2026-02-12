@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unicity Shopify POS: Mermaid Flow Reference</title>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Outfit', sans-serif;
+    background: #08090d;
+    color: #c8cad0;
+    min-height: 100vh;
+  }
+
+  .page-header {
+    padding: 40px 48px 0;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  .page-header h1 {
+    font-size: 28px;
+    font-weight: 800;
+    color: #fff;
+    letter-spacing: -0.5px;
+  }
+
+  .page-header p {
+    font-size: 14px;
+    color: #666;
+    margin-top: 6px;
+    font-weight: 400;
+  }
+
+  .tabs {
+    display: flex;
+    gap: 2px;
+    padding: 24px 48px 0;
+    max-width: 1400px;
+    margin: 0 auto;
+    flex-wrap: wrap;
+  }
+
+  .tab {
+    padding: 10px 20px;
+    font-family: 'Outfit', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: #555;
+    background: transparent;
+    border: 1px solid #1a1c24;
+    border-bottom: none;
+    border-radius: 8px 8px 0 0;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.3px;
+  }
+
+  .tab:hover { color: #aaa; background: #0e1018; }
+  .tab.active { color: #fff; background: #12141c; border-color: #2a2d38; }
+
+  .tab-content {
+    display: none;
+    padding: 32px 48px 48px;
+    max-width: 1400px;
+    margin: 0 auto;
+    background: #12141c;
+    border: 1px solid #2a2d38;
+    border-radius: 0 12px 12px 12px;
+    margin-left: 48px;
+    margin-right: 48px;
+  }
+
+  .tab-content.active { display: block; }
+
+  .section-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: #e0e2e8;
+    margin-bottom: 6px;
+    letter-spacing: -0.3px;
+  }
+
+  .section-desc {
+    font-size: 13px;
+    color: #666;
+    margin-bottom: 24px;
+    line-height: 1.6;
+    max-width: 800px;
+  }
+
+  .mermaid {
+    background: #0a0c12;
+    border: 1px solid #1e2030;
+    border-radius: 10px;
+    padding: 32px 24px;
+    overflow-x: auto;
+    margin-bottom: 20px;
+  }
+
+  .mermaid svg { max-width: 100%; height: auto; }
+
+  .callout {
+    background: #0d0f16;
+    border-left: 3px solid #f5a623;
+    border-radius: 0 8px 8px 0;
+    padding: 14px 18px;
+    margin-top: 16px;
+    margin-bottom: 20px;
+  }
+
+  .callout-title {
+    font-size: 12px;
+    font-weight: 700;
+    color: #f5a623;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 6px;
+  }
+
+  .callout p {
+    font-size: 13px;
+    color: #999;
+    line-height: 1.6;
+  }
+
+  .callout strong { color: #ccc; }
+
+  .legend {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+    padding: 12px 16px;
+    background: #0d0f16;
+    border-radius: 8px;
+    border: 1px solid #1e2030;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: #888;
+    font-weight: 500;
+  }
+
+  .legend-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 3px;
+    flex-shrink: 0;
+  }
+
+  .example-box {
+    background: #0d0f16;
+    border: 1px solid #1e2030;
+    border-radius: 10px;
+    padding: 20px;
+    margin-top: 16px;
+  }
+
+  .example-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: #5b9bf5;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .example-step {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 10px;
+  }
+
+  .example-num {
+    width: 24px;
+    height: 24px;
+    background: #1a2a4a;
+    color: #5b9bf5;
+    font-size: 12px;
+    font-weight: 700;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .example-text {
+    font-size: 13px;
+    color: #aaa;
+    line-height: 1.5;
+  }
+
+  .example-text strong { color: #e0e0e0; }
+  .example-text code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    background: #1a1d27;
+    color: #5bdb7a;
+    padding: 2px 6px;
+    border-radius: 3px;
+  }
+
+  @media (max-width: 900px) {
+    .page-header, .tabs, .tab-content { padding-left: 20px; padding-right: 20px; }
+    .tab-content { margin-left: 20px; margin-right: 20px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <h1>Shopify POS Distributor Architecture Flows</h1>
+  <p>Mermaid diagrams showing ownership, permissions, order lifecycle, payment flow, and a worked example</p>
+</div>
+
+<div class="tabs">
+  <div class="tab active" onclick="showTab('ownership')">1. Ownership Hierarchy</div>
+  <div class="tab" onclick="showTab('permissions')">2. Permission Boundaries</div>
+  <div class="tab" onclick="showTab('orderflow')">3. Order Lifecycle</div>
+  <div class="tab" onclick="showTab('payflow')">4. Payment + Settlement</div>
+  <div class="tab" onclick="showTab('example')">5. Worked Example</div>
+  <div class="tab" onclick="showTab('integration')">6. Integration Map</div>
+</div>
+
+<!-- ===================== TAB 1: OWNERSHIP HIERARCHY ===================== -->
+<div id="ownership" class="tab-content active">
+  <div class="section-title">Ownership and Control Hierarchy</div>
+  <div class="section-desc">
+    Three tiers of access. HQ owns the store and all settings. Regional managers get limited admin plus POS manager role.
+    Distributors get POS PIN access only with zero admin visibility. Two independent permission layers: Store-level (Shopify Admin) and POS roles (POS app).
+  </div>
+
+  <div class="legend">
+    <div class="legend-item"><div class="legend-dot" style="background: #5bdb7a;"></div>HQ Admin (full control)</div>
+    <div class="legend-item"><div class="legend-dot" style="background: #f5a623;"></div>Regional Manager (limited admin + POS manager)</div>
+    <div class="legend-item"><div class="legend-dot" style="background: #5b9bf5;"></div>Distributor (POS PIN only)</div>
+    <div class="legend-item"><div class="legend-dot" style="background: #a78bfa;"></div>System/Platform (Shopify owned)</div>
+  </div>
+
+  <div class="mermaid">
+graph TB
+    subgraph STORE["🏢 SHOPIFY PLUS STORE (Unicity)"]
+        direction TB
+        OWNER["🔑 Store Owner<br/>Full Shopify Admin<br/>Payment Settings ✅<br/>Payouts ✅<br/>Apps ✅<br/>Analytics ✅"]
+
+        subgraph HQ["HQ ADMIN LAYER — Store-Level Permissions"]
+            direction LR
+            PRODUCTS["📦 Products & Pricing<br/>Create/edit/delete products<br/>Set prices (STORE-WIDE)<br/>Manage variants"]
+            LOCATIONS["📍 Locations<br/>Create POS Pro locations<br/>Up to 200 included<br/>Assign products per location"]
+            STAFF_MGMT["👥 Staff & Roles<br/>Create POS roles<br/>Create admin roles<br/>Assign staff → locations"]
+            PAYMENTS["💳 Payment Config<br/>Shopify Payments setup<br/>Payout bank accounts<br/>Tax settings<br/>Fraud rules"]
+            ANALYTICS["📊 Analytics<br/>All reports<br/>Revenue by location<br/>Revenue by staff<br/>Financial exports"]
+        end
+    end
+
+    subgraph REGIONS["🌎 REGIONAL LAYER — Limited Admin + POS Manager Role"]
+        direction TB
+        subgraph WEST["Region West"]
+            MGR_W["👔 Manager West<br/>Email login to admin<br/>Limited store permissions<br/>POS Manager role"]
+            D_W1["📱 Distributor W1<br/>PIN: 4821<br/>POS only"]
+            D_W2["📱 Distributor W2<br/>PIN: 7734<br/>POS only"]
+            D_W3["📱 Distributor W3<br/>PIN: 1199<br/>POS only"]
+        end
+        subgraph EAST["Region East"]
+            MGR_E["👔 Manager East<br/>Email login to admin<br/>Limited store permissions<br/>POS Manager role"]
+            D_E1["📱 Distributor E1<br/>PIN: 5502<br/>POS only"]
+            D_E2["📱 Distributor E2<br/>PIN: 3318<br/>POS only"]
+        end
+    end
+
+    subgraph PLATFORM["⚙️ PLATFORM LAYER — Shopify Owned"]
+        SP["Shopify Payments<br/>(Stripe backend)<br/>Token vault<br/>Settlement engine"]
+        WEBHOOK["Webhook Engine<br/>orders/create<br/>orders/updated"]
+    end
+
+    OWNER --> HQ
+    OWNER --> REGIONS
+    HQ -->|"creates locations<br/>assigns products"| REGIONS
+    MGR_W -->|"manages staff<br/>at own location"| D_W1
+    MGR_W --> D_W2
+    MGR_W --> D_W3
+    MGR_E -->|"manages staff<br/>at own location"| D_E1
+    MGR_E --> D_E2
+    D_W1 & D_W2 & D_W3 & D_E1 & D_E2 -->|"all payments"| SP
+    SP -->|"fires"| WEBHOOK
+
+    style STORE fill:#0a1a0a,stroke:#5bdb7a,stroke-width:2px,color:#fff
+    style HQ fill:#0d1f0d,stroke:#5bdb7a,stroke-width:1px
+    style REGIONS fill:#1a1408,stroke:#f5a623,stroke-width:2px,color:#fff
+    style WEST fill:#1f1a0a,stroke:#f5a623,stroke-width:1px
+    style EAST fill:#1f1a0a,stroke:#f5a623,stroke-width:1px
+    style PLATFORM fill:#1a1030,stroke:#a78bfa,stroke-width:2px,color:#fff
+
+    style OWNER fill:#1a4a2a,stroke:#5bdb7a,color:#fff
+    style MGR_W fill:#3a2a10,stroke:#f5a623,color:#fff
+    style MGR_E fill:#3a2a10,stroke:#f5a623,color:#fff
+    style D_W1 fill:#111833,stroke:#2a6df0,color:#fff
+    style D_W2 fill:#111833,stroke:#2a6df0,color:#fff
+    style D_W3 fill:#111833,stroke:#2a6df0,color:#fff
+    style D_E1 fill:#111833,stroke:#2a6df0,color:#fff
+    style D_E2 fill:#111833,stroke:#2a6df0,color:#fff
+    style SP fill:#1a1030,stroke:#a78bfa,color:#fff
+    style WEBHOOK fill:#1a1030,stroke:#a78bfa,color:#fff
+    style PRODUCTS fill:#0d1f0d,stroke:#3a8a4a,color:#ccc
+    style LOCATIONS fill:#0d1f0d,stroke:#3a8a4a,color:#ccc
+    style STAFF_MGMT fill:#0d1f0d,stroke:#3a8a4a,color:#ccc
+    style PAYMENTS fill:#0d1f0d,stroke:#3a8a4a,color:#ccc
+    style ANALYTICS fill:#0d1f0d,stroke:#3a8a4a,color:#ccc
+  </div>
+
+  <div class="callout">
+    <div class="callout-title">Key Ownership Rules</div>
+    <p>
+      <strong>Pricing is store-wide.</strong> If a regional manager edits a product price, it changes at ALL locations. HQ controls pricing centrally.
+      Regional managers control product availability (toggle items on/off at their location) but not pricing.
+      Distributors see only the POS checkout screen. Zero admin, zero backend, zero other staff visibility.
+    </p>
+  </div>
+</div>
+
+<!-- ===================== TAB 2: PERMISSION BOUNDARIES ===================== -->
+<div id="permissions" class="tab-content">
+  <div class="section-title">Permission Boundary Map</div>
+  <div class="section-desc">
+    Two independent permission layers control access. Store-level permissions gate Shopify Admin features.
+    POS roles gate what each person can do inside the POS app. A distributor has POS role only. A regional manager has both.
+  </div>
+
+  <div class="mermaid">
+graph LR
+    subgraph STORE_PERMS["STORE-LEVEL PERMISSIONS (Shopify Admin)"]
+        direction TB
+        SP1["Products<br/>create / edit / delete"]
+        SP2["Orders<br/>view / manage / fulfill"]
+        SP3["Customers<br/>view / edit profiles"]
+        SP4["Analytics<br/>reports / exports"]
+        SP5["Settings<br/>payments / taxes / apps"]
+        SP6["Online Store<br/>themes / checkout / domains"]
+    end
+
+    subgraph POS_ROLES["POS ROLE PERMISSIONS (POS App)"]
+        direction TB
+        PR1["Process checkout ✅"]
+        PR2["Apply discounts ⚠️"]
+        PR3["Custom sale ❌"]
+        PR4["Process returns ⚠️"]
+        PR5["View orders ⚠️"]
+        PR6["Manage POS staff ⚠️"]
+        PR7["Cash drawer ⚠️"]
+        PR8["Inventory view ⚠️"]
+    end
+
+    subgraph DIST["DISTRIBUTOR - POS PIN Only"]
+        D_CAN["CAN:<br/>✅ Process checkout<br/>✅ Capture customer info<br/>✅ Auto-attribute sales"]
+        D_CANNOT["CANNOT:<br/>❌ Apply discounts<br/>❌ View orders<br/>❌ Process returns<br/>❌ Access admin<br/>❌ See other staff<br/>❌ View reports"]
+    end
+
+    subgraph MGR["REGIONAL MANAGER - Limited Admin + POS Manager"]
+        M_CAN["CAN:<br/>✅ Process checkout<br/>✅ Manage POS staff (own loc)<br/>✅ Process returns<br/>✅ View location orders<br/>✅ Toggle product availability<br/>✅ Approve discounts"]
+        M_CANNOT["CANNOT:<br/>❌ Change pricing<br/>❌ Payment settings<br/>❌ Analytics/reports<br/>❌ Create locations<br/>❌ Manage apps<br/>❌ See other locations"]
+    end
+
+    subgraph HQ_A["HQ ADMIN - Full Access"]
+        H_CAN["CAN:<br/>✅ Everything above<br/>✅ Payment config<br/>✅ All analytics<br/>✅ All locations<br/>✅ Apps & integrations<br/>✅ Create/delete anything"]
+    end
+
+    POS_ROLES -->|"POS role only"| DIST
+    STORE_PERMS -->|"limited subset"| MGR
+    POS_ROLES -->|"POS Manager role"| MGR
+    STORE_PERMS -->|"full access"| HQ_A
+    POS_ROLES -->|"all permissions"| HQ_A
+
+    style STORE_PERMS fill:#0d1f0d,stroke:#5bdb7a,stroke-width:2px,color:#ccc
+    style POS_ROLES fill:#1a1030,stroke:#a78bfa,stroke-width:2px,color:#ccc
+    style DIST fill:#111833,stroke:#2a6df0,stroke-width:2px,color:#fff
+    style MGR fill:#1f1a0a,stroke:#f5a623,stroke-width:2px,color:#fff
+    style HQ_A fill:#0a1a0a,stroke:#5bdb7a,stroke-width:2px,color:#fff
+
+    style D_CAN fill:#0d1a0d,stroke:#3a6a3a,color:#ccc
+    style D_CANNOT fill:#1a0d0d,stroke:#6a3a3a,color:#ccc
+    style M_CAN fill:#0d1a0d,stroke:#3a6a3a,color:#ccc
+    style M_CANNOT fill:#1a0d0d,stroke:#6a3a3a,color:#ccc
+    style H_CAN fill:#0d1a0d,stroke:#3a6a3a,color:#ccc
+  </div>
+
+  <div class="callout">
+    <div class="callout-title">Two-Layer Permission Model</div>
+    <p>
+      <strong>Store-level</strong> controls what you see in the Shopify Admin dashboard (products, orders, settings).
+      <strong>POS role</strong> controls what you can do inside the POS app on a phone or tablet.
+      A distributor gets zero store-level permissions. They exist only inside the POS app with a PIN.
+      A regional manager gets limited store-level (products, orders for their location) plus a POS Manager role.
+    </p>
+  </div>
+</div>
+
+<!-- ===================== TAB 3: ORDER LIFECYCLE ===================== -->
+<div id="orderflow" class="tab-content">
+  <div class="section-title">Complete Order Lifecycle (All Channels)</div>
+  <div class="section-desc">
+    Three entry points feed into one unified order system. POS sales auto-attribute to the staff PIN.
+    Online orders use referral codes. Subscription renewals fire automatically. All converge at the webhook.
+  </div>
+
+  <div class="mermaid">
+graph TD
+    subgraph ENTRY["ORDER ENTRY POINTS"]
+        POS["📱 POS Sale<br/>Distributor opens app<br/>Logs in with PIN<br/>Customer taps card"]
+        ONLINE["🛒 Online Store<br/>Customer shops website<br/>Shop Pay / Apple Pay<br/>Referral code in URL"]
+        SUB["🔄 Subscription Renewal<br/>Auto-charge on schedule<br/>Shopify vaulted token<br/>selling_plan_id attached"]
+    end
+
+    subgraph SHOPIFY["SHOPIFY PROCESSES ORDER"]
+        CREATE["Order Created<br/>Assigned: order_id<br/>source_name tagged<br/>financial_status: paid"]
+
+        subgraph ATTRIBUTION["ATTRIBUTION CHECK"]
+            CHECK{{"source_name?"}}
+            POS_ATTR["source = pos<br/>Extract attributed_staffs<br/>from line_items array<br/>Contains staff GID + qty"]
+            WEB_ATTR["source = web<br/>Extract referral code<br/>from order note or metafield"]
+            SUB_ATTR["source = subscription_app<br/>Identify via selling_plan_id<br/>on line_items"]
+        end
+    end
+
+    subgraph WEBHOOK_FIRE["WEBHOOK DISPATCH"]
+        WH["orders/create fires<br/>Full payload includes:<br/>source_name, line_items,<br/>financial_status, location_id,<br/>attributed_staffs (POS)"]
+    end
+
+    subgraph UNICITY["UNICITY BACKEND"]
+        MW["Attribution Middleware<br/>Maps staff_id → Distributor ID<br/>Maps referral → Distributor ID<br/>Lookup table / DB"]
+        COMMISSION["Commission Engine<br/>Calculate PV/BV<br/>Run upline commissions<br/>Credit distributor"]
+        PORTAL["Distributor Portal<br/>View sales + commissions<br/>Existing back office"]
+        FULFILL["Fulfillment<br/>POS: hand to customer<br/>Online: warehouse ships<br/>Unified inventory"]
+    end
+
+    POS -->|"card present"| CREATE
+    ONLINE -->|"card not present"| CREATE
+    SUB -->|"auto-charge"| CREATE
+    CREATE --> CHECK
+    CHECK -->|"pos"| POS_ATTR
+    CHECK -->|"web"| WEB_ATTR
+    CHECK -->|"subscription"| SUB_ATTR
+    POS_ATTR & WEB_ATTR & SUB_ATTR --> WH
+    WH --> MW
+    MW --> COMMISSION
+    COMMISSION --> PORTAL
+    WH --> FULFILL
+
+    style ENTRY fill:#111833,stroke:#2a6df0,stroke-width:2px,color:#fff
+    style SHOPIFY fill:#0d1f0d,stroke:#5bdb7a,stroke-width:2px,color:#fff
+    style ATTRIBUTION fill:#1a1a0d,stroke:#f5a623,stroke-width:1px,color:#fff
+    style WEBHOOK_FIRE fill:#1a1030,stroke:#a78bfa,stroke-width:2px,color:#fff
+    style UNICITY fill:#0d1018,stroke:#5b9bf5,stroke-width:2px,color:#fff
+
+    style POS fill:#111833,stroke:#2a6df0,color:#ccc
+    style ONLINE fill:#111833,stroke:#2a6df0,color:#ccc
+    style SUB fill:#111833,stroke:#2a6df0,color:#ccc
+    style CREATE fill:#0d1f0d,stroke:#5bdb7a,color:#ccc
+    style CHECK fill:#1a1a0d,stroke:#f5a623,color:#fff
+    style POS_ATTR fill:#1a1a0d,stroke:#f5a623,color:#ccc
+    style WEB_ATTR fill:#1a1a0d,stroke:#f5a623,color:#ccc
+    style SUB_ATTR fill:#1a1a0d,stroke:#f5a623,color:#ccc
+    style WH fill:#1a1030,stroke:#a78bfa,color:#ccc
+    style MW fill:#0d1018,stroke:#5b9bf5,color:#ccc
+    style COMMISSION fill:#0d1018,stroke:#5b9bf5,color:#ccc
+    style PORTAL fill:#0d1018,stroke:#5b9bf5,color:#ccc
+    style FULFILL fill:#0d1018,stroke:#5b9bf5,color:#ccc
+  </div>
+</div>
+
+<!-- ===================== TAB 4: PAYMENT + SETTLEMENT ===================== -->
+<div id="payflow" class="tab-content">
+  <div class="section-title">Payment Capture and Settlement Flow</div>
+  <div class="section-desc">
+    All channels use Shopify Payments (Stripe backend). POS always auto-captures at time of sale.
+    Single settlement stream. Fees, refunds, and chargebacks netted before payout.
+  </div>
+
+  <div class="mermaid">
+graph TD
+    subgraph CAPTURE["PAYMENT CAPTURE"]
+        POS_PAY["📱 POS Transaction<br/>Tap / Chip / Swipe<br/>ALWAYS auto-captures<br/>2.15% + 30¢"]
+        ONLINE_PAY["🛒 Online Transaction<br/>Shop Pay / Apple Pay<br/>Auto or manual capture<br/>2.15% + 30¢"]
+        SUB_PAY["🔄 Subscription Charge<br/>Vaulted token auto-charge<br/>Always auto-captures<br/>2.15% + 30¢"]
+    end
+
+    subgraph STRIPE["SHOPIFY PAYMENTS (STRIPE BACKEND)"]
+        AUTH["Authorization<br/>Card network validates<br/>Funds held"]
+        CAPTURE_DO["Capture<br/>Funds move to<br/>Shopify Payments balance"]
+        FEES["Fee Deduction<br/>Processing: 2.15% + 30¢<br/>Variable platform fee applied"]
+    end
+
+    subgraph VARIABLE["VARIABLE PLATFORM FEE (above $625K/mo)"]
+        VP_POS["POS: +0.25%<br/>Effective: 2.40% + 30¢"]
+        VP_ONLINE["Online: +0.40%<br/>Effective: 2.55% + 30¢"]
+        VP_B2B["B2B: +0.18%<br/>Effective: 2.33% + 30¢"]
+    end
+
+    subgraph SETTLEMENT["SETTLEMENT"]
+        BATCH["Daily Batching<br/>All channels combined<br/>Fri/Sat/Sun → Monday"]
+        NET["Net Calculation<br/>Gross sales<br/>minus Fees<br/>minus Refunds<br/>minus Chargebacks"]
+        PAYOUT["Payout<br/>Shopify Balance: 1 biz day<br/>External bank: +1-3 days ACH<br/>SINGLE deposit, all channels"]
+    end
+
+    subgraph BANK["UNICITY BANK ACCOUNT"]
+        RECON["One reconciliation stream<br/>One deposit per payout cycle<br/>Maps to all POS + Online + Sub"]
+    end
+
+    POS_PAY --> AUTH
+    ONLINE_PAY --> AUTH
+    SUB_PAY --> AUTH
+    AUTH --> CAPTURE_DO
+    CAPTURE_DO --> FEES
+    FEES --> VP_POS & VP_ONLINE & VP_B2B
+    VP_POS & VP_ONLINE & VP_B2B --> BATCH
+    BATCH --> NET
+    NET --> PAYOUT
+    PAYOUT --> RECON
+
+    style CAPTURE fill:#111833,stroke:#2a6df0,stroke-width:2px,color:#fff
+    style STRIPE fill:#1a1030,stroke:#a78bfa,stroke-width:2px,color:#fff
+    style VARIABLE fill:#1a1a0d,stroke:#f5a623,stroke-width:2px,color:#fff
+    style SETTLEMENT fill:#0d1f0d,stroke:#5bdb7a,stroke-width:2px,color:#fff
+    style BANK fill:#0d1018,stroke:#5b9bf5,stroke-width:2px,color:#fff
+
+    style POS_PAY fill:#111833,stroke:#2a6df0,color:#ccc
+    style ONLINE_PAY fill:#111833,stroke:#2a6df0,color:#ccc
+    style SUB_PAY fill:#111833,stroke:#2a6df0,color:#ccc
+    style AUTH fill:#1a1030,stroke:#a78bfa,color:#ccc
+    style CAPTURE_DO fill:#1a1030,stroke:#a78bfa,color:#ccc
+    style FEES fill:#1a1030,stroke:#a78bfa,color:#ccc
+    style VP_POS fill:#1a1a0d,stroke:#f5a623,color:#ccc
+    style VP_ONLINE fill:#1a1a0d,stroke:#f5a623,color:#ccc
+    style VP_B2B fill:#1a1a0d,stroke:#f5a623,color:#ccc
+    style BATCH fill:#0d1f0d,stroke:#5bdb7a,color:#ccc
+    style NET fill:#0d1f0d,stroke:#5bdb7a,color:#ccc
+    style PAYOUT fill:#0d1f0d,stroke:#5bdb7a,color:#ccc
+    style RECON fill:#0d1018,stroke:#5b9bf5,color:#ccc
+  </div>
+
+  <div class="callout">
+    <div class="callout-title">Token Ownership Warning</div>
+    <p>
+      <strong>Shopify/Stripe owns the card vault.</strong> Subscription tokens are stored by Shopify via the Customer Payment Method API.
+      If Unicity ever leaves Shopify, customers must re-enter their payment details. This is the same constraint
+      identified in the broader Shopify evaluation: token portability does not exist.
+    </p>
+  </div>
+</div>
+
+<!-- ===================== TAB 5: WORKED EXAMPLE ===================== -->
+<div id="example" class="tab-content">
+  <div class="section-title">Worked Example: Distributor W1 Makes a Sale</div>
+  <div class="section-desc">
+    A complete walkthrough of one POS transaction from login to commission payout.
+    Shows exactly who owns what at each step.
+  </div>
+
+  <div class="mermaid">
+sequenceDiagram
+    participant D as 📱 Distributor W1<br/>(PIN: 4821)
+    participant POS as Shopify POS App<br/>(iPhone)
+    participant SP as Shopify Payments<br/>(Stripe)
+    participant SHOP as Shopify Platform
+    participant MW as Attribution<br/>Middleware
+    participant CE as Commission<br/>Engine
+    participant BANK as Unicity<br/>Bank Account
+
+    Note over D: Opens POS app on personal iPhone
+    D->>POS: Enter PIN 4821
+    POS->>POS: Validate PIN → Staff W1<br/>Location: Region West
+
+    Note over D,POS: Customer wants Unimate (Yerba Mate)
+    D->>POS: Scan/add product to cart
+    POS->>POS: Product price: $59.95<br/>(set by HQ, not editable)
+
+    Note over D,SP: Customer taps iPhone
+    D->>POS: Tap to Pay
+    POS->>SP: Auth request: $59.95<br/>Card present, NFC
+
+    SP->>SP: Authorize with card network
+    SP-->>POS: Auth approved
+    SP->>SP: Auto-capture (POS always captures)
+    SP-->>POS: Payment confirmed
+
+    POS->>SHOP: Create order<br/>source_name: pos<br/>location_id: region-west<br/>staff_id: W1<br/>amount: $59.95
+
+    POS-->>D: Receipt sent to customer
+
+    Note over SHOP,MW: Webhook fires immediately
+    SHOP->>MW: orders/create webhook<br/>Payload includes:<br/>attributed_staffs: [{staff: W1, qty: 1}]<br/>source_name: pos
+
+    MW->>MW: Lookup: Staff W1 →<br/>Unicity Distributor ID D12345
+    MW->>CE: Sale attributed to D12345<br/>Product: Unimate<br/>Amount: $59.95<br/>PV/BV calculated
+
+    CE->>CE: Calculate commission<br/>Credit D12345<br/>Run upline tree
+
+    Note over SP,BANK: Settlement (2-5 business days)
+    SP->>SP: Deduct: 2.15% + 30¢ = $1.59<br/>Variable: 0.25% = $0.15<br/>Total fees: $1.74
+    SP->>SP: Net payout: $58.21
+    SP->>BANK: Daily batch payout<br/>Combined with all channels
+  </div>
+
+  <div class="example-box">
+    <div class="example-title">Step-by-step ownership at each stage</div>
+    <div class="example-step">
+      <div class="example-num">1</div>
+      <div class="example-text"><strong>PIN Login</strong> controlled by HQ via POS role assignment. Distributor W1 can only see Region West products. Cannot see other distributors, orders, or admin.</div>
+    </div>
+    <div class="example-step">
+      <div class="example-num">2</div>
+      <div class="example-text"><strong>Product pricing ($59.95)</strong> set by HQ. Store-wide. W1 cannot change it. Cannot apply discounts (disabled in their POS role). No custom sale allowed.</div>
+    </div>
+    <div class="example-step">
+      <div class="example-num">3</div>
+      <div class="example-text"><strong>Payment processing</strong> owned by Shopify Payments (Stripe backend). W1 has no visibility into rates, fees, or settlement. Card token vaulted by Shopify.</div>
+    </div>
+    <div class="example-step">
+      <div class="example-num">4</div>
+      <div class="example-text"><strong>Sales attribution</strong> automatic via POS Pro. The <code>attributed_staffs</code> field in the webhook payload maps W1 to Unicity Distributor ID D12345 through your middleware lookup table.</div>
+    </div>
+    <div class="example-step">
+      <div class="example-num">5</div>
+      <div class="example-text"><strong>Commission calculation</strong> happens in Unicity's existing engine. The middleware passes the attributed sale. W1 sees their commission in the Unicity distributor portal (not in Shopify).</div>
+    </div>
+    <div class="example-step">
+      <div class="example-num">6</div>
+      <div class="example-text"><strong>Settlement</strong> goes to Unicity's bank account. Total fees on this $59.95 sale: <code>$1.74</code> (2.40% effective + 30¢). Net payout: <code>$58.21</code>. Combined with all other channel sales in one daily deposit.</div>
+    </div>
+  </div>
+
+  <div class="callout">
+    <div class="callout-title">Regional Manager Involvement</div>
+    <p>
+      <strong>Manager West can see this order</strong> in the Shopify Admin (limited access to Region West orders only).
+      Manager West can process a return on this order if needed.
+      Manager West cannot see Region East orders or financial reports.
+      Manager West added W1 as POS staff and can remove them or change their PIN.
+    </p>
+  </div>
+</div>
+
+<!-- ===================== TAB 6: INTEGRATION MAP ===================== -->
+<div id="integration" class="tab-content">
+  <div class="section-title">System Integration Map</div>
+  <div class="section-desc">
+    How Shopify connects to Unicity's existing backend systems. The attribution middleware is the only custom build.
+    Everything else uses existing infrastructure.
+  </div>
+
+  <div class="mermaid">
+graph LR
+    subgraph SHOPIFY_SYS["SHOPIFY PLATFORM"]
+        POS_APP["📱 POS App<br/>(Distributor devices)"]
+        ONLINE_STORE["🛒 Online Store<br/>(shopify storefront)"]
+        SUB_APP["🔄 Subscription App<br/>(ReCharge or native)"]
+        ADMIN["⚙️ Shopify Admin<br/>(HQ + Managers)"]
+        API["Admin API<br/>+ Webhooks"]
+        SP2["Shopify Payments<br/>(Stripe)"]
+    end
+
+    subgraph CUSTOM["CUSTOM BUILD (New)"]
+        MIDDLEWARE["🔗 Attribution Middleware<br/><br/>Webhook listener<br/>Staff → Distributor mapping<br/>Referral → Distributor mapping<br/>Order enrichment"]
+    end
+
+    subgraph EXISTING["EXISTING UNICITY SYSTEMS"]
+        COMM["🧮 Commission Engine<br/>PV/BV calculation<br/>Upline tree"]
+        DIST_PORTAL["📊 Distributor Portal<br/>Sales dashboard<br/>Commission view"]
+        WAREHOUSE["📦 Fulfillment<br/>Pick/pack/ship<br/>Inventory sync"]
+        ERP["💰 Finance/ERP<br/>Reconciliation<br/>AP/AR"]
+    end
+
+    POS_APP & ONLINE_STORE & SUB_APP --> SP2
+    POS_APP & ONLINE_STORE & SUB_APP --> API
+    SP2 --> ERP
+    API -->|"orders/create<br/>webhook"| MIDDLEWARE
+    MIDDLEWARE -->|"attributed sale"| COMM
+    COMM --> DIST_PORTAL
+    API -->|"fulfillment<br/>webhooks"| WAREHOUSE
+    ADMIN -.->|"manual ops"| WAREHOUSE
+
+    style SHOPIFY_SYS fill:#1a1030,stroke:#a78bfa,stroke-width:2px,color:#fff
+    style CUSTOM fill:#1a1a0d,stroke:#f5a623,stroke-width:2px,color:#fff
+    style EXISTING fill:#0d1018,stroke:#5b9bf5,stroke-width:2px,color:#fff
+
+    style MIDDLEWARE fill:#2a1f10,stroke:#f5a623,color:#ccc
+    style POS_APP fill:#1a1030,stroke:#a78bfa,color:#ccc
+    style ONLINE_STORE fill:#1a1030,stroke:#a78bfa,color:#ccc
+    style SUB_APP fill:#1a1030,stroke:#a78bfa,color:#ccc
+    style ADMIN fill:#1a1030,stroke:#a78bfa,color:#ccc
+    style API fill:#1a1030,stroke:#a78bfa,color:#ccc
+    style SP2 fill:#1a1030,stroke:#a78bfa,color:#ccc
+    style COMM fill:#0d1018,stroke:#5b9bf5,color:#ccc
+    style DIST_PORTAL fill:#0d1018,stroke:#5b9bf5,color:#ccc
+    style WAREHOUSE fill:#0d1018,stroke:#5b9bf5,color:#ccc
+    style ERP fill:#0d1018,stroke:#5b9bf5,color:#ccc
+  </div>
+
+  <div class="callout">
+    <div class="callout-title">Build vs. Existing</div>
+    <p>
+      <strong>Only one custom component:</strong> the Attribution Middleware (webhook listener + staff/referral mapping).
+      Commission engine, distributor portal, warehouse fulfillment, and ERP are all existing Unicity systems.
+      The middleware is the glue between Shopify's webhook output and Unicity's commission input.
+      Naming convention for mapping: staff name field includes Unicity ID (e.g., <strong>Last: Smith-D12345</strong>) or build a dedicated lookup table.
+    </p>
+  </div>
+</div>
+
+<script>
+  mermaid.initialize({
+    startOnLoad: false,
+    theme: 'dark',
+    themeVariables: {
+      darkMode: true,
+      background: '#0a0c12',
+      primaryColor: '#1a2a4a',
+      primaryTextColor: '#e0e0e0',
+      primaryBorderColor: '#2a6df0',
+      lineColor: '#444',
+      secondaryColor: '#1a1a0d',
+      tertiaryColor: '#0d1f0d',
+      fontFamily: 'Outfit, sans-serif',
+      fontSize: '13px',
+      noteBkgColor: '#1a1d27',
+      noteTextColor: '#ccc',
+      noteBorderColor: '#333',
+      actorBkg: '#1a1d27',
+      actorTextColor: '#e0e0e0',
+      actorBorder: '#444',
+      signalColor: '#888',
+      signalTextColor: '#ccc',
+      sequenceNumberColor: '#5b9bf5'
+    },
+    flowchart: {
+      htmlLabels: true,
+      curve: 'basis',
+      nodeSpacing: 30,
+      rankSpacing: 50,
+      padding: 12
+    },
+    sequence: {
+      diagramMarginX: 20,
+      diagramMarginY: 20,
+      actorMargin: 60,
+      width: 180,
+      height: 50,
+      boxMargin: 8,
+      boxTextMargin: 6,
+      noteMargin: 10,
+      messageMargin: 30,
+      mirrorActors: false,
+      useMaxWidth: true
+    }
+  });
+
+  // Render all diagrams by temporarily showing all tabs
+  document.addEventListener('DOMContentLoaded', async function() {
+    // Show all tab content temporarily so Mermaid can measure and render
+    const allTabs = document.querySelectorAll('.tab-content');
+    allTabs.forEach(t => {
+      t.style.display = 'block';
+      t.style.visibility = 'hidden';
+      t.style.position = 'absolute';
+    });
+
+    // Run Mermaid on all diagrams
+    await mermaid.run();
+
+    // Restore tab visibility state
+    allTabs.forEach(t => {
+      t.style.display = '';
+      t.style.visibility = '';
+      t.style.position = '';
+    });
+  });
+
+  function showTab(id) {
+    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    event.target.classList.add('active');
+  }
+</script>
+
+</body>
+</html>
