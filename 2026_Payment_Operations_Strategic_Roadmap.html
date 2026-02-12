@@ -1,0 +1,1452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>2026 Payment Operations Strategic Roadmap | Unicity International</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.6.1/mermaid.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=JetBrains+Mono:wght@400;500;600&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0c0f14;
+  --bg-card: #141820;
+  --bg-card-hover: #1a1f2b;
+  --bg-elevated: #1e2430;
+  --border: #2a3040;
+  --border-active: #4a7cff;
+  --text: #e8ecf4;
+  --text-dim: #8892a4;
+  --text-muted: #5a6478;
+  --accent: #4a7cff;
+  --accent-glow: rgba(74, 124, 255, 0.15);
+  --accent-soft: rgba(74, 124, 255, 0.08);
+  --green: #34d399;
+  --green-bg: rgba(52, 211, 153, 0.1);
+  --amber: #fbbf24;
+  --amber-bg: rgba(251, 191, 36, 0.1);
+  --red: #f87171;
+  --red-bg: rgba(248, 113, 113, 0.1);
+  --purple: #a78bfa;
+  --purple-bg: rgba(167, 139, 250, 0.1);
+  --cyan: #22d3ee;
+  --cyan-bg: rgba(34, 211, 238, 0.1);
+  --orange: #fb923c;
+  --orange-bg: rgba(251, 146, 60, 0.1);
+  --radius: 10px;
+  --radius-sm: 6px;
+  --shadow: 0 2px 12px rgba(0,0,0,0.3);
+  --transition: 0.2s ease;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); line-height: 1.65; -webkit-font-smoothing: antialiased; }
+.page-header { padding: 40px 48px 32px; border-bottom: 1px solid var(--border); background: linear-gradient(180deg, rgba(74, 124, 255, 0.04) 0%, transparent 100%); }
+.page-header h1 { font-family: 'Fraunces', serif; font-size: 32px; font-weight: 700; letter-spacing: -0.5px; margin-bottom: 6px; }
+.page-header h1 span { color: var(--accent); }
+.page-header .subtitle { color: var(--text-dim); font-size: 14px; display: flex; gap: 20px; flex-wrap: wrap; }
+.page-header .subtitle .tag { background: var(--bg-elevated); padding: 3px 10px; border-radius: 4px; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--text-dim); border: 1px solid var(--border); }
+.tab-container { position: sticky; top: 0; z-index: 100; background: var(--bg); border-bottom: 1px solid var(--border); padding: 0 48px; display: flex; gap: 0; overflow-x: auto; scrollbar-width: none; }
+.tab-container::-webkit-scrollbar { display: none; }
+.tab-btn { background: none; border: none; color: var(--text-muted); font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500; padding: 14px 20px; cursor: pointer; white-space: nowrap; border-bottom: 2px solid transparent; transition: all var(--transition); }
+.tab-btn:hover { color: var(--text-dim); }
+.tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+.tab-panel { display: none; padding: 32px 48px 64px; animation: fadeIn 0.25s ease; }
+.tab-panel.active { display: block; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+.sub-tabs { display: flex; gap: 0; border-bottom: 1px solid var(--border); margin-bottom: 28px; flex-wrap: wrap; }
+.sub-tab-btn { background: none; border: none; color: var(--text-muted); font-family: 'DM Sans', sans-serif; font-size: 12.5px; font-weight: 500; padding: 10px 16px; cursor: pointer; border-bottom: 2px solid transparent; transition: all var(--transition); }
+.sub-tab-btn:hover { color: var(--text-dim); }
+.sub-tab-btn.active { color: var(--green); border-bottom-color: var(--green); }
+.sub-panel { display: none; animation: fadeIn 0.2s ease; }
+.sub-panel.active { display: block; }
+.section { margin-bottom: 36px; }
+.section-title { font-family: 'Fraunces', serif; font-size: 22px; font-weight: 600; margin-bottom: 16px; letter-spacing: -0.3px; }
+.section-subtitle { font-size: 16px; font-weight: 600; margin-bottom: 12px; color: var(--text); }
+p { margin-bottom: 12px; color: var(--text-dim); font-size: 14px; }
+p strong { color: var(--text); font-weight: 600; }
+.card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; margin-bottom: 16px; transition: border-color var(--transition); }
+.card:hover { border-color: var(--border-active); }
+.card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 14px; flex-wrap: wrap; gap: 10px; }
+.card-title { font-size: 16px; font-weight: 600; color: var(--text); }
+.badge { display: inline-flex; align-items: center; padding: 3px 10px; border-radius: 4px; font-size: 11px; font-weight: 600; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 0.5px; }
+.badge-high { background: var(--red-bg); color: var(--red); }
+.badge-medium { background: var(--amber-bg); color: var(--amber); }
+.badge-low { background: var(--green-bg); color: var(--green); }
+.badge-phase { background: var(--accent-soft); color: var(--accent); }
+.badge-info { background: var(--cyan-bg); color: var(--cyan); }
+.badge-purple { background: var(--purple-bg); color: var(--purple); }
+.badge-orange { background: var(--orange-bg); color: var(--orange); }
+table { width: 100%; border-collapse: collapse; font-size: 13px; margin-bottom: 20px; }
+thead th { text-align: left; padding: 10px 14px; background: var(--bg-elevated); color: var(--text-dim); font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: 0.6px; border-bottom: 1px solid var(--border); }
+thead th:first-child { border-radius: var(--radius-sm) 0 0 0; }
+thead th:last-child { border-radius: 0 var(--radius-sm) 0 0; }
+tbody td { padding: 10px 14px; border-bottom: 1px solid var(--border); color: var(--text-dim); vertical-align: top; }
+tbody tr:hover td { background: var(--accent-soft); }
+tbody td:first-child { color: var(--text); font-weight: 500; }
+.stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; margin-bottom: 28px; }
+.stat-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; text-align: center; }
+.stat-value { font-family: 'Fraunces', serif; font-size: 32px; font-weight: 700; color: var(--text); line-height: 1.1; }
+.stat-value.accent { color: var(--accent); }
+.stat-value.green { color: var(--green); }
+.stat-value.amber { color: var(--amber); }
+.stat-value.red { color: var(--red); }
+.stat-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.8px; color: var(--text-muted); margin-top: 6px; font-weight: 500; }
+.timeline { position: relative; padding-left: 28px; margin-bottom: 28px; }
+.timeline::before { content: ''; position: absolute; left: 8px; top: 4px; bottom: 4px; width: 2px; background: var(--border); }
+.timeline-item { position: relative; margin-bottom: 24px; }
+.timeline-item::before { content: ''; position: absolute; left: -24px; top: 6px; width: 12px; height: 12px; border-radius: 50%; background: var(--bg); border: 2px solid var(--accent); }
+.timeline-item.done::before { background: var(--green); border-color: var(--green); }
+.timeline-item.active::before { background: var(--accent); border-color: var(--accent); box-shadow: 0 0 8px var(--accent-glow); }
+.timeline-title { font-weight: 600; font-size: 14px; margin-bottom: 4px; color: var(--text); }
+.timeline-desc { font-size: 13px; color: var(--text-dim); }
+.timeline-meta { font-size: 11px; color: var(--text-muted); font-family: 'JetBrains Mono', monospace; margin-top: 4px; }
+.raci-table td { text-align: center; font-weight: 600; }
+.raci-r { color: var(--red); }
+.raci-a { color: var(--amber); }
+.raci-c { color: var(--accent); }
+.raci-i { color: var(--text-muted); }
+.mermaid-wrapper { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; margin-bottom: 20px; overflow-x: auto; }
+.mermaid-wrapper .mermaid-title { font-size: 14px; font-weight: 600; margin-bottom: 16px; color: var(--text); }
+.mermaid { display: flex; justify-content: center; }
+.mermaid svg { max-width: 100%; }
+.ticket-block { background: var(--bg-card); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 0 var(--radius) var(--radius) 0; padding: 22px 26px; margin-bottom: 18px; }
+.ticket-block.high { border-left-color: var(--red); }
+.ticket-block.medium { border-left-color: var(--amber); }
+.ticket-block h4 { font-size: 15px; font-weight: 600; margin-bottom: 10px; display: flex; align-items: center; gap: 10px; }
+.initiative-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; margin-bottom: 20px; transition: border-color var(--transition); }
+.initiative-card:hover { border-color: var(--border-active); }
+.initiative-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px; flex-wrap: wrap; gap: 12px; }
+.initiative-number { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--accent); font-weight: 600; }
+.initiative-title { font-family: 'Fraunces', serif; font-size: 18px; font-weight: 600; color: var(--text); margin-top: 4px; }
+.initiative-value { font-family: 'JetBrains Mono', monospace; font-size: 14px; color: var(--green); font-weight: 600; background: var(--green-bg); padding: 4px 12px; border-radius: 4px; }
+.initiative-body p { margin-bottom: 10px; }
+.metric-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin: 16px 0; }
+.metric-item { background: var(--bg-elevated); padding: 14px 16px; border-radius: var(--radius-sm); border: 1px solid var(--border); }
+.metric-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.6px; color: var(--text-muted); margin-bottom: 4px; }
+.metric-value2 { font-family: 'JetBrains Mono', monospace; font-size: 16px; font-weight: 600; color: var(--text); }
+.metric-change { font-size: 11px; color: var(--green); margin-top: 2px; }
+@media (max-width: 768px) { .page-header, .tab-container, .tab-panel { padding-left: 20px; padding-right: 20px; } .stat-grid { grid-template-columns: repeat(2, 1fr); } .metric-row { grid-template-columns: 1fr; } }
+@media print { .tab-container { display: none; } .tab-panel { display: block !important; page-break-inside: avoid; } .sub-tabs { display: none; } .sub-panel { display: block !important; } body { background: white; color: #1a1a1a; } }
+</style>
+</head>
+<body>
+<div class="page-header">
+  <h1>2026 <span>Payment Operations</span> Strategic Roadmap</h1>
+  <div class="subtitle">
+    <span>Unicity International</span>
+    <span class="tag">Prepared: Howard Koziara</span>
+    <span class="tag">10 Strategic Initiatives</span>
+    <span class="tag">40+ Global Markets</span>
+    <span class="tag">$414M+ Annual Volume</span>
+    <span class="tag">$16M-$43M Target Value</span>
+  </div>
+</div>
+<div class="tab-container" id="mainTabs">
+  <button class="tab-btn active" data-tab="overview">Overview</button>
+  <button class="tab-btn" data-tab="initiatives">Strategic Initiatives</button>
+  <button class="tab-btn" data-tab="globalrollout">Global Rollout</button>
+  <button class="tab-btn" data-tab="quarterly">Quarterly Plan</button>
+  <button class="tab-btn" data-tab="infrastructure">Data Infrastructure</button>
+  <button class="tab-btn" data-tab="flows">Flowcharts</button>
+  <button class="tab-btn" data-tab="results2025">2025 Results</button>
+  <button class="tab-btn" data-tab="raci">RACI &amp; Risks</button>
+  <button class="tab-btn" data-tab="links">Source Links</button>
+</div>
+
+<!-- ========================================== -->
+<!-- TAB: OVERVIEW -->
+<!-- ========================================== -->
+<div class="tab-panel active" id="panel-overview">
+  <div class="stat-grid">
+    <div class="stat-card"><div class="stat-value accent">10</div><div class="stat-label">Strategic Initiatives</div></div>
+    <div class="stat-card"><div class="stat-value green">$16M-$43M</div><div class="stat-label">2026 Target Value</div></div>
+    <div class="stat-card"><div class="stat-value amber">40+</div><div class="stat-label">Global Markets</div></div>
+    <div class="stat-card"><div class="stat-value">$414M+</div><div class="stat-label">Annual Volume</div></div>
+    <div class="stat-card"><div class="stat-value green">$9.8M</div><div class="stat-label">2025 Documented Value</div></div>
+    <div class="stat-card"><div class="stat-value accent">3</div><div class="stat-label">Processor Partners</div></div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Executive Summary</div>
+    <p>This roadmap globalizes the subscription optimization methodology proven in the 2025 USA engagement across all 40+ markets. The USA program delivered a <strong>+13.82 percentage point approval rate improvement</strong> and <strong>$9.8M in documented value</strong> through card updater services, clean address data, and MIT/CIT+OTI implementation.</p>
+    <p>The 2026 strategy deploys 10 interconnected initiatives across <strong>$414M+ in annual payment volume</strong> processed through WorldPay (44 markets), Nuvei (APAC), and Checkout.com (Middle East). Every initiative applies globally. Market-specific sequencing exists only for rollout scheduling, not scope limitation.</p>
+    <p>Parallel infrastructure work addresses a critical gap: <strong>declined payment records are not retained at the order level</strong>. The Unity database platform MUST persist ALL payment attempts (approved AND declined) at the order level with full context including processor attribution, decline reason codes, and subscription linkage.</p>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Initiative Portfolio</div>
+    <table>
+      <thead><tr><th>#</th><th>Initiative</th><th>Expected Value</th><th>Timeline</th><th>Priority</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>Global Subscription Optimization</td><td>$10M-$25M</td><td>Q1-Q4</td><td><span class="badge badge-high">P1</span></td></tr>
+        <tr><td>2</td><td>FraudSight ML Fraud Detection</td><td>$500K-$1M</td><td>Q1-Q2</td><td><span class="badge badge-high">P1</span></td></tr>
+        <tr><td>3</td><td>Refund System Integration</td><td>$200K-$400K</td><td>Q1-Q3</td><td><span class="badge badge-medium">P2</span></td></tr>
+        <tr><td>4</td><td>Card on File Global Implementation</td><td>$1M-$2M</td><td>Q1-Q3</td><td><span class="badge badge-high">P1</span></td></tr>
+        <tr><td>5</td><td>Global API Standardization</td><td>$2M-$5M</td><td>Q1-Q3</td><td><span class="badge badge-high">P1</span></td></tr>
+        <tr><td>6</td><td>Global Payment Monitoring Tools</td><td>$500K-$1M</td><td>Q1-Q2</td><td><span class="badge badge-medium">P2</span></td></tr>
+        <tr><td>7</td><td>Smart Routing Expansion</td><td>$500K-$1M</td><td>Q1-Q4</td><td><span class="badge badge-medium">P2</span></td></tr>
+        <tr><td>8</td><td>Product Subscription Reminders</td><td>$200K-$500K</td><td>Q1-Q4</td><td><span class="badge badge-medium">P2</span></td></tr>
+        <tr><td>9</td><td>Intelligent Retry Program</td><td>$320K-$425K</td><td>Q1-Q2</td><td><span class="badge badge-high">P1</span></td></tr>
+        <tr><td>10</td><td>Cryptocurrency Payments Pilot</td><td>$100K-$200K</td><td>Q1-Q2</td><td><span class="badge badge-low">P3</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Initiative Dependency Map</div>
+    <div class="mermaid-wrapper">
+      <div class="mermaid-title">How the 10 initiatives connect and depend on each other</div>
+      <div class="mermaid">
+graph LR
+  I5["#5 API Standardization"] --> I1["#1 Subscription Optimization"]
+  I5 --> I2["#2 FraudSight ML"]
+  I5 --> I4["#4 Card on File"]
+  I5 --> I7["#7 Smart Routing"]
+  I1 --> I9["#9 Intelligent Retry"]
+  I1 --> I8["#8 Subscription Reminders"]
+  I4 --> I1
+  I2 --> I7
+  I6["#6 Monitoring Tools"] --> I1
+  I6 --> I7
+  I3["#3 Refund Integration"] --> I6
+  I10["#10 Crypto Pilot"] -.-> I7
+  style I1 fill:#1e3a5f,stroke:#4a7cff,color:#e8ecf4
+  style I5 fill:#1a3328,stroke:#34d399,color:#e8ecf4
+  style I2 fill:#3b1a1a,stroke:#f87171,color:#e8ecf4
+  style I4 fill:#1e3a5f,stroke:#4a7cff,color:#e8ecf4
+  style I9 fill:#3b2d0a,stroke:#fbbf24,color:#e8ecf4
+  style I7 fill:#2d1a3b,stroke:#a78bfa,color:#e8ecf4
+  style I6 fill:#0a2d3b,stroke:#22d3ee,color:#e8ecf4
+  style I3 fill:#3b2d0a,stroke:#fbbf24,color:#e8ecf4
+  style I8 fill:#3b2d0a,stroke:#fbbf24,color:#e8ecf4
+  style I10 fill:#1a1f2b,stroke:#5a6478,color:#8892a4
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Quarterly Roadmap</div>
+    <div class="timeline">
+      <div class="timeline-item active">
+        <div class="timeline-title">Q1 2026: Foundation &amp; Quick Wins</div>
+        <div class="timeline-desc">API audit all markets, Card Updater rollout wave 1, FraudSight discovery, Decline categorization for retry, Coinbase pilot launch, Monitoring query enhancement</div>
+        <div class="timeline-meta">$4M-$8M projected value</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-title">Q2 2026: Global Expansion</div>
+        <div class="timeline-desc">Full subscription rollout waves 2-3, FraudSight pilot, Refund API integration, COF enablement, Smart Routing build, Dashboards live</div>
+        <div class="timeline-meta">$6M-$15M projected value</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-title">Q3 2026: Scale &amp; Optimize</div>
+        <div class="timeline-desc">FraudSight global, Refund go-live, COF migration, Smart Routing pilot, Subscription Reminders expansion, Europe rollout</div>
+        <div class="timeline-meta">$4M-$12M projected value</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-title">Q4 2026: Full Deployment</div>
+        <div class="timeline-desc">Remaining markets (LATAM, SE Asia), global optimization, full deployment all initiatives</div>
+        <div class="timeline-meta">$2M-$8M projected value</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ========================================== -->
+<!-- TAB: STRATEGIC INITIATIVES -->
+<!-- ========================================== -->
+<div class="tab-panel" id="panel-initiatives">
+  <div class="sub-tabs" data-group="initiatives">
+    <button class="sub-tab-btn active" data-subtab="init-1">1. Subscriptions</button>
+    <button class="sub-tab-btn" data-subtab="init-2">2. FraudSight</button>
+    <button class="sub-tab-btn" data-subtab="init-3">3. Refunds</button>
+    <button class="sub-tab-btn" data-subtab="init-4">4. Card on File</button>
+    <button class="sub-tab-btn" data-subtab="init-5">5. API Standards</button>
+    <button class="sub-tab-btn" data-subtab="init-6">6. Monitoring</button>
+    <button class="sub-tab-btn" data-subtab="init-7">7. Smart Routing</button>
+    <button class="sub-tab-btn" data-subtab="init-8">8. Reminders</button>
+    <button class="sub-tab-btn" data-subtab="init-9">9. Retry</button>
+    <button class="sub-tab-btn" data-subtab="init-10">10. Crypto</button>
+  </div>
+
+  <!-- INITIATIVE 1 -->
+  <div class="sub-panel active" id="subpanel-init-1">
+    <div class="initiative-card">
+      <div class="initiative-header">
+        <div><div class="initiative-number">INITIATIVE 01</div><div class="initiative-title">Global Subscription Optimization</div></div>
+        <div class="initiative-value">$10M-$25M</div>
+      </div>
+      <div class="initiative-body">
+        <p>Deploy the proven 3-phase subscription methodology globally. The USA program delivered +13.82 points approval improvement. This initiative replicates that success across all markets processing recurring payments.</p>
+        <div class="metric-row">
+          <div class="metric-item"><div class="metric-label">Global Approval Target</div><div class="metric-value2">78%+</div><div class="metric-change">from ~68% baseline</div></div>
+          <div class="metric-item"><div class="metric-label">Markets Covered</div><div class="metric-value2">40+</div><div class="metric-change">all recurring markets</div></div>
+          <div class="metric-item"><div class="metric-label">Expired Card Decline Reduction</div><div class="metric-value2">30-60%</div><div class="metric-change">via Card Updater</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-title">3-Phase Methodology</div>
+      <div class="mermaid-wrapper">
+        <div class="mermaid-title">Proven subscription recovery methodology applied globally</div>
+        <div class="mermaid">
+graph TD
+  A["Phase 1: Card Updater"] --> B["Phase 2: Clean Address Data"]
+  B --> C["Phase 3: MIT/CIT + OTI"]
+  A1["VAU / ABU enrollment"] --> A
+  A2["Real-time token refresh"] --> A
+  A3["30-60% expired card decline reduction"] --> A
+  B1["Full billing address on every transaction"] --> B
+  B2["Address verification scoring improvement"] --> B
+  C1["Merchant Initiated Transaction flag"] --> C
+  C2["Original Transaction ID linking"] --> C
+  C3["Banks recognize legitimate recurring"] --> C
+  style A fill:#1a3328,stroke:#34d399,color:#e8ecf4
+  style B fill:#1e3a5f,stroke:#4a7cff,color:#e8ecf4
+  style C fill:#2d1a3b,stroke:#a78bfa,color:#e8ecf4
+  style A1 fill:#141820,stroke:#2a3040,color:#8892a4
+  style A2 fill:#141820,stroke:#2a3040,color:#8892a4
+  style A3 fill:#141820,stroke:#2a3040,color:#8892a4
+  style B1 fill:#141820,stroke:#2a3040,color:#8892a4
+  style B2 fill:#141820,stroke:#2a3040,color:#8892a4
+  style C1 fill:#141820,stroke:#2a3040,color:#8892a4
+  style C2 fill:#141820,stroke:#2a3040,color:#8892a4
+  style C3 fill:#141820,stroke:#2a3040,color:#8892a4
+        </div>
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-title">Global Rollout Waves</div>
+      <table>
+        <thead><tr><th>Wave</th><th>Markets</th><th>Timeline</th><th>Baseline</th><th>Target</th><th>Value</th></tr></thead>
+        <tbody>
+          <tr><td>Wave 1</td><td>Canada, Japan</td><td>Q1</td><td>65-70%</td><td>78-80%+</td><td>$5M-$8M</td></tr>
+          <tr><td>Wave 2</td><td>Korea, UK, Australia</td><td>Q2</td><td>68-72%</td><td>78-82%+</td><td>$3M-$6M</td></tr>
+          <tr><td>Wave 3</td><td>Europe (all EEA)</td><td>Q3</td><td>~70%</td><td>80%+</td><td>$2M-$3M</td></tr>
+          <tr><td>Wave 4</td><td>LATAM, SE Asia</td><td>Q3-Q4</td><td>60-62%</td><td>75%+</td><td>$1.5M-$3M</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- INITIATIVE 2 -->
+  <div class="sub-panel" id="subpanel-init-2">
+    <div class="initiative-card">
+      <div class="initiative-header">
+        <div><div class="initiative-number">INITIATIVE 02</div><div class="initiative-title">FraudSight ML Fraud Detection</div></div>
+        <div class="initiative-value">$500K-$1M</div>
+      </div>
+      <div class="initiative-body">
+        <p>Replace or augment third-party fraud tools (Kount/Signifyd) with WorldPay's native FraudSight machine learning platform. FraudSight provides pre-network and post-network decisioning with Capital One data sharing for enriched fraud signals across all WorldPay-processed markets.</p>
+        <div class="metric-row">
+          <div class="metric-item"><div class="metric-label">Fraud Rate Target</div><div class="metric-value2">0.04%</div><div class="metric-change">from 0.08% (-50%)</div></div>
+          <div class="metric-item"><div class="metric-label">Chargeback Rate Target</div><div class="metric-value2">0.35%</div><div class="metric-change">from 0.48% (-27%)</div></div>
+          <div class="metric-item"><div class="metric-label">False Positive Reduction</div><div class="metric-value2">20%+</div><div class="metric-change">vs rules-based systems</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-title">FraudSight Decision Flow</div>
+      <div class="mermaid-wrapper">
+        <div class="mermaid-title">Pre-network and post-network fraud scoring pipeline</div>
+        <div class="mermaid">
+graph TD
+  TX["Transaction Submitted"] --> PRE["Pre-Network FraudSight Scoring"]
+  PRE -->|Score Below Threshold| BLOCK["Block Transaction"]
+  PRE -->|Score Above Threshold| NETWORK["Send to Card Network"]
+  NETWORK --> POST["Post-Network FraudSight Check"]
+  POST -->|Suspicious| REVIEW["Manual Review Queue"]
+  POST -->|Clean| AUTH["Authorization Result"]
+  AUTH -->|Approved| SETTLE["Settlement"]
+  AUTH -->|Declined| DECLINE["Decline Handling"]
+  CO["Capital One Data Sharing"] --> PRE
+  ML["ML Model Pattern Analysis"] --> PRE
+  style TX fill:#141820,stroke:#2a3040,color:#e8ecf4
+  style PRE fill:#3b1a1a,stroke:#f87171,color:#e8ecf4
+  style POST fill:#3b1a1a,stroke:#f87171,color:#e8ecf4
+  style BLOCK fill:#3b1a1a,stroke:#f87171,color:#e8ecf4
+  style NETWORK fill:#1e3a5f,stroke:#4a7cff,color:#e8ecf4
+  style REVIEW fill:#3b2d0a,stroke:#fbbf24,color:#e8ecf4
+  style AUTH fill:#1e3a5f,stroke:#4a7cff,color:#e8ecf4
+  style SETTLE fill:#1a3328,stroke:#34d399,color:#e8ecf4
+  style DECLINE fill:#3b2d0a,stroke:#fbbf24,color:#e8ecf4
+  style CO fill:#2d1a3b,stroke:#a78bfa,color:#e8ecf4
+  style ML fill:#2d1a3b,stroke:#a78bfa,color:#e8ecf4
+        </div>
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-title">Implementation Timeline</div>
+      <div class="timeline">
+        <div class="timeline-item active"><div class="timeline-title">January: Discovery &amp; Data Audit</div><div class="timeline-desc">Analyze current fraud patterns, identify FraudSight model inputs</div></div>
+        <div class="timeline-item"><div class="timeline-title">February: Configuration</div><div class="timeline-desc">Set FraudSight rules, score thresholds, Capital One data sharing</div></div>
+        <div class="timeline-item"><div class="timeline-title">March: Testing</div><div class="timeline-desc">Shadow mode parallel scoring, validate false positive rates</div></div>
+        <div class="timeline-item"><div class="timeline-title">April: Global Pilot</div><div class="timeline-desc">Enable FraudSight decisioning on live traffic</div></div>
+        <div class="timeline-item"><div class="timeline-title">May-June: Global Rollout</div><div class="timeline-desc">Expand to all WorldPay markets, tune thresholds per market</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- INITIATIVE 3 -->
+  <div class="sub-panel" id="subpanel-init-3">
+    <div class="initiative-card">
+      <div class="initiative-header">
+        <div><div class="initiative-number">INITIATIVE 03</div><div class="initiative-title">Refund System Integration</div></div>
+        <div class="initiative-value">$200K-$400K</div>
+      </div>
+      <div class="initiative-body">
+        <p>Integrate refund processing into Navision/Portal via processor APIs globally. Current state: no database record, manual processor portal per refund, reconciliation gaps.</p>
+        <div class="metric-row">
+          <div class="metric-item"><div class="metric-label">Time Per Refund</div><div class="metric-value2">30 sec</div><div class="metric-change">from 5-10 min (-90%)</div></div>
+          <div class="metric-item"><div class="metric-label">Refund Errors</div><div class="metric-value2">&lt;0.5%</div><div class="metric-change">from ~2% (-75%)</div></div>
+          <div class="metric-item"><div class="metric-label">Reconciliation</div><div class="metric-value2">99.9%</div><div class="metric-change">from 95%</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-title">Refund Integration Architecture</div>
+      <div class="mermaid-wrapper">
+        <div class="mermaid-title">Unified refund processing through processor APIs</div>
+        <div class="mermaid">
+graph LR
+  PORTAL["Navision/Portal Refund Request"] --> API["Unified Refund API Layer"]
+  API --> WP["WorldPay API"]
+  API --> NV["Nuvei API"]
+  API --> CO["Checkout.com API"]
+  WP --> RESP["Processor Response"]
+  NV --> RESP
+  CO --> RESP
+  RESP --> DB["Refund_Log Database Record"]
+  DB --> RECON["Auto Reconciliation"]
+  DB --> AUDIT["Audit Trail"]
+  style PORTAL fill:#1e3a5f,stroke:#4a7cff,color:#e8ecf4
+  style API fill:#2d1a3b,stroke:#a78bfa,color:#e8ecf4
+  style WP fill:#141820,stroke:#2a3040,color:#8892a4
+  style NV fill:#141820,stroke:#2a3040,color:#8892a4
+  style CO fill:#141820,stroke:#2a3040,color:#8892a4
+  style RESP fill:#3b2d0a,stroke:#fbbf24,color:#e8ecf4
+  style DB fill:#1a3328,stroke:#34d399,color:#e8ecf4
+  style RECON fill:#1a3328,stroke:#34d399,color:#e8ecf4
+  style AUDIT fill:#1a3328,stroke:#34d399,color:#e8ecf4
+        </div>
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-title">Database Schema: Refund_Log</div>
+      <table>
+        <thead><tr><th>Column</th><th>Type</th><th>Purpose</th></tr></thead>
+        <tbody>
+          <tr><td>Order_Number</td><td>VARCHAR(50)</td><td>Links refund to original order</td></tr>
+          <tr><td>Original_Transaction_ID</td><td>VARCHAR(100)</td><td>Processor transaction reference</td></tr>
+          <tr><td>Refund_Amount</td><td>DECIMAL(18,2)</td><td>Amount refunded</td></tr>
+          <tr><td>Refund_Reason</td><td>VARCHAR(200)</td><td>Categorized reason code</td></tr>
+          <tr><td>Refund_Status</td><td>VARCHAR(20)</td><td>Pending, Completed, Failed</td></tr>
+          <tr><td>Processor_Response</td><td>NVARCHAR(MAX)</td><td>Full API response for audit</td></tr>
+          <tr><td>Processed_By</td><td>VARCHAR(100)</td><td>User who initiated</td></tr>
+          <tr><td>Processed_Date</td><td>DATETIME</td><td>Timestamp</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- INITIATIVE 4 -->
+  <div class="sub-panel" id="subpanel-init-4">
+    <div class="initiative-card">
+      <div class="initiative-header">
+        <div><div class="initiative-number">INITIATIVE 04</div><div class="initiative-title">Card on File Global Implementation</div></div>
+        <div class="initiative-value">$1M-$2M</div>
+      </div>
+      <div class="initiative-body">
+        <p>Deploy network tokenization (Visa/MC tokens) across all markets and processors. Network tokens replace raw PANs, auto-update on card reissue, reduce PCI scope, and cut fraud on stored cards by 40%.</p>
+        <div class="metric-row">
+          <div class="metric-item"><div class="metric-label">Token Adoption</div><div class="metric-value2">90%+</div><div class="metric-change">of stored cards</div></div>
+          <div class="metric-item"><div class="metric-label">Stored Card Approval</div><div class="metric-value2">80%+</div><div class="metric-change">from ~75%</div></div>
+          <div class="metric-item"><div class="metric-label">Expired Card Declines</div><div class="metric-value2">-70%</div><div class="metric-change">via auto-update</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-title">Network Tokenization Flow</div>
+      <div class="mermaid-wrapper">
+        <div class="mermaid-title">Card on File lifecycle with network tokens</div>
+        <div class="mermaid">
+graph TD
+  CUST["Customer Provides Card"] --> TOKENIZE["Network Tokenization Service"]
+  TOKENIZE --> TOKEN["Network Token Stored in Vault"]
+  TOKEN --> RECURRING["Recurring Payment Trigger"]
+  RECURRING --> PROCESSOR["Processor Submits with Token"]
+  PROCESSOR --> NETWORK["Card Network Resolves Token"]
+  NETWORK --> ISSUER["Issuer Authorization"]
+  ISSUER -->|Approved| SETTLE["Settlement"]
+  ISSUER -->|Card Reissued| UPDATE["Auto Token Update"]
+  UPDATE --> TOKEN
+  style CUST fill:#141820,stroke:#2a3040,color:#e8ecf4
+  style TOKENIZE fill:#2d1a3b,stroke:#a78bfa,color:#e8ecf4
+  style TOKEN fill:#1e3a5f,stroke:#4a7cff,color:#e8ecf4
+  style RECURRING fill:#1e3a5f,stroke:#4a7cff,color:#e8ecf4
+  style PROCESSOR fill:#141820,stroke:#2a3040,color:#8892a4
+  style NETWORK fill:#3b2d0a,stroke:#fbbf24,color:#e8ecf4
+  style ISSUER fill:#3b2d0a,stroke:#fbbf24,color:#e8ecf4
+  style SETTLE fill:#1a3328,stroke:#34d399,color:#e8ecf4
+  style UPDATE fill:#1a3328,stroke:#34d399,color:#e8ecf4
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- INITIATIVE 5 -->
+  <div class="sub-panel" id="subpanel-init-5">
+    <div class="initiative-card">
+      <div class="initiative-header">
+        <div><div class="initiative-number">INITIATIVE 05</div><div class="initiative-title">Global API Standardization</div></div>
+        <div class="initiative-value">$2M-$5M</div>
+      </div>
+      <div class="initiative-body">
+        <p>Foundation initiative: ensure all markets meet best-practice API standards. Missing fields directly cause lower approval rates and higher fraud scores. This enables all other initiatives.</p>
+        <div class="metric-row">
+          <div class="metric-item"><div class="metric-label">Approval Lift Per Market</div><div class="metric-value2">+8-13 pts</div><div class="metric-change">from full compliance</div></div>
+          <div class="metric-item"><div class="metric-label">Total Value</div><div class="metric-value2">$10M-$17M</div><div class="metric-change">across all markets</div></div>
+          <div class="metric-item"><div class="metric-label">Target Compliance</div><div class="metric-value2">100%</div><div class="metric-change">A grade all markets</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-title">Global API Field Compliance</div>
+      <table>
+        <thead><tr><th>Field</th><th>Current Coverage</th><th>Target</th><th>Impact</th></tr></thead>
+        <tbody>
+          <tr><td>Full Billing Address</td><td>70%</td><td>100%</td><td>AVS match, fraud scoring</td></tr>
+          <tr><td>Email Address</td><td>90%</td><td>100%</td><td>3DS2 frictionless flow</td></tr>
+          <tr><td>Phone Number</td><td>60%</td><td>100%</td><td>3DS2 OTP, fraud signal</td></tr>
+          <tr><td>IP Address</td><td>85%</td><td>100%</td><td>Geolocation, velocity checks</td></tr>
+          <tr><td>Device ID</td><td>40%</td><td>100%</td><td>Device fingerprinting</td></tr>
+          <tr><td>Browser Fingerprint</td><td>30%</td><td>100%</td><td>Bot detection</td></tr>
+          <tr><td>MIT/CIT Flag</td><td>USA only</td><td>100%</td><td>Recurring auth path</td></tr>
+          <tr><td>Original Transaction ID</td><td>USA only</td><td>100%</td><td>Transaction chain linking</td></tr>
+          <tr><td>Recurring Flag</td><td>80%</td><td>100%</td><td>Issuer recognition</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="section">
+      <div class="section-title">API Compliance Remediation Sequence</div>
+      <div class="mermaid-wrapper">
+        <div class="mermaid-title">Current grades and remediation order by market</div>
+        <div class="mermaid">
+graph LR
+  USA["USA Grade: A"] -.-> TEMPLATE["API Standard Template"]
+  TEMPLATE --> CA["Canada C Feb-Mar"]
+  TEMPLATE --> JP["Japan D Mar-Apr"]
+  TEMPLATE --> KR["Korea D Apr-May"]
+  TEMPLATE --> UK["UK/AU C May-Jun"]
+  TEMPLATE --> EU["Europe D Jun-Jul"]
+  TEMPLATE --> LATAM["LATAM F Jul-Aug"]
+  TEMPLATE --> SEA["SE Asia F Aug-Sep"]
+  style USA fill:#1a3328,stroke:#34d399,color:#e8ecf4
+  style TEMPLATE fill:#1e3a5f,stroke:#4a7cff,color:#e8ecf4
+  style CA fill:#3b2d0a,stroke:#fbbf24,color:#e8ecf4
+  style JP fill:#3b1a1a,stroke:#f87171,color:#e8ecf4
+  style KR fill:#3b1a1a,stroke:#f87171,color:#e8ecf4
+  style UK fill:#3b2d0a,stroke:#fbbf24,color:#e8ecf4
+  style EU fill:#3b1a1a,stroke:#f87171,color:#e8ecf4
+  style LATAM fill:#3b1a1a,stroke:#f87171,color:#e8ecf4
+  style SEA fill:#3b1a1a,stroke:#f87171,color:#e8ecf4
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- INITIATIVE 6 -->
+  <div class="sub-panel" id="subpanel-init-6">
+    <div class="initiative-card">
+      <div class="initiative-header">
+        <div><div class="initiative-number">INITIATIVE 06</div><div class="initiative-title">Global Payment Monitoring Tools</div></div>
+        <div class="initiative-value">$500K-$1M</div>
+      </div>
+      <div class="initiative-body">
+        <p>Deploy SQL monitoring queries and PowerBI/Tableau dashboards globally. Current toolkit (USA-only) includes 6 production queries. Goal: automated dashboards with threshold alerting across all markets.</p>
+        <div class="metric-row">
+          <div class="metric-item"><div class="metric-label">Dashboard Tiers</div><div class="metric-value2">3</div><div class="metric-change">Daily, Weekly, Monthly</div></div>
+          <div class="metric-item"><div class="metric-label">Alert Response</div><div class="metric-value2">&lt;1 hour</div><div class="metric-change">from next-day discovery</div></div>
+          <div class="metric-item"><div class="metric-label">Trending Depth</div><div class="metric-value2">12 months</div><div class="metric-change">rolling comparison</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-title">Dashboard Architecture</div>
+      <table>
+        <thead><tr><th>Dashboard</th><th>Metrics</th><th>Refresh</th><th>Audience</th></tr></thead>
+        <tbody>
+          <tr><td>Daily Operations</td><td>Approval rate, decline volume, chargeback rate, subscription failures</td><td>Real-time</td><td>Payment Ops</td></tr>
+          <tr><td>Weekly Analysis</td><td>Approval by market, decline reasons, retry success</td><td>Daily</td><td>Payment Ops, IT</td></tr>
+          <tr><td>Monthly Executive</td><td>Global trends, revenue at risk, cost per transaction</td><td>Weekly</td><td>Leadership</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- INITIATIVE 7 -->
+  <div class="sub-panel" id="subpanel-init-7">
+    <div class="initiative-card">
+      <div class="initiative-header">
+        <div><div class="initiative-number">INITIATIVE 07</div><div class="initiative-title">Smart Routing Expansion</div></div>
+        <div class="initiative-value">$500K-$1M</div>
+      </div>
+      <div class="initiative-body">
+        <p>Expand routing beyond cost optimization to approval-based, real-time health, and decline reason routing. Current: static per-market. Target: dynamic decision logic routing to highest-approval processor.</p>
+        <div class="metric-row">
+          <div class="metric-item"><div class="metric-label">WorldPay</div><div class="metric-value2">$210M</div><div class="metric-change">IC+0.15% (44 markets)</div></div>
+          <div class="metric-item"><div class="metric-label">Nuvei</div><div class="metric-value2">$164M</div><div class="metric-change">IC+1.5% (APAC)</div></div>
+          <div class="metric-item"><div class="metric-label">Checkout.com</div><div class="metric-value2">$40M</div><div class="metric-change">1.06-1.36% (ME)</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-title">Smart Routing Decision Tree</div>
+      <div class="mermaid-wrapper">
+        <div class="mermaid-title">Dynamic routing logic for approval optimization</div>
+        <div class="mermaid">
+graph TD
+  TX["Transaction Submitted"] --> HEALTH{"Processor Health Check"}
+  HEALTH -->|All Healthy| APPROVAL{"Approval-Based Routing"}
+  HEALTH -->|Down or Drop >10%| FAILOVER["Auto-Failover"]
+  APPROVAL --> SUBMIT["Submit to Best Processor"]
+  SUBMIT -->|Declined| DECLINE{"Decline Analysis"}
+  DECLINE -->|Soft Decline| RETRY["Retry Different Processor"]
+  DECLINE -->|Hard Decline| FINAL["Final Decline"]
+  SUBMIT -->|Approved| DONE["Approved"]
+  RETRY -->|Approved| DONE
+  FAILOVER --> SUBMIT
+  style TX fill:#141820,stroke:#2a3040,color:#e8ecf4
+  style HEALTH fill:#3b2d0a,stroke:#fbbf24,color:#e8ecf4
+  style APPROVAL fill:#1e3a5f,stroke:#4a7cff,color:#e8ecf4
+  style FAILOVER fill:#3b1a1a,stroke:#f87171,color:#e8ecf4
+  style SUBMIT fill:#1e3a5f,stroke:#4a7cff,color:#e8ecf4
+  style DECLINE fill:#3b2d0a,stroke:#fbbf24,color:#e8ecf4
+  style RETRY fill:#2d1a3b,stroke:#a78bfa,color:#e8ecf4
+  style FINAL fill:#3b1a1a,stroke:#f87171,color:#e8ecf4
+  style DONE fill:#1a3328,stroke:#34d399,color:#e8ecf4
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- INITIATIVE 8 -->
+  <div class="sub-panel" id="subpanel-init-8">
+    <div class="initiative-card">
+      <div class="initiative-header">
+        <div><div class="initiative-number">INITIATIVE 08</div><div class="initiative-title">Product Subscription Reminders</div></div>
+        <div class="initiative-value">$200K-$500K</div>
+      </div>
+      <div class="initiative-body">
+        <p>Multi-touch reminder program before subscription billing. 20% of chargebacks from forgot subscription, 19% from thought already cancelled, 2.5% involuntary churn.</p>
+        <div class="metric-row">
+          <div class="metric-item"><div class="metric-label">Friendly Fraud CBs</div><div class="metric-value2">-50%</div><div class="metric-change">from awareness reminders</div></div>
+          <div class="metric-item"><div class="metric-label">Involuntary Churn</div><div class="metric-value2">1.8%</div><div class="metric-change">from 2.5%</div></div>
+          <div class="metric-item"><div class="metric-label">Card Update CTR</div><div class="metric-value2">15%+</div><div class="metric-change">proactive updates</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-title">Reminder Cadence</div>
+      <div class="mermaid-wrapper">
+        <div class="mermaid-title">Multi-touch notification sequence before billing</div>
+        <div class="mermaid">
+graph LR
+  D14["Day -14 Awareness"] --> D7["Day -7 Action Prompt"]
+  D7 --> D3["Day -3 Final Notice"]
+  D3 --> D0["Day 0 Billing"]
+  D0 -->|Failed| REC["Recovery Notification"]
+  style D14 fill:#1e3a5f,stroke:#4a7cff,color:#e8ecf4
+  style D7 fill:#1e3a5f,stroke:#4a7cff,color:#e8ecf4
+  style D3 fill:#3b2d0a,stroke:#fbbf24,color:#e8ecf4
+  style D0 fill:#1a3328,stroke:#34d399,color:#e8ecf4
+  style REC fill:#3b1a1a,stroke:#f87171,color:#e8ecf4
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- INITIATIVE 9 -->
+  <div class="sub-panel" id="subpanel-init-9">
+    <div class="initiative-card">
+      <div class="initiative-header">
+        <div><div class="initiative-number">INITIATIVE 09</div><div class="initiative-title">Intelligent Retry Program</div></div>
+        <div class="initiative-value">$320K-$425K</div>
+      </div>
+      <div class="initiative-body">
+        <p>Full deployment with decline categorization, optimal timing, customer notifications, and NSF scoring. Current retry does not distinguish hard from soft declines. Retrying hard declines wastes fees and damages issuer scoring.</p>
+        <div class="metric-row">
+          <div class="metric-item"><div class="metric-label">Global Retry Target</div><div class="metric-value2">58%+</div><div class="metric-change">from 48.53%</div></div>
+          <div class="metric-item"><div class="metric-label">Hard Decline Retries</div><div class="metric-value2">0%</div><div class="metric-change">from 25% (eliminated)</div></div>
+          <div class="metric-item"><div class="metric-label">Customer Recovery</div><div class="metric-value2">15%</div><div class="metric-change">new channel</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-title">Intelligent Retry Decision Flow</div>
+      <div class="mermaid-wrapper">
+        <div class="mermaid-title">Decline categorization and optimized retry logic</div>
+        <div class="mermaid">
+graph TD
+  DECLINE["Payment Declined"] --> CAT{"Decline Category"}
+  CAT -->|Hard: Account Closed, Invalid| HARD["NO RETRY - Notify Customer"]
+  CAT -->|Soft: NSF, Temp Hold| SOFT{"NSF Score"}
+  CAT -->|Issuer: Do Not Honor| ISSUER["Retry in 24h"]
+  SOFT -->|High Score| WAIT["Wait 5-7 Days Then Retry"]
+  SOFT -->|Low Score| NOTIFY["Customer Self-Recovery"]
+  WAIT --> RETRY["Optimized Retry"]
+  NOTIFY -->|Card Updated| RETRY
+  ISSUER --> RETRY
+  RETRY -->|Approved| SUCCESS["Payment Recovered"]
+  RETRY -->|Declined| DUNNING["Dunning Sequence"]
+  style DECLINE fill:#3b1a1a,stroke:#f87171,color:#e8ecf4
+  style CAT fill:#3b2d0a,stroke:#fbbf24,color:#e8ecf4
+  style HARD fill:#3b1a1a,stroke:#f87171,color:#e8ecf4
+  style SOFT fill:#3b2d0a,stroke:#fbbf24,color:#e8ecf4
+  style ISSUER fill:#1e3a5f,stroke:#4a7cff,color:#e8ecf4
+  style WAIT fill:#1e3a5f,stroke:#4a7cff,color:#e8ecf4
+  style NOTIFY fill:#2d1a3b,stroke:#a78bfa,color:#e8ecf4
+  style RETRY fill:#1e3a5f,stroke:#4a7cff,color:#e8ecf4
+  style SUCCESS fill:#1a3328,stroke:#34d399,color:#e8ecf4
+  style DUNNING fill:#3b1a1a,stroke:#f87171,color:#e8ecf4
+        </div>
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-title">Current Retry Performance</div>
+      <table>
+        <thead><tr><th>Market</th><th>Current</th><th>Attempts</th><th>Target</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td>Global Avg</td><td>48.53%</td><td>21,220</td><td>58%+</td><td><span class="badge badge-medium">IN PROGRESS</span></td></tr>
+          <tr><td>Japan</td><td>87.45%</td><td>2,100</td><td>90%+</td><td><span class="badge badge-low">STRONG</span></td></tr>
+          <tr><td>Australia</td><td>62.75%</td><td>1,800</td><td>70%+</td><td><span class="badge badge-medium">MODERATE</span></td></tr>
+          <tr><td>UK</td><td>55.03%</td><td>2,400</td><td>65%+</td><td><span class="badge badge-medium">MODERATE</span></td></tr>
+          <tr><td>Canada</td><td>44.72%</td><td>3,500</td><td>55%+</td><td><span class="badge badge-high">NEEDS WORK</span></td></tr>
+          <tr><td>Belgium</td><td>29.85%</td><td>900</td><td>50%+</td><td><span class="badge badge-high">CRITICAL</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- INITIATIVE 10 -->
+  <div class="sub-panel" id="subpanel-init-10">
+    <div class="initiative-card">
+      <div class="initiative-header">
+        <div><div class="initiative-number">INITIATIVE 10</div><div class="initiative-title">Cryptocurrency Payments Pilot</div></div>
+        <div class="initiative-value">$100K-$200K</div>
+      </div>
+      <div class="initiative-body">
+        <p>Coinbase Commerce pilot. Lower fees (1% vs 2.5%), zero chargebacks, faster settlement. One-time orders only with instant fiat conversion. Supported: Bitcoin, Ethereum, USDC, Litecoin, Dogecoin.</p>
+        <div class="metric-row">
+          <div class="metric-item"><div class="metric-label">Success Target</div><div class="metric-value2">&gt;95%</div><div class="metric-change">completion rate</div></div>
+          <div class="metric-item"><div class="metric-label">Adoption Target</div><div class="metric-value2">&gt;1%</div><div class="metric-change">of eligible orders</div></div>
+          <div class="metric-item"><div class="metric-label">Processing Fee</div><div class="metric-value2">1%</div><div class="metric-change">vs 2.5% card</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-title">Crypto Checkout Flow</div>
+      <div class="mermaid-wrapper">
+        <div class="mermaid-title">Coinbase Commerce checkout integration</div>
+        <div class="mermaid">
+graph TD
+  ORDER["Customer Places Order"] --> SELECT{"Payment Method"}
+  SELECT -->|Card| CARD["Standard Processing"]
+  SELECT -->|Crypto| COINBASE["Coinbase Commerce"]
+  COINBASE --> CHOOSE["Select Crypto Currency"]
+  CHOOSE --> WALLET["Send from Wallet"]
+  WALLET --> CONFIRM["Blockchain Confirmation"]
+  CONFIRM --> CONVERT["Instant Fiat Conversion"]
+  CONVERT --> SETTLE["Settlement to Bank"]
+  style ORDER fill:#141820,stroke:#2a3040,color:#e8ecf4
+  style SELECT fill:#3b2d0a,stroke:#fbbf24,color:#e8ecf4
+  style CARD fill:#1e3a5f,stroke:#4a7cff,color:#e8ecf4
+  style COINBASE fill:#2d1a3b,stroke:#a78bfa,color:#e8ecf4
+  style CHOOSE fill:#2d1a3b,stroke:#a78bfa,color:#e8ecf4
+  style WALLET fill:#2d1a3b,stroke:#a78bfa,color:#e8ecf4
+  style CONFIRM fill:#3b2d0a,stroke:#fbbf24,color:#e8ecf4
+  style CONVERT fill:#1a3328,stroke:#34d399,color:#e8ecf4
+  style SETTLE fill:#1a3328,stroke:#34d399,color:#e8ecf4
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══════════════════════════════════════════════════ TAB 3: GLOBAL ROLLOUT ═══════════════════════════════════════════════════ -->
+<div class="tab-panel" id="panel-globalrollout">
+
+  <div class="card" style="margin-bottom:24px;">
+    <h2 style="color:var(--accent);font-size:22px;margin-bottom:6px;">Global Market Rollout Plan</h2>
+    <p style="color:var(--text-dim);font-size:14px;">4 deployment waves across 40+ markets, sequenced by volume, infrastructure readiness, and processor relationships</p>
+  </div>
+
+  <!-- Rollout Waves Mermaid -->
+  <div class="card" style="margin-bottom:24px;">
+    <h3 style="color:var(--text-light);margin-bottom:16px;">Deployment Waves</h3>
+    <div class="mermaid">
+graph LR
+  subgraph WAVE1["Wave 1: Q1 2026"]
+    CA["Canada<br/>$38M | ~70%"]
+    JP["Japan<br/>$52M | ~65%"]
+  end
+  subgraph WAVE2["Wave 2: Q2 2026"]
+    KR["Korea<br/>$28M | ~68%"]
+    UK["UK<br/>$15M | ~72%"]
+    AU["Australia<br/>$12M | ~72%"]
+  end
+  subgraph WAVE3["Wave 3: Q3 2026"]
+    EU["Europe EEA<br/>$45M | ~70%"]
+    ME["Middle East<br/>$40M | Checkout.com"]
+  end
+  subgraph WAVE4["Wave 4: Q3-Q4 2026"]
+    LA["LATAM<br/>$18M | ~60%"]
+    SEA["SE Asia<br/>$22M | ~62%"]
+  end
+  WAVE1 --> WAVE2 --> WAVE3 --> WAVE4
+  style CA fill:#1a3328,stroke:#34d399,color:#e8ecf4
+  style JP fill:#1a3328,stroke:#34d399,color:#e8ecf4
+  style KR fill:#1e3a5f,stroke:#4a7cff,color:#e8ecf4
+  style UK fill:#1e3a5f,stroke:#4a7cff,color:#e8ecf4
+  style AU fill:#1e3a5f,stroke:#4a7cff,color:#e8ecf4
+  style EU fill:#3b2d0a,stroke:#fbbf24,color:#e8ecf4
+  style ME fill:#3b2d0a,stroke:#fbbf24,color:#e8ecf4
+  style LA fill:#2d1a3b,stroke:#a78bfa,color:#e8ecf4
+  style SEA fill:#2d1a3b,stroke:#a78bfa,color:#e8ecf4
+    </div>
+  </div>
+
+  <!-- Processor Coverage -->
+  <div class="card" style="margin-bottom:24px;">
+    <h3 style="color:var(--text-light);margin-bottom:16px;">Processor Coverage Matrix</h3>
+    <table>
+      <thead><tr><th>Processor</th><th>Volume</th><th>Rate Model</th><th>Markets</th><th>Key Capabilities</th></tr></thead>
+      <tbody>
+        <tr><td>WorldPay</td><td>$210M</td><td>IC+0.15%</td><td>44 markets</td><td>FraudSight, COF, Card Updater, Cross-Border</td></tr>
+        <tr><td>Nuvei</td><td>$164M</td><td>IC+1.5%</td><td>APAC focus</td><td>APM coverage, local acquiring, tokenization</td></tr>
+        <tr><td>Checkout.com</td><td>$40M</td><td>1.06-1.36%</td><td>Middle East</td><td>Local cards, MADA, KNET, Benefit</td></tr>
+        <tr><td>PayU</td><td>TBD</td><td>Varies</td><td>LATAM/India</td><td>Local methods, Boleto, UPI</td></tr>
+        <tr><td>Flutterwave</td><td>TBD</td><td>Varies</td><td>Africa</td><td>Mobile money, local cards</td></tr>
+        <tr><td>MyFatoorah</td><td>TBD</td><td>Varies</td><td>Gulf states</td><td>KNET, SADAD, OmanNet</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Wave Detail Cards -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px;">
+    <div class="card">
+      <h3 style="color:var(--green);margin-bottom:12px;">Wave 1: Q1 2026</h3>
+      <p style="color:var(--text-dim);font-size:13px;margin-bottom:12px;">Highest volume markets with established WorldPay infrastructure</p>
+      <p style="font-size:13px;"><strong style="color:var(--text-light);">Canada ($38M)</strong> &mdash; Phase 1 Card Updater deployment, API audit, subscription migration planning</p>
+      <p style="font-size:13px;margin-top:8px;"><strong style="color:var(--text-light);">Japan ($52M)</strong> &mdash; Assessment and readiness, API gap analysis, processor coordination with Nuvei</p>
+    </div>
+    <div class="card">
+      <h3 style="color:var(--accent);margin-bottom:12px;">Wave 2: Q2 2026</h3>
+      <p style="color:var(--text-dim);font-size:13px;margin-bottom:12px;">Mature markets with good data quality foundations</p>
+      <p style="font-size:13px;"><strong style="color:var(--text-light);">Korea ($28M)</strong> &mdash; Phase 1-2 deployment, local card network integration</p>
+      <p style="font-size:13px;margin-top:8px;"><strong style="color:var(--text-light);">UK ($15M) / Australia ($12M)</strong> &mdash; WorldPay direct, SCA compliance, Card Updater + Address</p>
+    </div>
+    <div class="card">
+      <h3 style="color:var(--yellow);margin-bottom:12px;">Wave 3: Q3 2026</h3>
+      <p style="color:var(--text-dim);font-size:13px;margin-bottom:12px;">Complex regulatory environments requiring careful rollout</p>
+      <p style="font-size:13px;"><strong style="color:var(--text-light);">Europe EEA ($45M)</strong> &mdash; Multi-country, SCA/PSD2 compliance, Trust Payments migration</p>
+      <p style="font-size:13px;margin-top:8px;"><strong style="color:var(--text-light);">Middle East ($40M)</strong> &mdash; Checkout.com integration, MADA/KNET/Benefit support</p>
+    </div>
+    <div class="card">
+      <h3 style="color:var(--purple);margin-bottom:12px;">Wave 4: Q3-Q4 2026</h3>
+      <p style="color:var(--text-dim);font-size:13px;margin-bottom:12px;">Emerging markets with highest improvement potential</p>
+      <p style="font-size:13px;"><strong style="color:var(--text-light);">LATAM ($18M)</strong> &mdash; Local payment methods, Boleto, installments, regulatory compliance</p>
+      <p style="font-size:13px;margin-top:8px;"><strong style="color:var(--text-light);">SE Asia ($22M)</strong> &mdash; E-wallet integration, local acquiring, mobile-first optimization</p>
+    </div>
+  </div>
+
+  <!-- Global Success Metrics -->
+  <div class="card">
+    <h3 style="color:var(--text-light);margin-bottom:16px;">Global Success Metrics</h3>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;">
+      <div style="background:var(--surface-raised);padding:16px;border-radius:10px;text-align:center;">
+        <div style="font-size:24px;font-weight:700;color:var(--green);">78%+</div>
+        <div style="font-size:12px;color:var(--text-muted);">Global Approval Rate</div>
+        <div style="font-size:11px;color:var(--text-dim);">from ~68% baseline</div>
+      </div>
+      <div style="background:var(--surface-raised);padding:16px;border-radius:10px;text-align:center;">
+        <div style="font-size:24px;font-weight:700;color:var(--green);">0.04%</div>
+        <div style="font-size:12px;color:var(--text-muted);">Fraud Rate Target</div>
+        <div style="font-size:11px;color:var(--text-dim);">from 0.08% baseline</div>
+      </div>
+      <div style="background:var(--surface-raised);padding:16px;border-radius:10px;text-align:center;">
+        <div style="font-size:24px;font-weight:700;color:var(--green);">0.35%</div>
+        <div style="font-size:12px;color:var(--text-muted);">Chargeback Rate</div>
+        <div style="font-size:11px;color:var(--text-dim);">from 0.48% baseline</div>
+      </div>
+      <div style="background:var(--surface-raised);padding:16px;border-radius:10px;text-align:center;">
+        <div style="font-size:24px;font-weight:700;color:var(--accent);">99.9%</div>
+        <div style="font-size:12px;color:var(--text-muted);">Refund Reconciliation</div>
+        <div style="font-size:11px;color:var(--text-dim);">from 95% baseline</div>
+      </div>
+      <div style="background:var(--surface-raised);padding:16px;border-radius:10px;text-align:center;">
+        <div style="font-size:24px;font-weight:700;color:var(--accent);">90%+</div>
+        <div style="font-size:12px;color:var(--text-muted);">Token Adoption</div>
+        <div style="font-size:11px;color:var(--text-dim);">stored card tokenization</div>
+      </div>
+      <div style="background:var(--surface-raised);padding:16px;border-radius:10px;text-align:center;">
+        <div style="font-size:24px;font-weight:700;color:var(--accent);">58%+</div>
+        <div style="font-size:12px;color:var(--text-muted);">Retry Approval</div>
+        <div style="font-size:11px;color:var(--text-dim);">from 48.53% baseline</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══════════════════════════════════════════════════ TAB 4: QUARTERLY PLAN ═══════════════════════════════════════════════════ -->
+<div class="tab-panel" id="panel-quarterly">
+
+  <div class="card" style="margin-bottom:24px;">
+    <h2 style="color:var(--accent);font-size:22px;margin-bottom:6px;">Quarterly Execution Plan</h2>
+    <p style="color:var(--text-dim);font-size:14px;">Deliverables by initiative across all four quarters</p>
+  </div>
+
+  <div class="tab-container" id="qTabs">
+    <button class="sub-tab-btn active" data-subtab="q1">Q1 Jan-Mar</button>
+    <button class="sub-tab-btn" data-subtab="q2">Q2 Apr-Jun</button>
+    <button class="sub-tab-btn" data-subtab="q3">Q3 Jul-Sep</button>
+    <button class="sub-tab-btn" data-subtab="q4">Q4 Oct-Dec</button>
+  </div>
+
+  <div class="sub-panel active" id="subpanel-q1">
+    <div class="card">
+      <h3 style="color:var(--green);margin-bottom:16px;">Q1 2026: Foundation & Launch</h3>
+      <table>
+        <thead><tr><th>Initiative</th><th>Q1 Activities</th></tr></thead>
+        <tbody>
+          <tr><td>1. Global Subscriptions</td><td>Canada Phase 1 (Card Updater), Japan assessment</td></tr>
+          <tr><td>2. FraudSight</td><td>Discovery meeting with WorldPay, configuration planning</td></tr>
+          <tr><td>3. Refund Integration</td><td>Requirements documentation, design</td></tr>
+          <tr><td>4. Card on File</td><td>Assessment, requirements documentation</td></tr>
+          <tr><td>5. API Standardization</td><td>Audit complete, Canada enhancement starts</td></tr>
+          <tr><td>6. Monitoring Tools</td><td>Query parameterization, PowerBI setup</td></tr>
+          <tr><td>7. Smart Routing</td><td>Document current rules, analyze performance by market</td></tr>
+          <tr><td>8. Reminders</td><td>Define requirements, design communication journey</td></tr>
+          <tr><td style="color:var(--yellow);">9. Intelligent Retry</td><td style="color:var(--yellow);">Decline categorization live, customer notification system</td></tr>
+          <tr><td style="color:var(--yellow);">10. Crypto Pilot</td><td style="color:var(--yellow);">US &amp; Canada pilot launch, integration, testing</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="sub-panel" id="subpanel-q2">
+    <div class="card">
+      <h3 style="color:var(--accent);margin-bottom:16px;">Q2 2026: Build & Expand</h3>
+      <table>
+        <thead><tr><th>Initiative</th><th>Q2 Activities</th></tr></thead>
+        <tbody>
+          <tr><td>1. Global Subscriptions</td><td>Japan/Korea Phase 1-2, Canada Phase 2-3</td></tr>
+          <tr><td>2. FraudSight</td><td>Shadow mode testing, US pilot go-live</td></tr>
+          <tr><td>3. Refund Integration</td><td>WorldPay API integration, Nuvei API integration</td></tr>
+          <tr><td>4. Card on File</td><td>WorldPay/Nuvei network token enablement</td></tr>
+          <tr><td>5. API Standardization</td><td>Japan/Korea enhancement, UK/Australia starts</td></tr>
+          <tr><td>6. Monitoring Tools</td><td>Dashboards live, alerting configured</td></tr>
+          <tr><td>7. Smart Routing</td><td>Build routing engine enhancements, shadow mode testing</td></tr>
+          <tr><td>8. Reminders</td><td>Build data feed and email integration, pilot 10% US</td></tr>
+          <tr><td style="color:var(--yellow);">9. Intelligent Retry</td><td style="color:var(--yellow);">NSF scoring model, full optimization deployed</td></tr>
+          <tr><td style="color:var(--yellow);">10. Crypto Pilot</td><td style="color:var(--yellow);">Monitor pilot metrics, evaluate expansion decision</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="sub-panel" id="subpanel-q3">
+    <div class="card">
+      <h3 style="color:var(--yellow);margin-bottom:16px;">Q3 2026: Scale & Optimize</h3>
+      <table>
+        <thead><tr><th>Initiative</th><th>Q3 Activities</th></tr></thead>
+        <tbody>
+          <tr><td>1. Global Subscriptions</td><td>UK/Australia/Europe Phase 1-2, LATAM assessment</td></tr>
+          <tr><td>2. FraudSight</td><td>Global rollout to all WorldPay markets</td></tr>
+          <tr><td>3. Refund Integration</td><td>Checkout.com API, testing, training, go-live</td></tr>
+          <tr><td>4. Card on File</td><td>Checkout.com enablement, migration planning</td></tr>
+          <tr><td>5. API Standardization</td><td>Europe enhancement, validation</td></tr>
+          <tr><td>6. Monitoring Tools</td><td>Refinement, additional markets</td></tr>
+          <tr><td>7. Smart Routing</td><td>US pilot, measure results, expand to additional markets</td></tr>
+          <tr><td>8. Reminders</td><td>Measure pilot impact, expand to all US subscriptions</td></tr>
+          <tr><td style="color:var(--yellow);">9. Intelligent Retry</td><td style="color:var(--yellow);">Optimization tuning, expand to low-performing markets</td></tr>
+          <tr><td style="color:var(--yellow);">10. Crypto</td><td style="color:var(--yellow);">Expand to additional markets if pilot successful</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="sub-panel" id="subpanel-q4">
+    <div class="card">
+      <h3 style="color:var(--purple);margin-bottom:16px;">Q4 2026: Deploy & Refine</h3>
+      <table>
+        <thead><tr><th>Initiative</th><th>Q4 Activities</th></tr></thead>
+        <tbody>
+          <tr><td>1. Global Subscriptions</td><td>LATAM/SE Asia Phase 1-2, global optimization</td></tr>
+          <tr><td>2. FraudSight</td><td>Optimization, rule tuning</td></tr>
+          <tr><td>3. Refund Integration</td><td>Reconciliation reports, optimization</td></tr>
+          <tr><td>4. Card on File</td><td>Migration execution, validation</td></tr>
+          <tr><td>5. API Standardization</td><td>Full compliance validation</td></tr>
+          <tr><td>6. Monitoring Tools</td><td>Full global deployment</td></tr>
+          <tr><td>7. Smart Routing</td><td>Full global deployment, tune routing rules</td></tr>
+          <tr><td>8. Reminders</td><td>Global rollout to all markets</td></tr>
+          <tr><td style="color:var(--yellow);">9. Intelligent Retry</td><td style="color:var(--yellow);">Global deployment, continuous optimization</td></tr>
+          <tr><td style="color:var(--yellow);">10. Crypto</td><td style="color:var(--yellow);">Evaluate subscription payment support</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══════════════════════════════════════════════════ TAB 5: DATA INFRASTRUCTURE ═══════════════════════════════════════════════════ -->
+<div class="tab-panel" id="panel-infrastructure">
+
+  <div class="card" style="margin-bottom:24px;">
+    <h2 style="color:var(--red);font-size:22px;margin-bottom:6px;">Data Infrastructure Gap</h2>
+    <p style="color:var(--text-dim);font-size:14px;">Critical foundation issue: declined payments not retained at order level, creating a $500K-$2M analytics blind spot</p>
+  </div>
+
+  <!-- Current Problem -->
+  <div class="card" style="margin-bottom:24px;border-left:3px solid var(--red);">
+    <h3 style="color:var(--red);margin-bottom:12px;">Current State: The Problem</h3>
+    <p style="font-size:14px;margin-bottom:12px;">When a payment is declined, no ODP record is created. The decline data exists only in <code>UnityvTellerLog</code> without order context. This means:</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px;">
+      <div style="background:var(--surface-raised);padding:14px;border-radius:10px;">
+        <div style="font-size:13px;color:var(--red);font-weight:600;">Analytics Blind Spot</div>
+        <div style="font-size:12px;color:var(--text-dim);margin-top:4px;">Cannot calculate true approval rates at order level. $500K-$2M in missed optimization opportunities.</div>
+      </div>
+      <div style="background:var(--surface-raised);padding:14px;border-radius:10px;">
+        <div style="font-size:13px;color:var(--red);font-weight:600;">CSR Visibility Gap</div>
+        <div style="font-size:12px;color:var(--text-dim);margin-top:4px;">Support cannot see why a customer's order failed. Increased handle time and customer frustration.</div>
+      </div>
+      <div style="background:var(--surface-raised);padding:14px;border-radius:10px;">
+        <div style="font-size:13px;color:var(--red);font-weight:600;">Incomplete Fraud Models</div>
+        <div style="font-size:12px;color:var(--text-dim);margin-top:4px;">FraudSight and retry logic cannot reference historical decline patterns without order-linked data.</div>
+      </div>
+      <div style="background:var(--surface-raised);padding:14px;border-radius:10px;">
+        <div style="font-size:13px;color:var(--red);font-weight:600;">Reconciliation Gaps</div>
+        <div style="font-size:12px;color:var(--text-dim);margin-top:4px;">Refund and chargeback tracking incomplete without full transaction lifecycle visibility.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Current vs Target Flow -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px;">
+    <div class="card">
+      <h3 style="color:var(--red);margin-bottom:12px;">Current Flow (Broken)</h3>
+      <div class="mermaid">
+graph TD
+  TXN["Transaction Attempt"] --> PROC["Processor"]
+  PROC -->|Approved| ODP["ODP Record Created"]
+  PROC -->|Declined| LOST["Decline Lost"]
+  ODP --> DW["Data Warehouse"]
+  LOST -->|"Only in"| TLOG["TellerLog<br/>No order context"]
+  style TXN fill:#141820,stroke:#2a3040,color:#e8ecf4
+  style PROC fill:#1e3a5f,stroke:#4a7cff,color:#e8ecf4
+  style ODP fill:#1a3328,stroke:#34d399,color:#e8ecf4
+  style LOST fill:#3b1a1a,stroke:#ef4444,color:#e8ecf4
+  style DW fill:#1a3328,stroke:#34d399,color:#e8ecf4
+  style TLOG fill:#3b1a1a,stroke:#ef4444,color:#e8ecf4
+      </div>
+    </div>
+    <div class="card">
+      <h3 style="color:var(--green);margin-bottom:12px;">Target Flow (Fixed)</h3>
+      <div class="mermaid">
+graph TD
+  TXN["Transaction Attempt"] --> PROC["Processor"]
+  PROC -->|Approved| REC["Record Created"]
+  PROC -->|Declined| REC2["Record Created"]
+  REC --> DW["Data Warehouse"]
+  REC2 --> DW
+  DW --> ANAL["Full Analytics"]
+  style TXN fill:#141820,stroke:#2a3040,color:#e8ecf4
+  style PROC fill:#1e3a5f,stroke:#4a7cff,color:#e8ecf4
+  style REC fill:#1a3328,stroke:#34d399,color:#e8ecf4
+  style REC2 fill:#1a3328,stroke:#34d399,color:#e8ecf4
+  style DW fill:#1a3328,stroke:#34d399,color:#e8ecf4
+  style ANAL fill:#1a3328,stroke:#34d399,color:#e8ecf4
+      </div>
+    </div>
+  </div>
+
+  <!-- Child Tickets -->
+  <div class="card" style="margin-bottom:24px;">
+    <h3 style="color:var(--text-light);margin-bottom:16px;">Child Tickets (81 stories, 621 points, 29-45 weeks)</h3>
+    <table>
+      <thead><tr><th>Child Ticket</th><th>Effort</th><th>Priority</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td>Payment Decline Record Retention</td><td>12-16 weeks</td><td style="color:var(--red);">P1</td><td>Unity migration must persist ALL attempts (approved + declined) with processor ID, decline code, subscription link</td></tr>
+        <tr><td>Chargeback Tracking</td><td>8-12 weeks</td><td style="color:var(--red);">P1</td><td>End-to-end chargeback lifecycle tracking with processor alerts integration</td></tr>
+        <tr><td>Refund Tracking</td><td>6-8 weeks</td><td style="color:var(--yellow);">P2</td><td>Unified refund record with processor response codes and reconciliation</td></tr>
+        <tr><td>Historical Migration</td><td>4-6 weeks</td><td style="color:var(--yellow);">P2</td><td>Backfill historical transaction data from TellerLog into new schema</td></tr>
+        <tr><td>Real-Time Alerting</td><td>2-4 weeks</td><td style="color:var(--text-muted);">P3</td><td>Automated alerts for approval rate drops, fraud spikes, processor outages</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Definition of Done -->
+  <div class="card">
+    <h3 style="color:var(--text-light);margin-bottom:12px;">Definition of Done</h3>
+    <p style="font-size:14px;line-height:1.7;">Every transaction attempt (approved, declined, or errored) persists with: Order_Number, Processor_Transaction_ID, Decline_Code, Decline_Reason, Subscription_ID, Attempt_Sequence, Card_BIN, Amount, Currency, Timestamp. The Data Warehouse reflects all attempts within 15 minutes. CSR portal shows full attempt history per order. PowerBI dashboards calculate true approval rates using attempts as denominator.</p>
+  </div>
+
+</div>
+
+<!-- ═══════════════════════════════════════════════════ TAB 6: FLOWCHARTS ═══════════════════════════════════════════════════ -->
+<div class="tab-panel" id="panel-flows">
+
+  <div class="card" style="margin-bottom:24px;">
+    <h2 style="color:var(--accent);font-size:22px;margin-bottom:6px;">System Flowcharts</h2>
+    <p style="color:var(--text-dim);font-size:14px;">Master initiative architecture, subscription processing, and database migration flows</p>
+  </div>
+
+  <!-- Master Initiative Flow -->
+  <div class="card" style="margin-bottom:24px;">
+    <h3 style="color:var(--text-light);margin-bottom:16px;">Master Initiative Execution Flow</h3>
+    <div class="mermaid">
+graph TB
+  subgraph FOUNDATION["Foundation Layer"]
+    API["5. API Standardization"]
+    MON["6. Monitoring Tools"]
+    INFRA["Data Infrastructure"]
+  end
+  subgraph OPTIMIZATION["Optimization Layer"]
+    SUB["1. Global Subscriptions"]
+    FS["2. FraudSight ML"]
+    COF["4. Card on File"]
+    RETRY["9. Intelligent Retry"]
+  end
+  subgraph OPERATIONS["Operations Layer"]
+    REF["3. Refund Integration"]
+    ROUTE["7. Smart Routing"]
+    REM["8. Reminders"]
+  end
+  subgraph EXPANSION["Expansion Layer"]
+    CRYPTO["10. Crypto Pilot"]
+  end
+  API --> SUB
+  API --> FS
+  API --> COF
+  INFRA --> MON
+  INFRA --> RETRY
+  MON --> ROUTE
+  SUB --> REM
+  COF --> SUB
+  FS --> ROUTE
+  RETRY --> SUB
+  style API fill:#1e3a5f,stroke:#4a7cff,color:#e8ecf4
+  style MON fill:#1e3a5f,stroke:#4a7cff,color:#e8ecf4
+  style INFRA fill:#1e3a5f,stroke:#4a7cff,color:#e8ecf4
+  style SUB fill:#1a3328,stroke:#34d399,color:#e8ecf4
+  style FS fill:#1a3328,stroke:#34d399,color:#e8ecf4
+  style COF fill:#1a3328,stroke:#34d399,color:#e8ecf4
+  style RETRY fill:#1a3328,stroke:#34d399,color:#e8ecf4
+  style REF fill:#3b2d0a,stroke:#fbbf24,color:#e8ecf4
+  style ROUTE fill:#3b2d0a,stroke:#fbbf24,color:#e8ecf4
+  style REM fill:#3b2d0a,stroke:#fbbf24,color:#e8ecf4
+  style CRYPTO fill:#2d1a3b,stroke:#a78bfa,color:#e8ecf4
+    </div>
+  </div>
+
+  <!-- Subscription Processing with OTI -->
+  <div class="card" style="margin-bottom:24px;">
+    <h3 style="color:var(--text-light);margin-bottom:16px;">Subscription Processing with OTI Chain</h3>
+    <div class="mermaid">
+graph LR
+  INITIAL["Initial Order<br/>CIT + 3DS"] -->|OTI stored| RECUR1["Renewal 1<br/>MIT + OTI ref"]
+  RECUR1 -->|Chain maintained| RECUR2["Renewal 2<br/>MIT + OTI ref"]
+  RECUR2 -->|Chain maintained| RECURN["Renewal N<br/>MIT + OTI ref"]
+  RECURN -->|Card expired| UPDATE["Card Updater<br/>VAU/ABU"]
+  UPDATE -->|New token| RESUME["Resume Chain<br/>New OTI"]
+  style INITIAL fill:#1e3a5f,stroke:#4a7cff,color:#e8ecf4
+  style RECUR1 fill:#1a3328,stroke:#34d399,color:#e8ecf4
+  style RECUR2 fill:#1a3328,stroke:#34d399,color:#e8ecf4
+  style RECURN fill:#1a3328,stroke:#34d399,color:#e8ecf4
+  style UPDATE fill:#3b2d0a,stroke:#fbbf24,color:#e8ecf4
+  style RESUME fill:#1a3328,stroke:#34d399,color:#e8ecf4
+    </div>
+  </div>
+
+  <!-- 2025 to 2026 Value Bridge -->
+  <div class="card">
+    <h3 style="color:var(--text-light);margin-bottom:16px;">2025 to 2026 Value Bridge</h3>
+    <div class="mermaid">
+graph LR
+  Y2025["2025 Foundation<br/>$9.8M Value"] --> EXPAND["Expand to 40+ Markets"]
+  EXPAND --> ENHANCE["Add New Capabilities"]
+  ENHANCE --> Y2026["2026 Target<br/>$16M-$43M Value"]
+  Y2025 -->|"USA proof points"| TEMPLATE["Grade A Template"]
+  TEMPLATE -->|"Replicate globally"| Y2026
+  style Y2025 fill:#1e3a5f,stroke:#4a7cff,color:#e8ecf4
+  style EXPAND fill:#3b2d0a,stroke:#fbbf24,color:#e8ecf4
+  style ENHANCE fill:#3b2d0a,stroke:#fbbf24,color:#e8ecf4
+  style Y2026 fill:#1a3328,stroke:#34d399,color:#e8ecf4
+  style TEMPLATE fill:#2d1a3b,stroke:#a78bfa,color:#e8ecf4
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══════════════════════════════════════════════════ TAB 7: 2025 RESULTS ═══════════════════════════════════════════════════ -->
+<div class="tab-panel" id="panel-results2025">
+
+  <div class="card" style="margin-bottom:24px;">
+    <h2 style="color:var(--green);font-size:22px;margin-bottom:6px;">2025 Foundation Results</h2>
+    <p style="color:var(--text-dim);font-size:14px;">$9.8M documented value delivered. USA served as the proving ground. 2026 scales these wins globally.</p>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px;">
+    <div class="card">
+      <h3 style="color:var(--green);margin-bottom:12px;">USA Subscription Enhancement</h3>
+      <div style="font-size:28px;font-weight:700;color:var(--green);">$4.6M</div>
+      <div style="font-size:13px;color:var(--text-dim);margin-top:4px;">+13.82 points approval rate improvement</div>
+      <p style="font-size:13px;margin-top:12px;">Three-phase methodology (Card Updater + Clean Address + MIT/CIT+OTI) proven in US market. This template scales to 40+ markets in 2026.</p>
+    </div>
+    <div class="card">
+      <h3 style="color:var(--accent);margin-bottom:12px;">Smart Routing</h3>
+      <div style="font-size:28px;font-weight:700;color:var(--accent);">$2.05M</div>
+      <div style="font-size:13px;color:var(--text-dim);margin-top:4px;">Annual cost savings through intelligent processor selection</div>
+      <p style="font-size:13px;margin-top:12px;">Cost-based routing between WorldPay, Nuvei, and Checkout.com based on transaction type, geography, and interchange optimization.</p>
+    </div>
+    <div class="card">
+      <h3 style="color:var(--yellow);margin-bottom:12px;">Chargeback Alert Defense</h3>
+      <div style="font-size:28px;font-weight:700;color:var(--yellow);">$1.17M</div>
+      <div style="font-size:13px;color:var(--text-dim);margin-top:4px;">Loss prevention through proactive alert monitoring</div>
+      <p style="font-size:13px;margin-top:12px;">Ethoca and Verifi alert integrations intercepting disputes before they become chargebacks. Reduced chargeback rate below network thresholds.</p>
+    </div>
+    <div class="card">
+      <h3 style="color:var(--purple);margin-bottom:12px;">3DS2 Global Optimization</h3>
+      <div style="font-size:28px;font-weight:700;color:var(--purple);">$853K</div>
+      <div style="font-size:13px;color:var(--text-dim);margin-top:4px;">Europe +46pts, Japan +37pts approval improvement</div>
+      <p style="font-size:13px;margin-top:12px;">Merchant-initiated exemptions, low-value exemptions, and transaction risk analysis for frictionless 3DS flows.</p>
+    </div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px;">
+    <div class="card">
+      <h3 style="color:var(--green);margin-bottom:12px;">ApplePay Subscription Fix</h3>
+      <div style="font-size:28px;font-weight:700;color:var(--green);">+63pts</div>
+      <div style="font-size:13px;color:var(--text-dim);margin-top:4px;">Approval rate improvement for ApplePay recurring</div>
+    </div>
+    <div class="card">
+      <h3 style="color:var(--accent);margin-bottom:12px;">Nuvei Rate Negotiation</h3>
+      <div style="font-size:28px;font-weight:700;color:var(--accent);">40%</div>
+      <div style="font-size:13px;color:var(--text-dim);margin-top:4px;">Processing rate reduction through volume-based renegotiation</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div style="display:flex;justify-content:center;align-items:center;padding:20px;">
+      <div style="text-align:center;">
+        <div style="font-size:14px;color:var(--text-muted);margin-bottom:8px;">Total 2025 Documented Value</div>
+        <div style="font-size:48px;font-weight:700;color:var(--green);">$9.8M</div>
+        <div style="font-size:14px;color:var(--text-dim);margin-top:8px;">Foundation for $16M-$43M 2026 target (1.6x to 4.4x growth)</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══════════════════════════════════════════════════ TAB 8: RACI & RISKS ═══════════════════════════════════════════════════ -->
+<div class="tab-panel" id="panel-raci">
+
+  <div class="card" style="margin-bottom:24px;">
+    <h2 style="color:var(--accent);font-size:22px;margin-bottom:6px;">RACI Matrix, Risk Register &amp; Budget</h2>
+  </div>
+
+  <!-- RACI Matrix -->
+  <div class="card" style="margin-bottom:24px;">
+    <h3 style="color:var(--text-light);margin-bottom:16px;">RACI Matrix</h3>
+    <div style="overflow-x:auto;">
+    <table>
+      <thead><tr><th>Initiative</th><th>Payment Ops</th><th>IT Dev</th><th>Finance</th><th>Processors</th><th>Leadership</th></tr></thead>
+      <tbody>
+        <tr><td>1. Global Subscriptions</td><td style="color:var(--green);">R</td><td style="color:var(--accent);">A</td><td style="color:var(--text-muted);">I</td><td style="color:var(--yellow);">C</td><td style="color:var(--text-muted);">I</td></tr>
+        <tr><td>2. FraudSight</td><td style="color:var(--green);">R</td><td style="color:var(--yellow);">C</td><td style="color:var(--text-muted);">I</td><td style="color:var(--accent);">A</td><td style="color:var(--text-muted);">I</td></tr>
+        <tr><td>3. Refund Integration</td><td style="color:var(--green);">R</td><td style="color:var(--accent);">A</td><td style="color:var(--yellow);">C</td><td style="color:var(--yellow);">C</td><td style="color:var(--text-muted);">I</td></tr>
+        <tr><td>4. Card on File</td><td style="color:var(--green);">R</td><td style="color:var(--accent);">A</td><td style="color:var(--text-muted);">I</td><td style="color:var(--yellow);">C</td><td style="color:var(--text-muted);">I</td></tr>
+        <tr><td>5. API Standardization</td><td style="color:var(--green);">R</td><td style="color:var(--accent);">A</td><td style="color:var(--text-muted);">I</td><td style="color:var(--yellow);">C</td><td style="color:var(--text-muted);">I</td></tr>
+        <tr><td>6. Monitoring Tools</td><td style="color:var(--accent);">R/A</td><td style="color:var(--yellow);">C</td><td style="color:var(--text-muted);">I</td><td style="color:var(--text-muted);">I</td><td style="color:var(--text-muted);">I</td></tr>
+        <tr><td>7. Smart Routing</td><td style="color:var(--green);">R</td><td style="color:var(--accent);">A</td><td style="color:var(--yellow);">C</td><td style="color:var(--yellow);">C</td><td style="color:var(--text-muted);">I</td></tr>
+        <tr><td>8. Reminders</td><td style="color:var(--green);">R</td><td style="color:var(--accent);">A</td><td style="color:var(--text-muted);">I</td><td style="color:var(--text-muted);">I</td><td style="color:var(--text-muted);">I</td></tr>
+        <tr><td>9. Intelligent Retry</td><td style="color:var(--green);">R</td><td style="color:var(--accent);">A</td><td style="color:var(--text-muted);">I</td><td style="color:var(--yellow);">C</td><td style="color:var(--text-muted);">I</td></tr>
+        <tr><td>10. Crypto Pilot</td><td style="color:var(--green);">R</td><td style="color:var(--accent);">A</td><td style="color:var(--yellow);">C</td><td style="color:var(--yellow);">C</td><td style="color:var(--accent);">A</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <p style="font-size:12px;color:var(--text-muted);margin-top:10px;"><strong>R</strong> = Responsible &nbsp;&nbsp; <strong>A</strong> = Accountable &nbsp;&nbsp; <strong>C</strong> = Consulted &nbsp;&nbsp; <strong>I</strong> = Informed</p>
+  </div>
+
+  <!-- Risk Register -->
+  <div class="card" style="margin-bottom:24px;">
+    <h3 style="color:var(--text-light);margin-bottom:16px;">Risk Register</h3>
+    <table>
+      <thead><tr><th>Risk</th><th>Likelihood</th><th>Impact</th><th>Mitigation</th></tr></thead>
+      <tbody>
+        <tr><td>Finance bank account delays</td><td style="color:var(--red);">HIGH</td><td style="color:var(--red);">HIGH</td><td>Parallel processing, escalation protocols, early engagement</td></tr>
+        <tr><td>IT bandwidth constraints</td><td style="color:var(--red);">HIGH</td><td style="color:var(--yellow);">MEDIUM</td><td>Prioritize by volume impact, phased rollout, dedicated resource request</td></tr>
+        <tr><td>Processor API changes</td><td style="color:var(--yellow);">MEDIUM</td><td style="color:var(--yellow);">MEDIUM</td><td>Version-locked API specs, sandbox testing, change notification monitoring</td></tr>
+        <tr><td>Regulatory differences (40+ markets)</td><td style="color:var(--yellow);">MEDIUM</td><td style="color:var(--red);">HIGH</td><td>Market-specific compliance checklist, legal review before launch</td></tr>
+        <tr><td>Unity migration timeline shifts</td><td style="color:var(--red);">HIGH</td><td style="color:var(--yellow);">MEDIUM</td><td>Decouple payment features where possible, dual-system support</td></tr>
+        <tr><td>FraudSight false positives</td><td style="color:var(--yellow);">MEDIUM</td><td style="color:var(--green);">LOW</td><td>Shadow mode testing, gradual rule tightening, manual review queue</td></tr>
+        <tr><td>Crypto regulatory changes</td><td style="color:var(--green);">LOW</td><td style="color:var(--yellow);">MEDIUM</td><td>Coinbase handles compliance, pilot-only scope, kill switch ready</td></tr>
+        <tr><td>Single resource bottleneck (Howard)</td><td style="color:var(--red);">HIGH</td><td style="color:var(--red);">HIGH</td><td>Documentation, automation, dashboards, knowledge transfer plan</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Budget -->
+  <div class="card" style="margin-bottom:24px;">
+    <h3 style="color:var(--text-light);margin-bottom:16px;">Budget &amp; ROI</h3>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+      <div>
+        <h4 style="color:var(--yellow);margin-bottom:12px;">Investment: $785K - $1.36M</h4>
+        <table>
+          <thead><tr><th>Category</th><th>Range</th></tr></thead>
+          <tbody>
+            <tr><td>Infrastructure</td><td>$515K - $855K</td></tr>
+            <tr><td>IT Development</td><td>$200K - $350K</td></tr>
+            <tr><td>Processor Fees</td><td>$50K - $100K</td></tr>
+            <tr><td>Tools &amp; Licensing</td><td>$20K - $50K</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div>
+        <h4 style="color:var(--green);margin-bottom:12px;">Return: $16M - $43M</h4>
+        <div style="background:var(--surface-raised);padding:20px;border-radius:10px;text-align:center;">
+          <div style="font-size:14px;color:var(--text-muted);">Return on Investment</div>
+          <div style="font-size:40px;font-weight:700;color:var(--green);margin:8px 0;">12x - 55x</div>
+          <div style="font-size:13px;color:var(--text-dim);">Based on $785K-$1.36M investment generating $16M-$43M annual value</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Resource Requirements -->
+  <div class="card">
+    <h3 style="color:var(--text-light);margin-bottom:16px;">Resource Requirements</h3>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;">
+      <div style="background:var(--surface-raised);padding:16px;border-radius:10px;">
+        <div style="font-size:14px;font-weight:600;color:var(--accent);margin-bottom:8px;">Payment Ops (Howard)</div>
+        <div style="font-size:20px;font-weight:700;color:var(--text-light);">30 hrs/week</div>
+        <p style="font-size:12px;color:var(--text-dim);margin-top:6px;">10 initiative mgmt, 8 processor coord, 8 monitoring, 4 documentation</p>
+      </div>
+      <div style="background:var(--surface-raised);padding:16px;border-radius:10px;">
+        <div style="font-size:14px;font-weight:600;color:var(--accent);margin-bottom:8px;">IT Development</div>
+        <div style="font-size:20px;font-weight:700;color:var(--text-light);">38-52 weeks</div>
+        <p style="font-size:12px;color:var(--text-dim);margin-top:6px;">24-30 API, 8-12 refund, 4-6 COF, 2-4 monitoring</p>
+      </div>
+      <div style="background:var(--surface-raised);padding:16px;border-radius:10px;">
+        <div style="font-size:14px;font-weight:600;color:var(--accent);margin-bottom:8px;">External</div>
+        <div style="font-size:20px;font-weight:700;color:var(--text-light);">3 AMs</div>
+        <p style="font-size:12px;color:var(--text-dim);margin-top:6px;">WorldPay, Nuvei, Checkout.com (existing relationships)</p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══════════════════════════════════════════════════ TAB 9: SOURCE LINKS ═══════════════════════════════════════════════════ -->
+<div class="tab-panel" id="panel-links">
+
+  <div class="card" style="margin-bottom:24px;">
+    <h2 style="color:var(--accent);font-size:22px;margin-bottom:6px;">Source Documentation</h2>
+    <p style="color:var(--text-dim);font-size:14px;">Reference documents and appendices</p>
+  </div>
+
+  <div class="card" style="margin-bottom:16px;">
+    <h3 style="color:var(--text-light);margin-bottom:12px;">Appendices</h3>
+    <p style="font-size:14px;margin-bottom:8px;"><strong style="color:var(--text-light);">Appendix A:</strong> 2025 USA Results Detail &mdash; <span style="color:var(--text-dim);">USA_Subscription_Payment_Optimization_FINAL_Executive_Summary.md</span></p>
+    <p style="font-size:14px;margin-bottom:8px;"><strong style="color:var(--text-light);">Appendix B:</strong> Monitoring Query Documentation &mdash; <span style="color:var(--text-dim);">Payment Monitoring System documentation package</span></p>
+    <p style="font-size:14px;"><strong style="color:var(--text-light);">Appendix C:</strong> Processor Contact Information &mdash; <span style="color:var(--text-dim);">WorldPay, Nuvei, Checkout.com account manager details</span></p>
+  </div>
+
+  <div class="card">
+    <h3 style="color:var(--text-light);margin-bottom:12px;">Document Info</h3>
+    <p style="font-size:14px;margin-bottom:8px;"><strong style="color:var(--text-light);">Prepared by:</strong> Howard Koziara, Payment Operations</p>
+    <p style="font-size:14px;margin-bottom:8px;"><strong style="color:var(--text-light);">Scope:</strong> 10 strategic initiatives, 40+ markets, $414M+ volume</p>
+    <p style="font-size:14px;margin-bottom:8px;"><strong style="color:var(--text-light);">Target value:</strong> $16M - $43M (from $785K - $1.36M investment)</p>
+    <p style="font-size:14px;"><strong style="color:var(--text-light);">Sources:</strong> 2026 Payment Operations Strategic Roadmap (Word), 2026 Payment Roadmap No Epic (HTML)</p>
+  </div>
+
+</div>
+
+</div> <!-- end .container -->
+
+<!-- ═══════════════════════════════════════════════════ JAVASCRIPT ═══════════════════════════════════════════════════ -->
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>
+mermaid.initialize({
+  startOnLoad: false,
+  theme: 'dark',
+  themeVariables: {
+    primaryColor: '#1e3a5f',
+    primaryTextColor: '#e8ecf4',
+    primaryBorderColor: '#4a7cff',
+    lineColor: '#4a7cff',
+    secondaryColor: '#1a3328',
+    tertiaryColor: '#2d1a3b',
+    fontSize: '13px',
+    fontFamily: 'DM Sans, sans-serif'
+  },
+  flowchart: { htmlLabels: true, curve: 'basis', padding: 20 },
+  securityLevel: 'loose'
+});
+
+// Main tabs
+document.querySelectorAll('#mainTabs .tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('#mainTabs .tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    const panel = document.getElementById('panel-' + btn.dataset.tab);
+    if (panel) {
+      panel.classList.add('active');
+      renderMermaid(panel);
+    }
+  });
+});
+
+// Sub tabs for initiatives
+document.querySelectorAll('.sub-tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const container = btn.closest('.tab-panel');
+    const tabGroup = btn.parentElement;
+    tabGroup.querySelectorAll('.sub-tab-btn').forEach(b => b.classList.remove('active'));
+    container.querySelectorAll('.sub-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    const subPanel = document.getElementById('subpanel-' + btn.dataset.subtab);
+    if (subPanel) {
+      subPanel.classList.add('active');
+      renderMermaid(subPanel);
+    }
+  });
+});
+
+function renderMermaid(scope) {
+  const els = scope.querySelectorAll('.mermaid:not([data-processed])');
+  els.forEach((el, i) => {
+    const id = 'mermaid-' + Date.now() + '-' + i;
+    try {
+      mermaid.render(id, el.textContent.trim()).then(({svg}) => {
+        el.innerHTML = svg;
+        el.setAttribute('data-processed', 'true');
+      }).catch(err => {
+        console.warn('Mermaid render error:', err);
+        el.setAttribute('data-processed', 'true');
+      });
+    } catch(e) {
+      console.warn('Mermaid error:', e);
+    }
+  });
+}
+
+// Initial render for visible panel
+window.addEventListener('DOMContentLoaded', () => {
+  const active = document.querySelector('.tab-panel.active');
+  if (active) renderMermaid(active);
+});
+</script>
+</body>
+</html>
