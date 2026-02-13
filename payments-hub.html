@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Payment Operations | Document Hub</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Outfit:wght@300;400;500;600;700;800&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Outfit', sans-serif;
+    background: #08090d;
+    color: #c8cad0;
+    min-height: 100vh;
+    padding: 48px;
+  }
+
+  .container { max-width: 1000px; margin: 0 auto; }
+
+  .page-header { margin-bottom: 48px; }
+
+  .page-header h1 {
+    font-size: 36px;
+    font-weight: 800;
+    color: #fff;
+    letter-spacing: -0.8px;
+    margin-bottom: 6px;
+  }
+
+  .page-header .subtitle {
+    font-size: 14px;
+    color: #555;
+    font-weight: 400;
+  }
+
+  .page-header .updated {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: #444;
+    margin-top: 10px;
+    letter-spacing: 0.5px;
+  }
+
+  .hub-nav {
+    display: flex;
+    gap: 8px;
+    margin-top: 14px;
+  }
+
+  .hub-nav a {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: #666;
+    text-decoration: none;
+    padding: 5px 12px;
+    border: 1px solid #1e2030;
+    border-radius: 6px;
+    transition: all 0.2s;
+  }
+
+  .hub-nav a:hover { border-color: #3a3d4a; color: #aaa; }
+  .hub-nav a.active { border-color: #5b9bf5; color: #5b9bf5; background: #5b9bf510; }
+
+  .category {
+    margin-bottom: 36px;
+  }
+
+  .category-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 14px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #1a1c24;
+  }
+
+  .category-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 3px;
+    flex-shrink: 0;
+  }
+
+  .category-name {
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+  }
+
+  .category-count {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: #444;
+    margin-left: auto;
+  }
+
+  .doc-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .doc-card {
+    background: #12141c;
+    border: 1px solid #1e2030;
+    border-radius: 10px;
+    padding: 20px 22px;
+    text-decoration: none;
+    color: inherit;
+    transition: all 0.2s ease;
+    display: block;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .doc-card:hover {
+    border-color: #3a3d4a;
+    background: #161825;
+    transform: translateY(-1px);
+  }
+
+  .doc-card-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: #e0e2e8;
+    margin-bottom: 6px;
+    line-height: 1.3;
+  }
+
+  .doc-card-desc {
+    font-size: 12px;
+    color: #666;
+    line-height: 1.5;
+    margin-bottom: 12px;
+  }
+
+  .doc-card-meta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .doc-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 4px;
+    letter-spacing: 0.3px;
+  }
+
+  .tag-html { background: #1a1a0d; color: #f5a623; border: 1px solid #3a2a10; }
+  .tag-pdf { background: #1a0d0d; color: #e85d5d; border: 1px solid #3a1010; }
+  .tag-tool { background: #0d1a1a; color: #5bdbb8; border: 1px solid #103a2a; }
+
+  .doc-date {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: #444;
+  }
+
+  .doc-card-accent {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 3px;
+    height: 100%;
+    border-radius: 10px 0 0 10px;
+  }
+
+  /* Category colors */
+  .cat-strategy .category-dot { background: #f5c542; }
+  .cat-strategy .category-name { color: #f5c542; }
+  .cat-strategy .doc-card-accent { background: #f5c542; }
+
+  .cat-worldpay .category-dot { background: #5b9bf5; }
+  .cat-worldpay .category-name { color: #5b9bf5; }
+  .cat-worldpay .doc-card-accent { background: #5b9bf5; }
+
+  .cat-2c2p .category-dot { background: #f5a623; }
+  .cat-2c2p .category-name { color: #f5a623; }
+  .cat-2c2p .doc-card-accent { background: #f5a623; }
+
+  .cat-nuvei .category-dot { background: #5bdb7a; }
+  .cat-nuvei .category-name { color: #5bdb7a; }
+  .cat-nuvei .doc-card-accent { background: #5bdb7a; }
+
+  .cat-tools .category-dot { background: #5bdbb8; }
+  .cat-tools .category-name { color: #5bdbb8; }
+  .cat-tools .doc-card-accent { background: #5bdbb8; }
+
+  .cat-reference .category-dot { background: #e85d5d; }
+  .cat-reference .category-name { color: #e85d5d; }
+  .cat-reference .doc-card-accent { background: #e85d5d; }
+
+  .empty-card {
+    background: #0e1018;
+    border: 1px dashed #1e2030;
+    border-radius: 10px;
+    padding: 20px 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .empty-card span {
+    font-size: 12px;
+    color: #333;
+    font-style: italic;
+  }
+
+  .footer {
+    margin-top: 60px;
+    padding-top: 24px;
+    border-top: 1px solid #1a1c24;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .footer-left {
+    font-size: 12px;
+    color: #333;
+  }
+
+  .footer-right a {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: #444;
+    text-decoration: none;
+  }
+
+  .footer-right a:hover { color: #888; }
+
+  .search-box {
+    margin-bottom: 36px;
+    position: relative;
+  }
+
+  .search-box input {
+    width: 100%;
+    background: #12141c;
+    border: 1px solid #1e2030;
+    border-radius: 10px;
+    padding: 14px 20px 14px 44px;
+    font-family: 'Outfit', sans-serif;
+    font-size: 14px;
+    color: #e0e0e0;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .search-box input:focus { border-color: #3a3d4a; }
+  .search-box input::placeholder { color: #444; }
+
+  .search-icon {
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 16px;
+    color: #444;
+    pointer-events: none;
+  }
+
+  .hidden { display: none !important; }
+
+  @media (max-width: 700px) {
+    body { padding: 24px 20px; }
+    .doc-grid { grid-template-columns: 1fr; }
+    .page-header h1 { font-size: 28px; }
+    .hub-nav { flex-wrap: wrap; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <div class="page-header">
+    <h1>Payment Operations</h1>
+    <div class="subtitle">Gateway evaluations, integration specs, strategy roadmaps, and operational tools</div>
+    <div class="updated">howkoz.github.io/workflow</div>
+    <div class="hub-nav">
+      <a href="index.html">Shopify Hub</a>
+      <a href="payments-hub.html" class="active">Payment Ops Hub</a>
+    </div>
+  </div>
+
+  <div class="search-box">
+    <div class="search-icon">&#x2315;</div>
+    <input type="text" id="searchInput" placeholder="Filter documents..." oninput="filterDocs()">
+  </div>
+
+  <!-- ============ 2026 STRATEGY ============ -->
+  <div class="category cat-strategy" data-category>
+    <div class="category-header">
+      <div class="category-dot"></div>
+      <div class="category-name">2026 Strategy</div>
+      <div class="category-count">Roadmaps, strategic planning, global rollout</div>
+    </div>
+    <div class="doc-grid">
+      <a href="2026_Payment_Operations_Strategic_Roadmap.html" class="doc-card" data-doc data-search="2026 strategy roadmap payment operations strategic initiatives global rollout subscription optimization worldpay nuvei checkout infrastructure quarterly plan raci">
+        <div class="doc-card-accent"></div>
+        <div class="doc-card-title">2026 Payment Operations Strategic Roadmap</div>
+        <div class="doc-card-desc">10 strategic initiatives across 40+ markets. $16M-$43M target value, global subscription optimization, data infrastructure, processor partner rollout plans</div>
+        <div class="doc-card-meta">
+          <span class="doc-tag tag-html">HTML</span>
+          <span class="doc-date">Feb 2026</span>
+        </div>
+      </a>
+      <div class="empty-card" data-doc data-search="">
+        <span>More strategy docs coming soon</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ WORLDPAY ============ -->
+  <div class="category cat-worldpay" data-category>
+    <div class="category-header">
+      <div class="category-dot"></div>
+      <div class="category-name">Worldpay</div>
+      <div class="category-count">MCP implementation, MENA expansion</div>
+    </div>
+    <div class="doc-grid">
+      <div class="empty-card" data-doc data-search="">
+        <span>Worldpay docs coming soon</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 2C2P ============ -->
+  <div class="category cat-2c2p" data-category>
+    <div class="category-header">
+      <div class="category-dot"></div>
+      <div class="category-name">2C2P</div>
+      <div class="category-count">Southeast Asia gateway</div>
+    </div>
+    <div class="doc-grid">
+      <div class="empty-card" data-doc data-search="">
+        <span>2C2P docs coming soon</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ NUVEI ============ -->
+  <div class="category cat-nuvei" data-category>
+    <div class="category-header">
+      <div class="category-dot"></div>
+      <div class="category-name">Nuvei</div>
+      <div class="category-count">Secondary processor</div>
+    </div>
+    <div class="doc-grid">
+      <div class="empty-card" data-doc data-search="">
+        <span>Nuvei docs coming soon</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ TOOLS ============ -->
+  <div class="category cat-tools" data-category>
+    <div class="category-header">
+      <div class="category-dot"></div>
+      <div class="category-name">Tools</div>
+      <div class="category-count">Interactive calculators and decision aids</div>
+    </div>
+    <div class="doc-grid">
+      <div class="empty-card" data-doc data-search="">
+        <span>Tools coming soon</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ REFERENCE ============ -->
+  <div class="category cat-reference" data-category>
+    <div class="category-header">
+      <div class="category-dot"></div>
+      <div class="category-name">Reference</div>
+      <div class="category-count">Guides and how-tos</div>
+    </div>
+    <div class="doc-grid">
+      <a href="github-pages-guide.html" class="doc-card" data-doc data-search="github pages deployment guide upload publish how to reference instructions">
+        <div class="doc-card-accent"></div>
+        <div class="doc-card-title">GitHub Pages Deployment Guide</div>
+        <div class="doc-card-desc">Step-by-step instructions for uploading and publishing HTML documents to this site</div>
+        <div class="doc-card-meta">
+          <span class="doc-tag tag-html">HTML</span>
+          <span class="doc-date">Feb 2026</span>
+        </div>
+      </a>
+      <div class="empty-card" data-doc data-search="">
+        <span>More reference docs coming soon</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <div class="footer-left">Unicity Payment Operations | HowKoz</div>
+    <div class="footer-right"><a href="https://github.com/howkoz/workflow" target="_blank">github.com/howkoz/workflow</a></div>
+  </div>
+
+</div>
+
+<script>
+  function filterDocs() {
+    const query = document.getElementById('searchInput').value.toLowerCase().trim();
+    const categories = document.querySelectorAll('[data-category]');
+
+    categories.forEach(cat => {
+      const docs = cat.querySelectorAll('[data-doc]');
+      let anyVisible = false;
+
+      docs.forEach(doc => {
+        const searchText = (doc.getAttribute('data-search') || '') + ' ' + doc.textContent.toLowerCase();
+        if (!query || searchText.includes(query)) {
+          doc.classList.remove('hidden');
+          anyVisible = true;
+        } else {
+          doc.classList.add('hidden');
+        }
+      });
+
+      cat.classList.toggle('hidden', !anyVisible);
+    });
+  }
+</script>
+
+</body>
+</html>
