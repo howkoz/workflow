@@ -18,33 +18,33 @@
   --pos-green:#00c853;--pos-blue:#2962ff;
 }
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Inter',system-ui,sans-serif;background:linear-gradient(145deg,#f0f2f5 0%,#e8eaef 50%,#f0f2f5 100%);min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;color:var(--gray-900)}
+body{font-family:'Inter',system-ui,sans-serif;background:linear-gradient(145deg,#1e2028 0%,#252530 50%,#1e2028 100%);min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;color:var(--gray-900)}
 
 /* === MODE TOGGLE === */
-.mode-toggle{display:flex;background:#fff;border-radius:12px;padding:4px;margin-bottom:10px;box-shadow:0 2px 12px rgba(0,0,0,0.08);border:1px solid var(--gray-200);gap:3px}
-.mode-btn{padding:10px 24px;border-radius:9px;font-size:13px;font-weight:600;cursor:pointer;transition:all 0.3s;border:none;font-family:inherit;background:transparent;color:var(--gray-500);display:flex;align-items:center;gap:6px}
+.mode-toggle{display:flex;background:#2a2c38;border-radius:12px;padding:4px;margin-bottom:10px;box-shadow:0 2px 12px rgba(0,0,0,0.25);border:1px solid #3a3c48;gap:3px}
+.mode-btn{padding:10px 24px;border-radius:9px;font-size:13px;font-weight:600;cursor:pointer;transition:all 0.3s;border:none;font-family:inherit;background:transparent;color:#8a8c98;display:flex;align-items:center;gap:6px}
 .mode-btn.active-online{background:var(--navy);color:#fff;box-shadow:0 2px 8px rgba(42,61,92,0.3)}
 .mode-btn.active-pos{background:#111;color:var(--pos-green);box-shadow:0 2px 8px rgba(0,0,0,0.3)}
 .mode-btn .mode-ic{font-size:15px}
 
 /* === DEMO CONTROLS === */
 .demo-header{text-align:center;margin-bottom:12px}
-.demo-header h1{font-family:'Montserrat',sans-serif;font-size:13px;font-weight:700;color:var(--navy);letter-spacing:3px;text-transform:uppercase}
-.demo-header p{font-size:11px;color:var(--gray-500);margin-top:3px}
-.demo-header.pos-mode h1{color:#111}
-.demo-header.pos-mode p{color:var(--gray-500)}
+.demo-header h1{font-family:'Montserrat',sans-serif;font-size:13px;font-weight:700;color:#c0c4d0;letter-spacing:3px;text-transform:uppercase}
+.demo-header p{font-size:11px;color:#7a7e8c;margin-top:3px}
+.demo-header.pos-mode h1{color:#c0c4d0}
+.demo-header.pos-mode p{color:#7a7e8c}
 .online-controls{transition:all 0.3s}
 .online-controls.hidden{display:none}
-.customer-toggle{display:flex;background:#fff;border-radius:10px;padding:3px;margin-bottom:10px;box-shadow:0 1px 4px rgba(0,0,0,0.08);border:1px solid var(--gray-200)}
-.ct-btn{padding:8px 20px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;transition:all 0.25s;border:none;font-family:inherit;background:transparent;color:var(--gray-500)}
+.customer-toggle{display:flex;background:#2a2c38;border-radius:10px;padding:3px;margin-bottom:10px;box-shadow:0 1px 4px rgba(0,0,0,0.2);border:1px solid #3a3c48}
+.ct-btn{padding:8px 20px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;transition:all 0.25s;border:none;font-family:inherit;background:transparent;color:#8a8c98}
 .ct-btn.active{background:var(--navy);color:#fff;box-shadow:0 2px 8px rgba(42,61,92,0.3)}
 .path-indicator{display:flex;gap:6px;margin-bottom:8px}
-.path-badge{padding:4px 12px;border-radius:14px;font-size:10px;font-weight:600;background:#fff;border:1px solid var(--gray-200);color:var(--gray-500);transition:all 0.3s;cursor:default}
+.path-badge{padding:4px 12px;border-radius:14px;font-size:10px;font-weight:600;background:#2a2c38;border:1px solid #3a3c48;color:#8a8c98;transition:all 0.3s;cursor:default}
 .path-badge.a-ap{background:#000;border-color:#000;color:#fff}
 .path-badge.a-sp{background:var(--sp-purple);border-color:var(--sp-purple);color:#fff}
 .path-badge.a-std{background:var(--navy);border-color:var(--navy);color:#fff}
 .screen-indicator{display:flex;gap:6px;margin-bottom:12px}
-.sdot{width:28px;height:3px;border-radius:2px;background:var(--gray-200);transition:all 0.4s;cursor:pointer}
+.sdot{width:28px;height:3px;border-radius:2px;background:#3a3c48;transition:all 0.4s;cursor:pointer}
 .sdot.active{background:var(--navy);width:44px}
 .sdot.pos-dot.active{background:var(--pos-green)}
 
@@ -53,10 +53,10 @@ body{font-family:'Inter',system-ui,sans-serif;background:linear-gradient(145deg,
 .pos-controls.show{display:flex;flex-direction:column;align-items:center;gap:8px}
 .pos-info{display:flex;gap:8px;align-items:center}
 .pos-badge{padding:5px 14px;border-radius:8px;font-size:11px;font-weight:600;background:#111;color:var(--pos-green);border:1px solid #333}
-.pos-staff{padding:5px 14px;border-radius:8px;font-size:11px;font-weight:600;background:#fff;color:var(--gray-700);border:1px solid var(--gray-200)}
+.pos-staff{padding:5px 14px;border-radius:8px;font-size:11px;font-weight:600;background:#2a2c38;color:#c0c2ce;border:1px solid #3a3c48}
 
 /* === PHONE === */
-.phone{width:375px;height:812px;background:#1a1a1a;border-radius:52px;padding:10px;position:relative;box-shadow:0 0 0 1px rgba(0,0,0,0.1),0 20px 60px rgba(0,0,0,0.15),0 0 0 8px #e0e0e0;transition:box-shadow 0.4s}
+.phone{width:375px;height:812px;background:#1a1a1a;border-radius:52px;padding:10px;position:relative;box-shadow:0 0 0 1px rgba(255,255,255,0.08),0 20px 60px rgba(0,0,0,0.4),0 0 0 8px #3a3c48;transition:box-shadow 0.4s}
 .phone.pos-phone{box-shadow:0 0 0 1px rgba(0,0,0,0.1),0 20px 60px rgba(0,0,0,0.25),0 0 0 8px #333}
 .phone::before{content:'';position:absolute;top:10px;left:50%;transform:translateX(-50%);width:120px;height:32px;background:#1a1a1a;border-radius:0 0 18px 18px;z-index:100}
 .screen{width:100%;height:100%;background:#fff;border-radius:44px;overflow:hidden;position:relative}
@@ -894,7 +894,7 @@ body{font-family:'Inter',system-ui,sans-serif;background:linear-gradient(145deg,
     <div class="conf-metafields" id="cMeta">
       <div class="cmf-title">Customer Attribution (Metafields)</div>
       <div class="cmf-desc">Email mapped to Unicity DIST_ID via import</div>
-      <div class="cmf-row"><span class="cmf-l">Customer Email</span><span class="cmf-v" id="cmfEmail">howard@unicity.com</span></div>
+      <div class="cmf-row"><span class="cmf-l">Customer Email</span><span class="cmf-v" id="cmfEmail"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="1c74736b7d6e785c6972757f756865327f7371">[email&#160;protected]</a></span></div>
       <div class="cmf-row"><span class="cmf-l">Referrer ID</span><span class="cmf-v" id="cmfRef">104635663</span></div>
       <div class="cmf-row"><span class="cmf-l">Unicity ID</span><span class="cmf-v" id="cmfUnid">103255665</span></div>
       <div class="cmf-row"><span class="cmf-l">Customer Origin</span><span class="cmf-v">shopify</span></div>
@@ -1329,7 +1329,7 @@ body{font-family:'Inter',system-ui,sans-serif;background:linear-gradient(145deg,
 <button class="reset-btn" onclick="reset()">&#8634; Reset</button>
 <div class="keys-hint">Arrow keys to navigate &middot; R to reset</div>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 // ========== STATE ==========
 let mode='online'; // 'online' or 'pos'
 let cur=1,qty=1,cQty=1,po='onetime',path='none',sPay='card',cust='new';
@@ -1869,13 +1869,4 @@ function reset(){
 
 // ========== KEYBOARD NAV ==========
 document.addEventListener('keydown',function(e){
-  if(e.key==='ArrowRight'||e.key==='ArrowDown')navNext();
-  if(e.key==='ArrowLeft'||e.key==='ArrowUp')navPrev();
-  if(e.key==='r'||e.key==='R')reset();
-});
-
-// ========== INIT ==========
-setMode('online');
-</script>
-</body>
-</html>
+  
