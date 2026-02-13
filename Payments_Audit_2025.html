@@ -1,0 +1,1566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payments Audit 2025 - Master Recap</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,500;0,9..40,700;1,9..40,400&family=JetBrains+Mono:wght@400;600&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-deep: #0a0e1a;
+            --bg-card: #111827;
+            --bg-surface: #1a2236;
+            --accent-cyan: #22d3ee;
+            --accent-amber: #f59e0b;
+            --accent-red: #ef4444;
+            --accent-green: #10b981;
+            --accent-purple: #a78bfa;
+            --text-primary: #f1f5f9;
+            --text-muted: #94a3b8;
+            --border-subtle: rgba(148,163,184,0.12);
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--bg-deep);
+            color: var(--text-primary);
+            line-height: 1.6;
+            height: 100vh;
+            overflow: hidden;
+        }
+        .mono { font-family: 'JetBrains Mono', monospace; }
+        .display { font-family: 'Playfair Display', serif; }
+
+        /* TOP HEADER BAR */
+        .top-bar {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+            background: linear-gradient(135deg, #0d1321 0%, #111827 100%);
+            border-bottom: 1px solid var(--border-subtle);
+            padding: 12px 32px;
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .top-bar h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 20px; font-weight: 900;
+            background: linear-gradient(135deg, #22d3ee, #a78bfa);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .top-bar .badge {
+            font-size: 10px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase;
+            color: var(--accent-cyan); background: rgba(34,211,238,0.08);
+            padding: 4px 12px; border-radius: 20px; border: 1px solid rgba(34,211,238,0.2);
+        }
+        .top-bar-stats {
+            display: flex; gap: 24px; font-size: 12px; color: var(--text-muted);
+        }
+        .top-bar-stats span { color: var(--accent-cyan); font-weight: 600; }
+
+        /* MAIN TAB BAR */
+        .tab-bar {
+            position: fixed; top: 56px; left: 0; right: 0; z-index: 99;
+            background: var(--bg-card);
+            border-bottom: 2px solid var(--border-subtle);
+            display: flex; overflow-x: auto;
+            scrollbar-width: none;
+        }
+        .tab-bar::-webkit-scrollbar { display: none; }
+        .tab-btn {
+            flex-shrink: 0; padding: 14px 24px;
+            font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500;
+            color: var(--text-muted); background: none; border: none;
+            cursor: pointer; position: relative; white-space: nowrap;
+            transition: color 0.2s;
+        }
+        .tab-btn:hover { color: var(--text-primary); }
+        .tab-btn.active {
+            color: var(--accent-cyan); font-weight: 700;
+        }
+        .tab-btn.active::after {
+            content: ''; position: absolute; bottom: -2px; left: 12px; right: 12px;
+            height: 2px; background: var(--accent-cyan); border-radius: 2px;
+        }
+        .tab-btn .tab-icon { margin-right: 6px; font-size: 14px; }
+
+        /* SUB-TAB BAR (within each tab) */
+        .subtab-bar {
+            background: var(--bg-surface);
+            border-bottom: 1px solid var(--border-subtle);
+            display: flex; overflow-x: auto; padding: 0 24px;
+            scrollbar-width: none;
+        }
+        .subtab-bar::-webkit-scrollbar { display: none; }
+        .subtab-btn {
+            flex-shrink: 0; padding: 10px 16px;
+            font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 500;
+            color: var(--text-muted); background: none; border: none;
+            cursor: pointer; position: relative; white-space: nowrap;
+            transition: color 0.2s;
+        }
+        .subtab-btn:hover { color: var(--text-primary); }
+        .subtab-btn.active { color: var(--accent-amber); font-weight: 600; }
+        .subtab-btn.active::after {
+            content: ''; position: absolute; bottom: 0; left: 8px; right: 8px;
+            height: 2px; background: var(--accent-amber); border-radius: 2px;
+        }
+
+        /* TAB PANELS */
+        .tab-panel {
+            display: none;
+            position: fixed; top: 104px; left: 0; right: 0; bottom: 0;
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(148,163,184,0.2) transparent;
+        }
+        .tab-panel::-webkit-scrollbar { width: 6px; }
+        .tab-panel::-webkit-scrollbar-thumb { background: rgba(148,163,184,0.2); border-radius: 4px; }
+        .tab-panel.active { display: block; }
+
+        .panel-content { max-width: 1200px; margin: 0 auto; padding: 32px; }
+
+        /* SUB-TAB PANELS */
+        .subtab-panel { display: none; }
+        .subtab-panel.active { display: block; }
+
+        /* SHARED COMPONENTS */
+        .section-header { margin-bottom: 24px; }
+        .section-header h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 26px; font-weight: 900; color: var(--text-primary);
+        }
+        .section-header .subtitle {
+            font-size: 13px; color: var(--text-muted); margin-top: 4px;
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px; padding: 24px; margin-bottom: 16px;
+        }
+        .card h3 { font-size: 15px; font-weight: 700; color: var(--text-primary); margin-bottom: 12px; }
+
+        .metric-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-bottom: 16px; }
+        .metric-card {
+            background: var(--bg-card); border: 1px solid var(--border-subtle);
+            border-radius: 12px; padding: 20px; text-align: center;
+        }
+        .metric-card .value { font-family: 'JetBrains Mono', monospace; font-size: 28px; font-weight: 700; }
+        .metric-card .label { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
+
+        .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+        .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+
+        .risk-card {
+            border-radius: 10px; padding: 20px; margin-bottom: 12px;
+        }
+        .risk-critical { background: rgba(239,68,68,0.06); border: 1px solid rgba(239,68,68,0.2); }
+        .risk-high { background: rgba(249,115,22,0.06); border: 1px solid rgba(249,115,22,0.2); }
+        .risk-medium { background: rgba(245,158,11,0.06); border: 1px solid rgba(245,158,11,0.2); }
+        .risk-info { background: rgba(34,211,238,0.06); border: 1px solid rgba(34,211,238,0.2); }
+        .risk-card h4 { font-size: 14px; font-weight: 700; margin-bottom: 8px; }
+        .risk-card ul { list-style: none; padding: 0; }
+        .risk-card li { font-size: 13px; padding: 3px 0; padding-left: 12px; position: relative; }
+        .risk-card li::before { content: '\2022'; position: absolute; left: 0; }
+
+        .data-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+        .data-table th {
+            text-align: left; padding: 10px 12px; font-size: 11px; font-weight: 600;
+            text-transform: uppercase; letter-spacing: 0.5px;
+            color: var(--text-muted); border-bottom: 1px solid var(--border-subtle);
+        }
+        .data-table td {
+            padding: 10px 12px; color: var(--text-muted);
+            border-bottom: 1px solid rgba(148,163,184,0.06);
+        }
+        .data-table tr:hover td { background: rgba(34,211,238,0.03); }
+
+        .tag {
+            display: inline-block; padding: 2px 10px; border-radius: 20px;
+            font-size: 11px; font-weight: 600;
+        }
+        .tag-red { background: rgba(239,68,68,0.15); color: #fca5a5; }
+        .tag-amber { background: rgba(245,158,11,0.15); color: #fcd34d; }
+        .tag-green { background: rgba(16,185,129,0.15); color: #6ee7b7; }
+        .tag-blue { background: rgba(34,211,238,0.15); color: #67e8f9; }
+        .tag-purple { background: rgba(167,139,250,0.15); color: #c4b5fd; }
+
+        .owner { font-size: 10px; letter-spacing: 0.5px; }
+
+        .mermaid-wrap {
+            background: var(--bg-surface); border-radius: 12px;
+            padding: 24px; margin-bottom: 16px; border: 1px solid var(--border-subtle);
+            overflow-x: auto;
+        }
+        .mermaid-wrap h4 { font-size: 13px; color: var(--text-muted); margin-bottom: 16px; }
+
+        .action-block {
+            display: flex; align-items: center; justify-content: space-between;
+            background: var(--bg-surface); border-radius: 8px;
+            padding: 12px 16px; margin-bottom: 8px;
+            border-left: 3px solid var(--accent-purple);
+        }
+        .action-title { font-size: 13px; font-weight: 600; color: var(--text-primary); }
+        .action-desc { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+
+        /* Correction callout */
+        .correction-box {
+            background: linear-gradient(135deg, rgba(245,158,11,0.08), rgba(239,68,68,0.06));
+            border: 1px solid rgba(245,158,11,0.3);
+            border-left: 4px solid var(--accent-amber);
+            border-radius: 10px; padding: 20px; margin-bottom: 16px;
+        }
+        .correction-box h3 {
+            color: #fcd34d; font-size: 14px; font-weight: 700; margin-bottom: 4px;
+        }
+        .correction-box .corr-label {
+            font-size: 11px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase;
+            color: #f59e0b; margin-bottom: 8px;
+        }
+        .rate-compare {
+            display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-top: 12px;
+        }
+        .rate-compare-card {
+            background: rgba(0,0,0,0.3); border-radius: 8px; padding: 14px; text-align: center;
+        }
+        .rate-compare-card .currency { font-size: 12px; font-weight: 700; color: var(--text-primary); margin-bottom: 8px; }
+        .rate-compare-card .old { font-size: 18px; font-weight: 600; color: #ef4444; text-decoration: line-through; opacity: 0.7; }
+        .rate-compare-card .new { font-size: 22px; font-weight: 700; color: #10b981; margin-top: 2px; }
+        .rate-compare-card .lbl { font-size: 10px; color: var(--text-muted); }
+
+        /* Print */
+        @media print {
+            body { overflow: visible; }
+            .top-bar, .tab-bar { position: static; }
+            .tab-panel { position: static; display: block !important; overflow: visible; }
+            .subtab-panel { display: block !important; }
+        }
+        @media (max-width: 768px) {
+            .two-col, .three-col, .rate-compare { grid-template-columns: 1fr; }
+            .metric-grid { grid-template-columns: 1fr 1fr; }
+            .top-bar-stats { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="top-bar">
+    <div style="display:flex; align-items:center; gap:16px;">
+        <h1>Payments Audit 2025</h1>
+        <div class="badge">4 Meetings Consolidated</div>
+    </div>
+    <div class="top-bar-stats">
+        <div><span>59</span> Markets</div>
+        <div><span>23</span> Processors</div>
+        <div><span>$399.9MM</span> Volume</div>
+        <div><span>$1.3-1.8MM+</span> Savings</div>
+    </div>
+</div>
+
+<!-- MAIN TAB BAR -->
+<div class="tab-bar">
+    <button class="tab-btn active" onclick="switchTab('exec')"><span class="tab-icon">&#9670;</span>Executive Summary</button>
+    <button class="tab-btn" onclick="switchTab('reporting')"><span class="tab-icon">&#9671;</span>Reporting Gaps (A/B)</button>
+    <button class="tab-btn" onclick="switchTab('fraud')"><span class="tab-icon">&#9671;</span>Fraud &amp; Compliance (C/D)</button>
+    <button class="tab-btn" onclick="switchTab('cost')"><span class="tab-icon">&#9671;</span>Cost Reduction (E)</button>
+    <button class="tab-btn" onclick="switchTab('itdev')"><span class="tab-icon">&#9671;</span>IT &amp; Dev Gaps (H/I)</button>
+    <button class="tab-btn" onclick="switchTab('consolidated')"><span class="tab-icon">&#9671;</span>Consolidated Actions</button>
+</div>
+
+<!-- ================================================================ -->
+<!-- TAB 1: EXECUTIVE SUMMARY -->
+<!-- ================================================================ -->
+<div class="tab-panel active" id="panel-exec">
+    <div class="panel-content">
+        <div class="section-header">
+            <h2>Executive Summary &amp; KPI Dashboard</h2>
+            <div class="subtitle">Comprehensive findings across reporting gaps, fraud prevention, cost reduction, and IT infrastructure. Covering Sections A, B, C, D, E, H, and I.</div>
+        </div>
+
+        <div class="metric-grid">
+            <div class="metric-card"><div class="value" style="color:#22d3ee">$399.9MM</div><div class="label">Total Processing Volume (2025)</div></div>
+            <div class="metric-card"><div class="value" style="color:#f59e0b">70.8%</div><div class="label">Approval Rate (Target: 80-85%)</div></div>
+            <div class="metric-card"><div class="value" style="color:#ef4444">$7.3MM</div><div class="label">Annual Processing Costs</div></div>
+            <div class="metric-card"><div class="value" style="color:#ef4444">6.4M</div><div class="label">Unverified Distributors</div></div>
+        </div>
+        <div class="metric-grid">
+            <div class="metric-card"><div class="value" style="color:#f97316">$80K</div><div class="label">Nuvei Overcharge (Annual)</div></div>
+            <div class="metric-card"><div class="value" style="color:#10b981">$1M+</div><div class="label">Chargebacks Prevented (MM)</div></div>
+            <div class="metric-card"><div class="value" style="color:#a78bfa">10</div><div class="label">Markets on Deprecated 3DS1</div></div>
+            <div class="metric-card"><div class="value" style="color:#10b981">$1.3-1.8MM</div><div class="label">Total Savings Identified</div></div>
+        </div>
+
+        <div class="mermaid-wrap">
+            <h4>Audit Coverage Map</h4>
+            <div class="mermaid">
+graph TB
+    A["Payments Audit 2025"] --> B["Sections A/B&lt;br/&gt;Reporting Gaps"]
+    A --> C["Sections C/D&lt;br/&gt;Fraud &amp; Compliance"]
+    A --> D["Section E&lt;br/&gt;Cost Reduction"]
+    A --> E["Sections H/I&lt;br/&gt;IT &amp; Dev Gaps"]
+    B --> B1["Volume &amp; Auth Rates"]
+    B --> B2["Processor Costs"]
+    B --> B3["Data Visibility"]
+    B --> B4["Market Launches"]
+    C --> C1["KYC/AML Gap&lt;br/&gt;6.4M unverified"]
+    C --> C2["Monitoring Gap&lt;br/&gt;55% uncovered"]
+    C --> C3["Chargeback Mgmt"]
+    C --> C4["Signifyd Integration"]
+    D --> D1["Rate Optimization&lt;br/&gt;Trust Payments Corrected"]
+    D --> D2["Bonus Clawback&lt;br/&gt;$800K-1.2MM"]
+    D --> D3["HSA Vendor&lt;br/&gt;$46K savings"]
+    D --> D4["MCC Strategy&lt;br/&gt;2-5% auth lift"]
+    E --> E1["Infrastructure&lt;br/&gt;PCI DSS v4.0"]
+    E --> E2["3DS2 Migration&lt;br/&gt;10 markets"]
+    E --> E3["API Key Rotation"]
+    E --> E4["GDPR DPA Gap&lt;br/&gt;&amp;euro;10M penalty"]
+    style A fill:#0d9488,stroke:#14b8a6,color:#fff
+    style B fill:#3b82f6,stroke:#60a5fa,color:#fff
+    style C fill:#ef4444,stroke:#f87171,color:#fff
+    style D fill:#f59e0b,stroke:#fbbf24,color:#fff
+    style E fill:#8b5cf6,stroke:#a78bfa,color:#fff
+            </div>
+        </div>
+
+        <!-- CORRECTION CALLOUT on exec summary -->
+        <div class="correction-box">
+            <div class="corr-label">&#9888; Rate Correction Notice</div>
+            <h3>Trust Payments: IC++ Rates Significantly Lower Than Portal Summary</h3>
+            <p style="font-size:13px; color:var(--text-muted); margin-top:6px;">Initial rates were calculated from portal summary views. Corrected rates use IC++ level processing data, which provides the actual interchange-plus-plus cost breakdown. The corrected rates are approximately half the portal summary figures across all three currencies.</p>
+            <div class="rate-compare">
+                <div class="rate-compare-card">
+                    <div class="currency">EUR</div>
+                    <div class="lbl">Portal Summary</div>
+                    <div class="old">5.89%</div>
+                    <div class="lbl" style="margin-top:6px;">IC++ Actual</div>
+                    <div class="new">3.08%</div>
+                </div>
+                <div class="rate-compare-card">
+                    <div class="currency">GBP</div>
+                    <div class="lbl">Portal Summary</div>
+                    <div class="old">6.96%</div>
+                    <div class="lbl" style="margin-top:6px;">IC++ Actual</div>
+                    <div class="new">3.26%</div>
+                </div>
+                <div class="rate-compare-card">
+                    <div class="currency">CHF</div>
+                    <div class="lbl">Portal Summary</div>
+                    <div class="old">6.46%</div>
+                    <div class="lbl" style="margin-top:6px;">IC++ Actual</div>
+                    <div class="new">3.53%</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>Meeting Participants (All Sessions)</h3>
+            <div style="display:flex; flex-wrap:wrap; gap:8px; margin-top:4px;">
+                <span class="tag tag-blue">Howard Koziara (Payments)</span>
+                <span class="tag tag-blue">June (Auditor)</span>
+                <span class="tag tag-blue">Rick Trout (Finance)</span>
+                <span class="tag tag-blue">Ketan/Kathan Blair (Finance)</span>
+                <span class="tag tag-blue">AJ Pardilla (IT/Dev)</span>
+                <span class="tag tag-blue">Mark (Portal)</span>
+                <span class="tag tag-blue">Eric</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ================================================================ -->
+<!-- TAB 2: REPORTING GAPS -->
+<!-- ================================================================ -->
+<div class="tab-panel" id="panel-reporting">
+    <!-- Sub-tabs -->
+    <div class="subtab-bar">
+        <button class="subtab-btn active" onclick="switchSubTab('reporting','rpt-overview')">Overview</button>
+        <button class="subtab-btn" onclick="switchSubTab('reporting','rpt-volume')">Volume &amp; Auth</button>
+        <button class="subtab-btn" onclick="switchSubTab('reporting','rpt-costs')">Processor Costs</button>
+        <button class="subtab-btn" onclick="switchSubTab('reporting','rpt-cb')">Chargebacks</button>
+        <button class="subtab-btn" onclick="switchSubTab('reporting','rpt-data')">Data Visibility</button>
+        <button class="subtab-btn" onclick="switchSubTab('reporting','rpt-launches')">Market Launches</button>
+    </div>
+
+    <!-- Overview -->
+    <div class="subtab-panel active" id="sub-rpt-overview">
+        <div class="panel-content">
+            <div class="section-header">
+                <h2>Reporting Gaps &amp; Inefficiencies</h2>
+                <div class="subtitle">Sections A &amp; B &mdash; Current State Assessment</div>
+            </div>
+            <div class="two-col">
+                <div class="risk-card risk-critical">
+                    <h4 style="color:#fca5a5;">Authorization Performance</h4>
+                    <ul>
+                        <li style="color:#fca5a5;">70.8% vs. 80-85% industry benchmark</li>
+                        <li style="color:#fca5a5;">Mexico at 61% approval rate</li>
+                        <li style="color:#fca5a5;">US at 67% (high volume market)</li>
+                    </ul>
+                    <div style="margin-top:8px;"><span class="tag tag-red">Revenue Loss</span></div>
+                </div>
+                <div class="risk-card risk-high">
+                    <h4 style="color:#fdba74;">Processor Cost Issues</h4>
+                    <ul>
+                        <li style="color:#fdba74;">Nuvei $0.25 vs $0.05 contracted</li>
+                        <li style="color:#fdba74;">Trust Payments: see corrected IC++ rates</li>
+                        <li style="color:#fdba74;">US via Nuvei 3.89% vs WP 2.07%</li>
+                    </ul>
+                    <div style="margin-top:8px;"><span class="tag tag-amber">Margin Erosion</span></div>
+                </div>
+                <div class="risk-card risk-medium">
+                    <h4 style="color:#fcd34d;">Data Visibility Gap</h4>
+                    <ul>
+                        <li style="color:#fcd34d;">No centralized reporting platform</li>
+                        <li style="color:#fcd34d;">Manual SQL + spreadsheet process</li>
+                        <li style="color:#fcd34d;">No real-time alerts or KPI tracking</li>
+                    </ul>
+                    <div style="margin-top:8px;"><span class="tag tag-amber">Delayed Response</span></div>
+                </div>
+                <div class="risk-card risk-info">
+                    <h4 style="color:#67e8f9;">Process Inefficiencies</h4>
+                    <ul>
+                        <li style="color:#67e8f9;">Manual refund processing</li>
+                        <li style="color:#67e8f9;">15-day RMA blackout period</li>
+                        <li style="color:#67e8f9;">No standardized market launch process</li>
+                    </ul>
+                    <div style="margin-top:8px;"><span class="tag tag-blue">Delays &amp; Errors</span></div>
+                </div>
+            </div>
+            <div class="card" style="background:rgba(16,185,129,0.06); border-color:rgba(16,185,129,0.2);">
+                <h3 style="color:#6ee7b7;">Strategic Vision</h3>
+                <p>Dual-processor minimum for every market with subscription support. Currently 8 markets lack local settlement; 12 integrations needed to reach minimum coverage.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Volume & Auth -->
+    <div class="subtab-panel" id="sub-rpt-volume">
+        <div class="panel-content">
+            <div class="section-header">
+                <h2>Volume &amp; Authorization Performance</h2>
+                <div class="subtitle">$399.9MM across 59 markets and 23 processors</div>
+            </div>
+            <div class="card">
+                <h3>Top Markets by Volume</h3>
+                <table class="data-table">
+                    <thead><tr><th>Market</th><th>Volume</th><th>Approval Rate</th><th>Status</th></tr></thead>
+                    <tbody>
+                        <tr><td style="color:var(--text-primary);">South Korea</td><td class="mono">$114.3MM</td><td class="mono">92%</td><td><span class="tag tag-green">Strong</span></td></tr>
+                        <tr><td style="color:var(--text-primary);">United States</td><td class="mono">$102.6MM</td><td class="mono">67%</td><td><span class="tag tag-amber">Below Target</span></td></tr>
+                        <tr><td style="color:var(--text-primary);">Japan</td><td class="mono">$53.4MM</td><td class="mono">89%</td><td><span class="tag tag-green">Strong</span></td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="card">
+                <h3>Highest Decline Markets</h3>
+                <table class="data-table">
+                    <thead><tr><th>Market</th><th>Volume</th><th>Approval Rate</th><th>Gap to Target</th></tr></thead>
+                    <tbody>
+                        <tr><td style="color:var(--text-primary);">Belgium</td><td class="mono">$1.6MM</td><td class="mono" style="color:#ef4444;">50%</td><td class="mono">-30%</td></tr>
+                        <tr><td style="color:var(--text-primary);">Colombia</td><td class="mono">$230K</td><td class="mono" style="color:#ef4444;">54%</td><td class="mono">-26%</td></tr>
+                        <tr><td style="color:var(--text-primary);">Mexico</td><td class="mono">$1.2MM</td><td class="mono" style="color:#ef4444;">61%</td><td class="mono">-19%</td></tr>
+                        <tr><td style="color:var(--text-primary);">United States</td><td class="mono">$102.6MM</td><td class="mono" style="color:#f59e0b;">67%</td><td class="mono">-13%</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Processor Costs -->
+    <div class="subtab-panel" id="sub-rpt-costs">
+        <div class="panel-content">
+            <div class="section-header">
+                <h2>Processor Cost Analysis</h2>
+                <div class="subtitle">$7.3MM total cost across all processors (2025)</div>
+            </div>
+
+            <!-- TRUST PAYMENTS CORRECTION -->
+            <div class="correction-box">
+                <div class="corr-label">&#9888; Rate Correction &mdash; Trust Payments</div>
+                <h3>IC++ Processing Data vs Portal Summary Views</h3>
+                <p style="font-size:13px; color:var(--text-muted); margin-top:6px;">Initial rates reported in audit meetings were calculated from portal summary views. Corrected rates below use IC++ (Interchange Plus Plus) level processing data, which separates interchange, scheme fees, and processor markup. The portal summary inflated effective rates by approximately 2x across all currencies.</p>
+                <div class="rate-compare">
+                    <div class="rate-compare-card">
+                        <div class="currency">EUR</div>
+                        <div class="lbl">Portal Summary</div>
+                        <div class="old">5.89%</div>
+                        <div class="lbl" style="margin-top:6px;">IC++ Actual</div>
+                        <div class="new">3.08%</div>
+                    </div>
+                    <div class="rate-compare-card">
+                        <div class="currency">GBP</div>
+                        <div class="lbl">Portal Summary</div>
+                        <div class="old">6.96%</div>
+                        <div class="lbl" style="margin-top:6px;">IC++ Actual</div>
+                        <div class="new">3.26%</div>
+                    </div>
+                    <div class="rate-compare-card">
+                        <div class="currency">CHF</div>
+                        <div class="lbl">Portal Summary</div>
+                        <div class="old">6.46%</div>
+                        <div class="lbl" style="margin-top:6px;">IC++ Actual</div>
+                        <div class="new">3.53%</div>
+                    </div>
+                </div>
+                <p style="font-size:12px; color:var(--text-muted); margin-top:12px;">While corrected rates are significantly lower than initially reported, they remain above competitive market rates (1.0-1.5% for domestic EU processing). Migration to Worldpay for EU volume remains a cost-saving opportunity, though the projected savings figure should be recalculated using IC++ rates.</p>
+            </div>
+
+            <div class="three-col">
+                <div class="card" style="border-top:3px solid #3b82f6;">
+                    <h3>Worldpay</h3>
+                    <p>30+ MIDs, blended pricing (~20 MIDs)</p>
+                    <p style="margin-top:8px; font-weight:700; color:var(--text-primary);">US Rate: <span class="mono">2.07%</span></p>
+                </div>
+                <div class="card" style="border-top:3px solid #f97316;">
+                    <h3>Nuvei</h3>
+                    <p>2 MIDs (US &amp; Canada)</p>
+                    <p style="margin-top:8px; font-weight:700; color:#ef4444;">Actual: <span class="mono">$0.25/txn</span></p>
+                    <p style="font-size:12px; color:var(--text-muted);">Contracted: $0.05/txn</p>
+                    <p style="margin-top:4px; font-weight:700; color:var(--text-primary);">US Rate: <span class="mono">3.89%</span></p>
+                </div>
+                <div class="card" style="border-top:3px solid #a855f7;">
+                    <h3>Trust Payments <span class="tag tag-amber" style="font-size:9px; vertical-align:middle;">CORRECTED</span></h3>
+                    <p>2 MIDs (Switzerland &amp; Europe/GB)</p>
+                    <p style="margin-top:8px; font-weight:700; color:var(--text-primary);">EUR: <span class="mono" style="color:#ef4444; text-decoration:line-through; opacity:0.5;">5.89%</span> <span class="mono" style="color:#10b981;">3.08%</span></p>
+                    <p style="font-weight:700; color:var(--text-primary);">GBP: <span class="mono" style="color:#ef4444; text-decoration:line-through; opacity:0.5;">6.96%</span> <span class="mono" style="color:#10b981;">3.26%</span></p>
+                    <p style="font-weight:700; color:var(--text-primary);">CHF: <span class="mono" style="color:#ef4444; text-decoration:line-through; opacity:0.5;">6.46%</span> <span class="mono" style="color:#10b981;">3.53%</span></p>
+                    <p style="font-size:11px; color:var(--text-muted); margin-top:4px;">IC++ rates (corrected from portal summary)</p>
+                </div>
+            </div>
+
+            <div class="risk-card risk-critical">
+                <h4 style="color:#fca5a5;">Nuvei Overcharge: ~$80K/year</h4>
+                <div style="display:flex; gap:32px; margin-top:12px; flex-wrap:wrap;">
+                    <div><div style="font-size:11px; color:var(--text-muted);">Contracted</div><div class="mono" style="font-size:20px; color:#6ee7b7;">$0.05/txn</div></div>
+                    <div><div style="font-size:11px; color:var(--text-muted);">Actual Charged</div><div class="mono" style="font-size:20px; color:#ef4444;">$0.25/txn</div></div>
+                    <div><div style="font-size:11px; color:var(--text-muted);">Annual Impact</div><div class="mono" style="font-size:20px; color:#fca5a5;">~$80K</div></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chargebacks -->
+    <div class="subtab-panel" id="sub-rpt-cb">
+        <div class="panel-content">
+            <div class="section-header">
+                <h2>Chargebacks &amp; Refunds</h2>
+                <div class="subtitle">Overall refund rate 3.26% (target &lt;8%), chargeback threshold &gt;0.60%</div>
+            </div>
+            <div class="two-col">
+                <div class="card">
+                    <h3>Canada: Highest Refund Rates</h3>
+                    <table class="data-table">
+                        <thead><tr><th>Processor</th><th>Refund Rate</th></tr></thead>
+                        <tbody>
+                            <tr><td>Nuvei</td><td class="mono" style="color:#ef4444;">7.76%</td></tr>
+                            <tr><td>PayPal</td><td class="mono" style="color:#f59e0b;">6.37%</td></tr>
+                            <tr><td>Amex</td><td class="mono" style="color:#f59e0b;">5.84%</td></tr>
+                            <tr><td>Worldpay</td><td class="mono" style="color:#f59e0b;">5.43%</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="card">
+                    <h3>Markets Exceeding CB Threshold</h3>
+                    <table class="data-table">
+                        <thead><tr><th>Market</th><th>Processor</th><th>CB Rate</th></tr></thead>
+                        <tbody>
+                            <tr><td>Great Britain</td><td>Trust Payments</td><td class="mono" style="color:#ef4444;">1.13%</td></tr>
+                            <tr><td>Australia</td><td>Worldpay</td><td class="mono" style="color:#ef4444;">1.24%</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Data Visibility -->
+    <div class="subtab-panel" id="sub-rpt-data">
+        <div class="panel-content">
+            <div class="section-header">
+                <h2>Data Visibility &amp; Reporting</h2>
+                <div class="subtitle">No centralized reporting platform; Snowflake initiative starting</div>
+            </div>
+            <div class="mermaid-wrap">
+                <h4>Proposed Data Pipeline</h4>
+                <div class="mermaid">
+graph LR
+    A["Processor APIs&lt;br/&gt;(23 Processors)"] --> B["Snowflake&lt;br/&gt;Data Warehouse"]
+    B --> C["Power BI&lt;br/&gt;Dashboards"]
+    C --> D["Real-time KPIs&lt;br/&gt;Approval, CB, Refund"]
+    C --> E["Automated Alerts&lt;br/&gt;Threshold Breaches"]
+    C --> F["Executive&lt;br/&gt;Self-Service"]
+    style A fill:#1e40af,stroke:#3b82f6,color:#fff
+    style B fill:#0d9488,stroke:#14b8a6,color:#fff
+    style C fill:#7c3aed,stroke:#a78bfa,color:#fff
+    style D fill:#059669,stroke:#10b981,color:#fff
+    style E fill:#dc2626,stroke:#ef4444,color:#fff
+    style F fill:#0891b2,stroke:#22d3ee,color:#fff
+                </div>
+            </div>
+            <div class="card" style="background:rgba(16,185,129,0.06); border-color:rgba(16,185,129,0.2);">
+                <h3 style="color:#6ee7b7;">Snowflake Initiative &mdash; Starting Next Week</h3>
+                <p>Vietnam resource building processor API integrations and loading data into Snowflake. Power BI dashboards for real-time KPI tracking, automated alerts for approval rate drops below 85%, chargeback rate exceeding 0.5%, and volume spikes/drops exceeding 20% deviation.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Market Launches -->
+    <div class="subtab-panel" id="sub-rpt-launches">
+        <div class="panel-content">
+            <div class="section-header">
+                <h2>Market Launch Process</h2>
+                <div class="subtitle">No standardized, managed process for new market processor setup</div>
+            </div>
+            <div class="mermaid-wrap">
+                <h4>Recommended 3-Phase Launch Framework</h4>
+                <div class="mermaid">
+graph LR
+    A["Phase 1&lt;br/&gt;PM Framework"] --> B["Phase 2&lt;br/&gt;Documentation"]
+    B --> C["Phase 3&lt;br/&gt;Visibility"]
+    A --> A1["Hire/designate PM&lt;br/&gt;per launch"]
+    A --> A2["End-to-end&lt;br/&gt;ownership"]
+    B --> B1["Standard launch&lt;br/&gt;playbook"]
+    B --> B2["Checklist: regulatory,&lt;br/&gt;payments, tech"]
+    C --> C1["ClickUp real-time&lt;br/&gt;tracking"]
+    C --> C2["KPIs: Time-to-Market,&lt;br/&gt;Post-Launch Issues"]
+    style A fill:#1e40af,stroke:#3b82f6,color:#fff
+    style B fill:#7c3aed,stroke:#a78bfa,color:#fff
+    style C fill:#059669,stroke:#10b981,color:#fff
+                </div>
+            </div>
+            <div class="card">
+                <h3>Refund Processing Gap</h3>
+                <div class="three-col" style="margin-top:12px;">
+                    <div class="risk-card risk-critical" style="margin:0;">
+                        <h4 style="color:#fca5a5; font-size:13px;">No Centralized Tracking</h4>
+                        <p style="font-size:12px;">Refunds not tracked internally. Manual processor access required.</p>
+                    </div>
+                    <div class="risk-card risk-high" style="margin:0;">
+                        <h4 style="color:#fdba74; font-size:13px;">Dual Manual Processing</h4>
+                        <p style="font-size:12px;">Two systems (Portal &amp; Processor). No automated sync.</p>
+                    </div>
+                    <div class="risk-card risk-medium" style="margin:0;">
+                        <h4 style="color:#fcd34d; font-size:13px;">RMA Blackout Period</h4>
+                        <p style="font-size:12px;">~15 days (1st-15th). PV removal blocked. Portal RMA update one sprint away.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ================================================================ -->
+<!-- TAB 3: FRAUD & COMPLIANCE -->
+<!-- ================================================================ -->
+<div class="tab-panel" id="panel-fraud">
+    <div class="subtab-bar">
+        <button class="subtab-btn active" onclick="switchSubTab('fraud','fr-overview')">Overview</button>
+        <button class="subtab-btn" onclick="switchSubTab('fraud','fr-kyc')">Plaid KYC/AML</button>
+        <button class="subtab-btn" onclick="switchSubTab('fraud','fr-monitor')">Monitoring Gap</button>
+        <button class="subtab-btn" onclick="switchSubTab('fraud','fr-cb')">Chargeback Mgmt</button>
+        <button class="subtab-btn" onclick="switchSubTab('fraud','fr-signifyd')">Signifyd</button>
+        <button class="subtab-btn" onclick="switchSubTab('fraud','fr-midmetrics')">Mid Metrics</button>
+    </div>
+
+    <!-- Overview -->
+    <div class="subtab-panel active" id="sub-fr-overview">
+        <div class="panel-content">
+            <div class="section-header">
+                <h2>Fraud Prevention &amp; Risk Management</h2>
+                <div class="subtitle">Sections C &amp; D &mdash; Identity, Monitoring, and Compliance Gaps</div>
+            </div>
+            <div class="two-col">
+                <div class="risk-card risk-critical">
+                    <h4 style="color:#fca5a5;">Identity Verification Gap</h4>
+                    <ul>
+                        <li style="color:#fca5a5;">6.4M distributors with zero KYC/AML</li>
+                        <li style="color:#fca5a5;">OFAC sanctions screening absent</li>
+                        <li style="color:#fca5a5;">PEP screening not implemented</li>
+                        <li style="color:#fca5a5;">Synthetic identity fraud exposure</li>
+                    </ul>
+                    <div style="margin-top:8px;"><span class="tag tag-red">BSA/OFAC Criminal Penalties</span></div>
+                </div>
+                <div class="risk-card risk-high">
+                    <h4 style="color:#fdba74;">Transaction Monitoring Gap</h4>
+                    <ul>
+                        <li style="color:#fdba74;">Only 40-45% transaction coverage</li>
+                        <li style="color:#fdba74;">11-15 hrs/day with no monitoring</li>
+                        <li style="color:#fdba74;">Manual Google Sheets process</li>
+                        <li style="color:#fdba74;">100K monthly transactions unreviewed</li>
+                    </ul>
+                    <div style="margin-top:8px;"><span class="tag tag-amber">Undetected Fraud Losses</span></div>
+                </div>
+                <div class="risk-card risk-medium">
+                    <h4 style="color:#fcd34d;">Chargeback Management Gap</h4>
+                    <ul>
+                        <li style="color:#fcd34d;">Blanket refunds with no investigation</li>
+                        <li style="color:#fcd34d;">40-60% winnable but not disputed</li>
+                        <li style="color:#fcd34d;">No dollar threshold controls</li>
+                        <li style="color:#fcd34d;">20% preventable via email automation</li>
+                    </ul>
+                    <div style="margin-top:8px;"><span class="tag tag-amber">Revenue Surrender</span></div>
+                </div>
+                <div class="risk-card risk-info">
+                    <h4 style="color:#67e8f9;">Compliance Gap</h4>
+                    <ul>
+                        <li style="color:#67e8f9;">Third-party card usage accepted</li>
+                        <li style="color:#67e8f9;">Card network rule violations</li>
+                        <li style="color:#67e8f9;">AML red flags ignored</li>
+                        <li style="color:#67e8f9;">No enforcement protocol</li>
+                    </ul>
+                    <div style="margin-top:8px;"><span class="tag tag-blue">Account Termination Risk</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Plaid KYC -->
+    <div class="subtab-panel" id="sub-fr-kyc">
+        <div class="panel-content">
+            <div class="section-header">
+                <h2>Plaid KYC/AML Verification</h2>
+                <div class="subtitle">Tiered verification at $3.10/distributor/year</div>
+            </div>
+            <div class="mermaid-wrap">
+                <h4>Plaid KYC Tiered Verification Flow</h4>
+                <div class="mermaid">
+graph TD
+    A["New Distributor&lt;br/&gt;Onboarding"] --> B["Tier 1: Anti-Fraud Engine&lt;br/&gt;Data Source Verification&lt;br/&gt;&lt;b&gt;$1.17&lt;/b&gt;"]
+    B -->|Low Risk| C["APPROVED"]
+    B -->|High Risk| D["Tier 2: Document Verification&lt;br/&gt;&lt;b&gt;$0.98&lt;/b&gt;"]
+    D -->|Success| E["APPROVED"]
+    D -->|Fail| F["Tier 3: Selfie Verification&lt;br/&gt;&lt;b&gt;$0.23&lt;/b&gt;"]
+    F -->|Success| G["APPROVED"]
+    F -->|Fail| H["Manual Review Queue"]
+    I["Ongoing: AML Monitoring&lt;br/&gt;$0.108/month"] -.-> A
+    style A fill:#1e293b,stroke:#475569,color:#f1f5f9
+    style B fill:#92400e,stroke:#d97706,color:#fef3c7
+    style C fill:#065f46,stroke:#10b981,color:#d1fae5
+    style D fill:#92400e,stroke:#d97706,color:#fef3c7
+    style E fill:#065f46,stroke:#10b981,color:#d1fae5
+    style F fill:#92400e,stroke:#d97706,color:#fef3c7
+    style G fill:#065f46,stroke:#10b981,color:#d1fae5
+    style H fill:#7f1d1d,stroke:#ef4444,color:#fecaca
+    style I fill:#1e3a5f,stroke:#3b82f6,color:#bfdbfe
+                </div>
+            </div>
+            <div class="card" style="text-align:center;">
+                <div style="font-size:13px; color:var(--text-muted);">Total Annual Cost Per Distributor</div>
+                <div class="mono" style="font-size:36px; font-weight:700; color:var(--accent-cyan); margin-top:4px;">$3.10</div>
+                <div style="font-size:12px; color:var(--text-muted);">($1.81 one-time + $0.108/month AML)</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Monitoring -->
+    <div class="subtab-panel" id="sub-fr-monitor">
+        <div class="panel-content">
+            <div class="section-header">
+                <h2>Transaction Monitoring Coverage</h2>
+                <div class="subtitle">182K monthly transactions, only 49% reviewed</div>
+            </div>
+            <div class="two-col">
+                <div class="card">
+                    <h3>Current Coverage</h3>
+                    <table class="data-table">
+                        <thead><tr><th>Metric</th><th>Value</th></tr></thead>
+                        <tbody>
+                            <tr><td>Markets Covered</td><td class="mono">US, Canada, Japan</td></tr>
+                            <tr><td>Team Size</td><td class="mono">3 people (Philippines)</td></tr>
+                            <tr><td>Hours</td><td class="mono">3am-4pm weekday</td></tr>
+                            <tr><td>Reviewed</td><td class="mono" style="color:#10b981;">90K (49%)</td></tr>
+                            <tr><td>Other Markets</td><td class="mono" style="color:#f59e0b;">82K (45%)</td></tr>
+                            <tr><td>Capacity Gap</td><td class="mono" style="color:#ef4444;">10K (6%)</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="card">
+                    <h3 style="color:#fca5a5;">Critical Gaps</h3>
+                    <div class="risk-card risk-critical" style="margin-top:8px;">
+                        <ul>
+                            <li style="color:#fca5a5;">11 hrs/day weekday with no coverage</li>
+                            <li style="color:#fca5a5;">15 hrs/day weekend with no coverage</li>
+                            <li style="color:#fca5a5;">Must finish before 5am warehouse cutoff</li>
+                            <li style="color:#fca5a5;">100K monthly transactions unreviewed</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chargeback Mgmt -->
+    <div class="subtab-panel" id="sub-fr-cb">
+        <div class="panel-content">
+            <div class="section-header">
+                <h2>Chargeback Management</h2>
+                <div class="subtitle">Current blanket refund vs. recommended tiered approach</div>
+            </div>
+            <div class="mermaid-wrap">
+                <h4>Current vs Recommended Chargeback Flow</h4>
+                <div class="mermaid">
+graph TD
+    subgraph CURRENT["CURRENT: Blanket Refund"]
+        CA["Chargeback Alert"] --> CB["Mid Metrics Reviews"]
+        CB --> CC{"Found in System?"}
+        CC -->|Yes| CD["AUTO REFUND&lt;br/&gt;Any Amount"]
+        CC -->|No| CE["Chargeback Proceeds"]
+        CD --> CF["$2K-$5K refunded blindly&lt;br/&gt;No investigation"]
+    end
+    subgraph RECOMMENDED["RECOMMENDED: Tiered Refund"]
+        RA["Chargeback Alert"] --> RB["Check Amount"]
+        RB --> RC["Tier 1: $0-$500&lt;br/&gt;Auto Refund"]
+        RB --> RD["Tier 2: $501-$2K&lt;br/&gt;Review Required"]
+        RB --> RE["Tier 3: $2K+&lt;br/&gt;Finance Approval"]
+        RC --> RF["40-60% Disputed &amp; Won"]
+        RD --> RF
+        RE --> RF
+    end
+    style CA fill:#7f1d1d,stroke:#ef4444,color:#fecaca
+    style CD fill:#7f1d1d,stroke:#ef4444,color:#fecaca
+    style CF fill:#7f1d1d,stroke:#ef4444,color:#fecaca
+    style RA fill:#065f46,stroke:#10b981,color:#d1fae5
+    style RF fill:#065f46,stroke:#10b981,color:#d1fae5
+    style RC fill:#065f46,stroke:#10b981,color:#d1fae5
+                </div>
+            </div>
+            <div class="metric-grid">
+                <div class="metric-card"><div class="value" style="color:#10b981;">20%</div><div class="label">Recurring CBs preventable with email</div></div>
+                <div class="metric-card"><div class="value" style="color:#ef4444;">52%</div><div class="label">Fraud CBs needing upstream prevention</div></div>
+                <div class="metric-card"><div class="value" style="color:#10b981;">40-60%</div><div class="label">Winnable with representment</div></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Signifyd -->
+    <div class="subtab-panel" id="sub-fr-signifyd">
+        <div class="panel-content">
+            <div class="section-header">
+                <h2>Signifyd Real-Time Fraud Detection</h2>
+                <div class="subtitle">AI-powered fraud scoring with chargeback liability shift</div>
+            </div>
+            <div class="mermaid-wrap">
+                <h4>Signifyd Detection Flow</h4>
+                <div class="mermaid">
+graph LR
+    A["User Lands&lt;br/&gt;on Site"] --> B["Browses&lt;br/&gt;Products"]
+    B --> C["Adds to&lt;br/&gt;Cart"]
+    C --> D["Checkout&lt;br/&gt;Initiated"]
+    D --> E{"Signifyd AI&lt;br/&gt;Risk Score"}
+    E -->|Low Risk| F["APPROVED&lt;br/&gt;If fraud later:&lt;br/&gt;Signifyd pays CB"]
+    E -->|High Risk| G["BLOCKED&lt;br/&gt;Unicity can&lt;br/&gt;override"]
+    style E fill:#7c3aed,stroke:#a78bfa,color:#fff
+    style F fill:#065f46,stroke:#10b981,color:#d1fae5
+    style G fill:#7f1d1d,stroke:#ef4444,color:#fecaca
+                </div>
+            </div>
+            <div class="two-col">
+                <div class="card">
+                    <h3>Pricing (Negotiated)</h3>
+                    <table class="data-table">
+                        <thead><tr><th>Item</th><th>Previous</th><th>Negotiated</th></tr></thead>
+                        <tbody>
+                            <tr><td>Tier 1 Rate</td><td class="mono" style="text-decoration:line-through; color:var(--text-muted);">65 bps</td><td class="mono" style="color:#10b981;">13-14 bps</td></tr>
+                            <tr><td>Tier 2 Rate</td><td class="mono" style="text-decoration:line-through; color:var(--text-muted);">65 bps</td><td class="mono" style="color:#10b981;">15-16 bps</td></tr>
+                            <tr><td>Annual Increase</td><td class="mono" style="color:#ef4444;">3%</td><td class="mono" style="color:#10b981;">REMOVED</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="card">
+                    <h3>Detection Comparison</h3>
+                    <table class="data-table">
+                        <thead><tr><th>Metric</th><th>Manual</th><th>Signifyd</th></tr></thead>
+                        <tbody>
+                            <tr><td>Detection Rate</td><td class="mono" style="color:#ef4444;">10-20%</td><td class="mono" style="color:#10b981;">60-80%</td></tr>
+                            <tr><td>False Positive</td><td class="mono" style="color:#ef4444;">8-10%</td><td class="mono" style="color:#10b981;">2-4%</td></tr>
+                            <tr><td>Liability Shift</td><td class="mono" style="color:#ef4444;">No</td><td class="mono" style="color:#10b981;">Yes</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mid Metrics -->
+    <div class="subtab-panel" id="sub-fr-midmetrics">
+        <div class="panel-content">
+            <div class="section-header">
+                <h2>Mid Metrics Value Analysis</h2>
+                <div class="subtitle">2.5 years below 1% CB threshold, $1M+ in chargebacks prevented</div>
+            </div>
+            <div class="two-col">
+                <div class="card" style="border-color:rgba(16,185,129,0.2);">
+                    <h3 style="color:#6ee7b7;">Confirmed Benefits</h3>
+                    <div style="display:flex; gap:16px; flex-wrap:wrap; margin-top:12px;">
+                        <div style="text-align:center; flex:1; min-width:80px;"><div class="mono" style="font-size:24px; color:#10b981;">2.5yr</div><div style="font-size:11px; color:var(--text-muted);">Below 1% CB</div></div>
+                        <div style="text-align:center; flex:1; min-width:80px;"><div class="mono" style="font-size:24px; color:#10b981;">$1M+</div><div style="font-size:11px; color:var(--text-muted);">CBs Prevented</div></div>
+                        <div style="text-align:center; flex:1; min-width:80px;"><div class="mono" style="font-size:24px; color:#10b981;">3-4K</div><div style="font-size:11px; color:var(--text-muted);">Alerts/Year</div></div>
+                    </div>
+                </div>
+                <div class="card" style="border-color:rgba(245,158,11,0.2);">
+                    <h3 style="color:#fcd34d;">Under Investigation</h3>
+                    <ul style="margin-top:12px; list-style:none; padding:0;">
+                        <li style="font-size:13px; color:var(--text-muted); padding:4px 0;">What do they actually do day-to-day?</li>
+                        <li style="font-size:13px; color:var(--text-muted); padding:4px 0;">Manual login to our processor accounts?</li>
+                        <li style="font-size:13px; color:var(--text-muted); padding:4px 0;">Could we replicate in-house?</li>
+                        <li style="font-size:13px; color:var(--text-muted); padding:4px 0;">What is actual annual spend?</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="card" style="margin-top:12px;">
+                <h3>Decision Options</h3>
+                <div class="three-col" style="margin-top:12px;">
+                    <div style="text-align:center; padding:16px; background:var(--bg-surface); border-radius:8px;">
+                        <div style="font-weight:700; color:var(--text-primary);">Keep Mid Metrics</div>
+                        <div style="font-size:11px; color:var(--text-muted); margin-top:4px;">Status quo, proven safety</div>
+                    </div>
+                    <div style="text-align:center; padding:16px; background:var(--bg-surface); border-radius:8px;">
+                        <div style="font-weight:700; color:var(--text-primary);">Build In-House</div>
+                        <div style="font-size:11px; color:var(--text-muted); margin-top:4px;">Cost savings, full control</div>
+                    </div>
+                    <div style="text-align:center; padding:16px; background:var(--bg-surface); border-radius:8px;">
+                        <div style="font-weight:700; color:var(--text-primary);">Hybrid</div>
+                        <div style="font-size:11px; color:var(--text-muted); margin-top:4px;">Keep RDR, in-house alerts</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ================================================================ -->
+<!-- TAB 4: COST REDUCTION -->
+<!-- ================================================================ -->
+<div class="tab-panel" id="panel-cost">
+    <div class="subtab-bar">
+        <button class="subtab-btn active" onclick="switchSubTab('cost','cost-overview')">Overview</button>
+        <button class="subtab-btn" onclick="switchSubTab('cost','cost-rates')">Rate Optimization</button>
+        <button class="subtab-btn" onclick="switchSubTab('cost','cost-clawback')">Bonus Clawback</button>
+        <button class="subtab-btn" onclick="switchSubTab('cost','cost-hsa')">HSA Vendor</button>
+        <button class="subtab-btn" onclick="switchSubTab('cost','cost-mcc')">MCC Strategy</button>
+    </div>
+
+    <!-- Overview -->
+    <div class="subtab-panel active" id="sub-cost-overview">
+        <div class="panel-content">
+            <div class="section-header">
+                <h2>Cost Reduction &amp; Revenue Generation</h2>
+                <div class="subtitle">Section E &mdash; $1.3-1.8MM+ total annual savings identified</div>
+            </div>
+            <div class="card" style="text-align:center; background:linear-gradient(135deg, rgba(13,148,136,0.15), rgba(13,148,136,0.05)); border-color:rgba(13,148,136,0.3);">
+                <div style="font-size:13px; color:var(--text-muted);">Total Identified Annual Savings Potential</div>
+                <div class="mono" style="font-size:44px; font-weight:700; color:#14b8a6; margin-top:4px;">$1.3MM - $1.8MM+</div>
+                <div style="font-size:13px; color:var(--text-muted); margin-top:4px;">Combined cost reduction and revenue recovery</div>
+            </div>
+            <div class="card" style="margin-top:20px;">
+                <h3>Savings Breakdown</h3>
+                <table class="data-table">
+                    <thead><tr><th>Initiative</th><th>Annual Impact</th><th>Timeline</th><th>Confidence</th></tr></thead>
+                    <tbody>
+                        <tr><td style="color:var(--text-primary);">Processor Rate Optimization (Trust Payments) <span class="tag tag-amber" style="font-size:9px;">RATES CORRECTED</span></td><td class="mono" style="color:#10b981;">$500K-800K+</td><td>Q1 2026</td><td><span class="tag tag-green">High</span></td></tr>
+                        <tr><td style="color:var(--text-primary);">Bonus Clawback System</td><td class="mono" style="color:#10b981;">$800K-1.2MM</td><td>Q2-Q3 2026</td><td><span class="tag tag-amber">Medium</span></td></tr>
+                        <tr><td style="color:var(--text-primary);">HSA Vendor Transition (Truemed &rarr; Flex)</td><td class="mono" style="color:#10b981;">$46,521</td><td>Q1-Q2 2026</td><td><span class="tag tag-green">High</span></td></tr>
+                        <tr><td style="color:var(--text-primary);">MCC Optimization (Auth Rate Improvement)</td><td class="mono" style="color:#22d3ee;">TBD (2-5% auth lift)</td><td>Q1-Q2 2026</td><td><span class="tag tag-amber">Medium</span></td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="correction-box" style="margin-top:16px;">
+                <div class="corr-label">&#9888; Note on Trust Payments Savings Estimate</div>
+                <h3>Savings figure ($500K-800K+) was calculated using portal summary rates. IC++ corrected rates reduce the gap to market benchmarks. Recommend recalculating savings using IC++ actuals (EUR 3.08%, GBP 3.26%, CHF 3.53%) before presenting to leadership.</h3>
+            </div>
+        </div>
+    </div>
+
+    <!-- Rate Optimization -->
+    <div class="subtab-panel" id="sub-cost-rates">
+        <div class="panel-content">
+            <div class="section-header">
+                <h2>Payment Processor Rate Optimization</h2>
+                <div class="subtitle">Trust Payments rates corrected from portal summary to IC++ actuals</div>
+            </div>
+
+            <div class="correction-box">
+                <div class="corr-label">&#9888; Corrected Rate Data &mdash; Trust Payments</div>
+                <h3>Portal Summary vs IC++ Processing Rates</h3>
+                <p style="font-size:13px; color:var(--text-muted); margin-top:6px;">Initial rates were calculated from portal summary views. Corrected rates use IC++ level processing data which separates interchange, scheme fees, and processor markup.</p>
+                <div class="rate-compare">
+                    <div class="rate-compare-card">
+                        <div class="currency">EUR</div>
+                        <div class="lbl">Portal Summary</div>
+                        <div class="old">5.89%</div>
+                        <div class="lbl" style="margin-top:6px;">IC++ Actual</div>
+                        <div class="new">3.08%</div>
+                    </div>
+                    <div class="rate-compare-card">
+                        <div class="currency">GBP</div>
+                        <div class="lbl">Portal Summary</div>
+                        <div class="old">6.96%</div>
+                        <div class="lbl" style="margin-top:6px;">IC++ Actual</div>
+                        <div class="new">3.26%</div>
+                    </div>
+                    <div class="rate-compare-card">
+                        <div class="currency">CHF</div>
+                        <div class="lbl">Portal Summary</div>
+                        <div class="old">6.46%</div>
+                        <div class="lbl" style="margin-top:6px;">IC++ Actual</div>
+                        <div class="new">3.53%</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Corrected Rates vs Market Benchmarks</h3>
+                <table class="data-table">
+                    <thead><tr><th>Processor / Market</th><th>Portal Rate</th><th>IC++ Rate</th><th>Market Rate</th><th>Multiplier (Corrected)</th></tr></thead>
+                    <tbody>
+                        <tr><td style="color:var(--text-primary);">Trust Payments EUR</td><td class="mono" style="color:#ef4444; text-decoration:line-through; opacity:0.5;">5.89%</td><td class="mono" style="color:#f59e0b;">3.08%</td><td class="mono">1.0-1.5%</td><td><span class="tag tag-amber">2-3x</span></td></tr>
+                        <tr><td style="color:var(--text-primary);">Trust Payments GBP</td><td class="mono" style="color:#ef4444; text-decoration:line-through; opacity:0.5;">6.96%</td><td class="mono" style="color:#f59e0b;">3.26%</td><td class="mono">1.0-1.4%</td><td><span class="tag tag-amber">2-3x</span></td></tr>
+                        <tr><td style="color:var(--text-primary);">Trust Payments CHF</td><td class="mono" style="color:#ef4444; text-decoration:line-through; opacity:0.5;">6.46%</td><td class="mono" style="color:#f59e0b;">3.53%</td><td class="mono">1.0-1.5%</td><td><span class="tag tag-amber">2-3x</span></td></tr>
+                        <tr><td style="color:var(--text-primary);">USA (Nuvei)</td><td class="mono" colspan="2" style="color:#f59e0b;">3.66%</td><td class="mono">1.0-1.5%</td><td><span class="tag tag-amber">2.5-3.5x</span></td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="card">
+                <h3>Processors with Unknown Rates</h3>
+                <div style="display:flex; flex-wrap:wrap; gap:8px; margin-top:8px;">
+                    <span class="tag tag-amber">OCBC</span>
+                    <span class="tag tag-amber">PC2P</span>
+                    <span class="tag tag-amber">CCAvenue</span>
+                    <span class="tag tag-amber">MokaGateway</span>
+                    <span class="tag tag-amber">OnePay</span>
+                    <span class="tag tag-amber">CMI</span>
+                    <span class="tag tag-amber">PayMob</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bonus Clawback -->
+    <div class="subtab-panel" id="sub-cost-clawback">
+        <div class="panel-content">
+            <div class="section-header">
+                <h2>Automated Bonus Clawback System</h2>
+                <div class="subtitle">$800K-1.2MM annual exposure, only Korea has manual process</div>
+            </div>
+            <div class="mermaid-wrap">
+                <h4>Clawback System Gap</h4>
+                <div class="mermaid">
+graph TD
+    A["Distributor Return/Refund"] --> B{"Automated&lt;br/&gt;Clawback System?"}
+    B -->|Korea Only| C["Manual Process&lt;br/&gt;$40K recovered&lt;br/&gt;28 demotions Oct-Dec"]
+    B -->|50+ Markets| D["NO SYSTEM&lt;br/&gt;$800K-1.2MM&lt;br/&gt;annual exposure"]
+    D --> E["Interim Options"]
+    E --> E1["Option A:&lt;br/&gt;Expand Korea&lt;br/&gt;Manual Process"]
+    E --> E2["Option B:&lt;br/&gt;Policy Change&lt;br/&gt;30-60 day hold"]
+    E --> E3["Option C:&lt;br/&gt;Enhanced&lt;br/&gt;Monitoring"]
+    style A fill:#1e293b,stroke:#475569,color:#f1f5f9
+    style D fill:#7f1d1d,stroke:#ef4444,color:#fecaca
+    style C fill:#065f46,stroke:#10b981,color:#d1fae5
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- HSA Vendor -->
+    <div class="subtab-panel" id="sub-cost-hsa">
+        <div class="panel-content">
+            <div class="section-header">
+                <h2>HSA Vendor Comparison</h2>
+                <div class="subtitle">Truemed vs Flex: $46,521 annual savings potential</div>
+            </div>
+            <div class="metric-grid">
+                <div class="metric-card"><div class="value" style="color:#ef4444;">$168K</div><div class="label">Current (Truemed) 2025 YE</div></div>
+                <div class="metric-card"><div class="value" style="color:#10b981;">$121K</div><div class="label">Proposed (Flex) Est. Cost</div></div>
+                <div class="metric-card"><div class="value" style="color:#14b8a6;">$46,521</div><div class="label">Combined Annual Savings</div></div>
+            </div>
+            <div class="card">
+                <h3>Feature Comparison</h3>
+                <table class="data-table">
+                    <thead><tr><th>Feature</th><th>Truemed</th><th>Flex</th></tr></thead>
+                    <tbody>
+                        <tr><td style="color:var(--text-primary);">Fee Structure</td><td style="color:#ef4444;">8% flat (7% consumer + 1% Unicity)</td><td style="color:#10b981;">4% + $0.30/txn, $8 letter fee</td></tr>
+                        <tr><td style="color:var(--text-primary);">Failed Card Handling</td><td style="color:#ef4444;">Routes to Stripe, reconciliation issues</td><td style="color:#10b981;">Redirects back to Unicity seamlessly</td></tr>
+                        <tr><td style="color:var(--text-primary);">Letter of Medical Necessity</td><td style="color:#ef4444;">Required ALL products, hours to generate</td><td style="color:#10b981;">Not all products, 30 min, valid 12 months</td></tr>
+                        <tr><td style="color:var(--text-primary);">Reporting</td><td style="color:#ef4444;">Basic dashboard, limited analytics</td><td style="color:#10b981;">Comprehensive, downloadable, full analytics</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- MCC Strategy -->
+    <div class="subtab-panel" id="sub-cost-mcc">
+        <div class="panel-content">
+            <div class="section-header">
+                <h2>MCC Code Optimization Strategy</h2>
+                <div class="subtitle">Split from single MCC 5969 to 5499 + 5968 for 2-5% auth improvement</div>
+            </div>
+            <div class="mermaid-wrap">
+                <h4>MCC Split Strategy</h4>
+                <div class="mermaid">
+graph TD
+    A["Current State&lt;br/&gt;ALL Transactions&lt;br/&gt;MCC 5969&lt;br/&gt;Direct Marketing"] --> B["Proposed Split"]
+    B --> C["MCC 5499&lt;br/&gt;Misc Food Stores"]
+    B --> D["MCC 5968&lt;br/&gt;Continuity/Subscription"]
+    C --> C1["One-Time Purchases&lt;br/&gt;Customer Orders&lt;br/&gt;Distributor Personal Orders"]
+    D --> D1["Autoship/Subscription&lt;br/&gt;Enrollment Fees&lt;br/&gt;Membership Fees"]
+    C1 --> E["Benefits:&lt;br/&gt;Lower risk classification&lt;br/&gt;2-5% higher auth rates&lt;br/&gt;Fewer false declines"]
+    D1 --> F["Benefits:&lt;br/&gt;CVV not required after initial&lt;br/&gt;Lower interchange (Visa)&lt;br/&gt;Subscription-optimized fraud"]
+    style A fill:#7f1d1d,stroke:#ef4444,color:#fecaca
+    style C fill:#065f46,stroke:#10b981,color:#d1fae5
+    style D fill:#1e3a5f,stroke:#3b82f6,color:#bfdbfe
+    style E fill:#065f46,stroke:#10b981,color:#d1fae5
+    style F fill:#1e3a5f,stroke:#3b82f6,color:#bfdbfe
+                </div>
+            </div>
+            <div class="card" style="background:rgba(245,158,11,0.06); border-color:rgba(245,158,11,0.2);">
+                <h3 style="color:#fcd34d;">Implementation Note</h3>
+                <p>Create two MIDs with every processor in every market. Request splitting current approved volume over both MIDs to potentially avoid re-underwriting. MCC 5968 requires HIRM program registration.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ================================================================ -->
+<!-- TAB 5: IT & DEV -->
+<!-- ================================================================ -->
+<div class="tab-panel" id="panel-itdev">
+    <div class="subtab-bar">
+        <button class="subtab-btn active" onclick="switchSubTab('itdev','it-overview')">Overview</button>
+        <button class="subtab-btn" onclick="switchSubTab('itdev','it-3ds')">3DS2 Migration</button>
+        <button class="subtab-btn" onclick="switchSubTab('itdev','it-api')">API Keys</button>
+        <button class="subtab-btn" onclick="switchSubTab('itdev','it-gdpr')">GDPR / DPA</button>
+        <button class="subtab-btn" onclick="switchSubTab('itdev','it-stress')">Stress Testing</button>
+    </div>
+
+    <!-- Overview -->
+    <div class="subtab-panel active" id="sub-it-overview">
+        <div class="panel-content">
+            <div class="section-header">
+                <h2>IT &amp; Development / Documentation Gaps</h2>
+                <div class="subtitle">Sections H &amp; I &mdash; January 29, 2025</div>
+            </div>
+            <div class="two-col">
+                <div class="risk-card risk-critical">
+                    <h4 style="color:#fca5a5;">Infrastructure Security</h4>
+                    <ul>
+                        <li style="color:#fca5a5;">No data purging for vault data</li>
+                        <li style="color:#fca5a5;">EKS logs retained indefinitely</li>
+                        <li style="color:#fca5a5;">Deletion protection disabled</li>
+                        <li style="color:#fca5a5;">Missing lifecycle documentation</li>
+                    </ul>
+                    <div style="margin-top:8px;"><span class="tag tag-red">PCI DSS v4.0 Non-Compliance</span></div>
+                </div>
+                <div class="risk-card risk-high">
+                    <h4 style="color:#fdba74;">3DS Implementation Gap</h4>
+                    <ul>
+                        <li style="color:#fdba74;">10 markets on deprecated 3DS1</li>
+                        <li style="color:#fdba74;">Card networks sunset support 2022</li>
+                        <li style="color:#fdba74;">No liability shift protection</li>
+                        <li style="color:#fdba74;">India April 1 mandate</li>
+                    </ul>
+                    <div style="margin-top:8px;"><span class="tag tag-amber">Auth Rates &amp; Fraud Exposure</span></div>
+                </div>
+                <div class="risk-card risk-medium">
+                    <h4 style="color:#fcd34d;">GDPR Compliance Gap</h4>
+                    <ul>
+                        <li style="color:#fcd34d;">Missing DPA with Trust Payments</li>
+                        <li style="color:#fcd34d;">GDPR Article 28 violation</li>
+                        <li style="color:#fcd34d;">No breach notification protocol</li>
+                    </ul>
+                    <div style="margin-top:8px;"><span class="tag tag-amber">&euro;10M or 2% Turnover Penalty</span></div>
+                </div>
+                <div class="risk-card risk-info">
+                    <h4 style="color:#67e8f9;">Operational Gaps</h4>
+                    <ul>
+                        <li style="color:#67e8f9;">Manual API key rotation (90 days)</li>
+                        <li style="color:#67e8f9;">No regular stress testing</li>
+                        <li style="color:#67e8f9;">Underutilized launch checklists</li>
+                        <li style="color:#67e8f9;">Single-person dependencies</li>
+                    </ul>
+                    <div style="margin-top:8px;"><span class="tag tag-blue">Outage &amp; Scaling Risk</span></div>
+                </div>
+            </div>
+            <div class="card" style="background:rgba(16,185,129,0.06); border-color:rgba(16,185,129,0.2); margin-top:16px;">
+                <h3 style="color:#6ee7b7;">Resolved Issues (DevOps Quick Response)</h3>
+                <div class="two-col" style="margin-top:8px;">
+                    <div style="display:flex; align-items:center; gap:8px;"><span class="tag tag-green">2 DAYS</span><span style="font-size:13px;">TLS upgraded from 1.1 to 1.2/1.3</span></div>
+                    <div style="display:flex; align-items:center; gap:8px;"><span class="tag tag-green">2 WEEKS</span><span style="font-size:13px;">HashiCorp vault logs encrypted</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3DS2 -->
+    <div class="subtab-panel" id="sub-it-3ds">
+        <div class="panel-content">
+            <div class="section-header">
+                <h2>3D Secure 2.0 Implementation Gap</h2>
+                <div class="subtitle">10 markets on deprecated 3DS1 (networks sunset in 2022)</div>
+            </div>
+            <div class="mermaid-wrap">
+                <h4>3DS2 Migration Status by Market</h4>
+                <div class="mermaid">
+graph LR
+    subgraph RESOLVED["Resolved / In Progress"]
+        A1["Kuwait&lt;br/&gt;Direct Integration"]
+        A2["Turkey&lt;br/&gt;In Progress"]
+        A3["Jordan&lt;br/&gt;Direct Integration"]
+        A4["India&lt;br/&gt;JustPay 3DS2"]
+    end
+    subgraph UNKNOWN["Status Unknown"]
+        B1["Hong Kong"]
+        B2["Morocco"]
+        B3["Taiwan"]
+        B4["Vietnam"]
+    end
+    subgraph REMAINING["Remaining Issues"]
+        C1["Egypt&lt;br/&gt;Bank Wire Only"]
+        C2["Bahrain&lt;br/&gt;Still on 3DS1"]
+    end
+    style A1 fill:#065f46,stroke:#10b981,color:#d1fae5
+    style A2 fill:#065f46,stroke:#10b981,color:#d1fae5
+    style A3 fill:#065f46,stroke:#10b981,color:#d1fae5
+    style A4 fill:#065f46,stroke:#10b981,color:#d1fae5
+    style B1 fill:#78350f,stroke:#f59e0b,color:#fef3c7
+    style B2 fill:#78350f,stroke:#f59e0b,color:#fef3c7
+    style B3 fill:#78350f,stroke:#f59e0b,color:#fef3c7
+    style B4 fill:#78350f,stroke:#f59e0b,color:#fef3c7
+    style C1 fill:#7f1d1d,stroke:#ef4444,color:#fecaca
+    style C2 fill:#7f1d1d,stroke:#ef4444,color:#fecaca
+                </div>
+            </div>
+            <div class="two-col">
+                <div class="card">
+                    <h3 style="color:#fca5a5;">3DS1 Risks</h3>
+                    <ul style="margin-top:8px; list-style:none; padding:0;">
+                        <li style="font-size:13px; color:var(--text-muted); padding:4px 0;">Declining authorization rates</li>
+                        <li style="font-size:13px; color:var(--text-muted); padding:4px 0;">Increased fraud liability (no shift)</li>
+                        <li style="font-size:13px; color:var(--text-muted); padding:4px 0;">No modern authentication methods</li>
+                        <li style="font-size:13px; color:var(--text-muted); padding:4px 0;">Black box for analytics</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h3 style="color:#6ee7b7;">3DS2 Benefits</h3>
+                    <ul style="margin-top:8px; list-style:none; padding:0;">
+                        <li style="font-size:13px; color:var(--text-muted); padding:4px 0;">5-15% auth rate improvement</li>
+                        <li style="font-size:13px; color:var(--text-muted); padding:4px 0;">Liability shift to issuing bank</li>
+                        <li style="font-size:13px; color:var(--text-muted); padding:4px 0;">Frictionless experience option</li>
+                        <li style="font-size:13px; color:var(--text-muted); padding:4px 0;">Enhanced data for operations</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- API Keys -->
+    <div class="subtab-panel" id="sub-it-api">
+        <div class="panel-content">
+            <div class="section-header">
+                <h2>API Key Rotation &amp; Secrets Management</h2>
+                <div class="subtitle">Manual rotation every 90 days, single-person dependency</div>
+            </div>
+            <div class="card">
+                <h3>Risk Categories</h3>
+                <div class="two-col" style="margin-top:12px;">
+                    <div class="risk-card risk-critical" style="margin:0;">
+                        <h4 style="color:#fca5a5; font-size:13px;">Security</h4>
+                        <p style="font-size:12px;">Missed rotations extend exposure. Single-person dependency. Cannot respond rapidly to compromise.</p>
+                    </div>
+                    <div class="risk-card risk-high" style="margin:0;">
+                        <h4 style="color:#fdba74; font-size:13px;">Operational</h4>
+                        <p style="font-size:12px;">Coordination errors cause outages. Keys updated in some systems but not others.</p>
+                    </div>
+                </div>
+                <div style="margin-top:12px; display:flex; gap:16px; flex-wrap:wrap;">
+                    <div style="flex:1; min-width:200px; background:var(--bg-surface); border-radius:8px; padding:16px; text-align:center;">
+                        <div style="font-size:12px; color:var(--text-muted);">Cloud Secrets Manager</div>
+                        <div class="mono" style="font-size:20px; color:var(--accent-cyan);">$50-200/mo</div>
+                    </div>
+                    <div style="flex:1; min-width:200px; background:var(--bg-surface); border-radius:8px; padding:16px; text-align:center;">
+                        <div style="font-size:12px; color:var(--text-muted);">AWS Secrets Manager</div>
+                        <div class="mono" style="font-size:20px; color:var(--accent-cyan);">$0.40/secret/mo</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- GDPR -->
+    <div class="subtab-panel" id="sub-it-gdpr">
+        <div class="panel-content">
+            <div class="section-header">
+                <h2>GDPR / Data Processing Agreement</h2>
+                <div class="subtitle">Missing DPA with Trust Payments &mdash; GDPR Article 28 violation</div>
+            </div>
+            <div class="mermaid-wrap">
+                <h4>DPA Status Across Processors</h4>
+                <div class="mermaid">
+graph LR
+    A["Unicity&lt;br/&gt;(Data Controller)"] -->|"DPA EXISTS"| B["Worldpay"]
+    A -->|"NO DPA"| C["Trust Payments"]
+    C --> D["GDPR Article 28&lt;br/&gt;Violation"]
+    D --> E["Penalty: &amp;euro;10M&lt;br/&gt;or 2% Global Turnover"]
+    F["Recommended:&lt;br/&gt;Request replacement copy&lt;br/&gt;of DPA"] --> C
+    style A fill:#1e293b,stroke:#475569,color:#f1f5f9
+    style B fill:#065f46,stroke:#10b981,color:#d1fae5
+    style C fill:#7f1d1d,stroke:#ef4444,color:#fecaca
+    style D fill:#7f1d1d,stroke:#ef4444,color:#fecaca
+    style E fill:#7f1d1d,stroke:#ef4444,color:#fecaca
+    style F fill:#1e3a5f,stroke:#3b82f6,color:#bfdbfe
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stress Testing -->
+    <div class="subtab-panel" id="sub-it-stress">
+        <div class="panel-content">
+            <div class="section-header">
+                <h2>Stress Testing &amp; Infrastructure</h2>
+                <div class="subtitle">Testing only before anticipated events, not systematically</div>
+            </div>
+            <div class="card">
+                <h3>Recommended Quarterly Schedule</h3>
+                <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-top:12px;">
+                    <div style="text-align:center; padding:16px; background:rgba(59,130,246,0.08); border-radius:8px;">
+                        <div style="font-weight:700; color:#93c5fd;">Q1 (January)</div>
+                        <div style="font-size:11px; color:var(--text-muted); margin-top:4px;">Post-holiday baseline</div>
+                    </div>
+                    <div style="text-align:center; padding:16px; background:rgba(16,185,129,0.08); border-radius:8px;">
+                        <div style="font-weight:700; color:#6ee7b7;">Q2 (April)</div>
+                        <div style="font-size:11px; color:var(--text-muted); margin-top:4px;">Pre-summer prep</div>
+                    </div>
+                    <div style="text-align:center; padding:16px; background:rgba(245,158,11,0.08); border-radius:8px;">
+                        <div style="font-weight:700; color:#fcd34d;">Q3 (July)</div>
+                        <div style="font-size:11px; color:var(--text-muted); margin-top:4px;">Pre-holiday prep</div>
+                    </div>
+                    <div style="text-align:center; padding:16px; background:rgba(249,115,22,0.08); border-radius:8px;">
+                        <div style="font-weight:700; color:#fdba74;">Q4 (October)</div>
+                        <div style="font-size:11px; color:var(--text-muted); margin-top:4px;">Pre-BFCM validation</div>
+                    </div>
+                </div>
+            </div>
+            <div class="card" style="margin-top:12px;">
+                <h3>Infrastructure Targets</h3>
+                <div class="three-col" style="margin-top:12px;">
+                    <div style="text-align:center; padding:16px; background:var(--bg-surface); border-radius:8px;">
+                        <div style="font-size:11px; color:var(--text-muted);">Auto-Scaling</div>
+                        <div class="mono" style="font-size:24px; color:var(--accent-cyan);">&lt;5 min</div>
+                    </div>
+                    <div style="text-align:center; padding:16px; background:var(--bg-surface); border-radius:8px;">
+                        <div style="font-size:11px; color:var(--text-muted);">Network Latency</div>
+                        <div class="mono" style="font-size:24px; color:var(--accent-cyan);">&lt;100ms</div>
+                    </div>
+                    <div style="text-align:center; padding:16px; background:var(--bg-surface); border-radius:8px;">
+                        <div style="font-size:11px; color:var(--text-muted);">DB Query Response</div>
+                        <div class="mono" style="font-size:24px; color:var(--accent-cyan);">&lt;100ms</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ================================================================ -->
+<!-- TAB 6: CONSOLIDATED ACTIONS -->
+<!-- ================================================================ -->
+<div class="tab-panel" id="panel-consolidated">
+    <div class="subtab-bar">
+        <button class="subtab-btn active" onclick="switchSubTab('consolidated','con-actions')">Master Actions</button>
+        <button class="subtab-btn" onclick="switchSubTab('consolidated','con-risk')">Risk Matrix</button>
+        <button class="subtab-btn" onclick="switchSubTab('consolidated','con-savings')">Savings Summary</button>
+    </div>
+
+    <!-- Master Actions -->
+    <div class="subtab-panel active" id="sub-con-actions">
+        <div class="panel-content">
+            <div class="section-header">
+                <h2>Master Action Items</h2>
+                <div class="subtitle">Consolidated across all 4 meeting sessions</div>
+            </div>
+
+            <div style="margin-bottom:24px;">
+                <h3 style="color:#fca5a5; margin-bottom:12px; font-size:15px;">CRITICAL &mdash; Immediate</h3>
+                <div class="action-block"><div><div class="action-title">Enable EKS deletion protection</div><div class="action-desc">Production clusters vulnerable to single API call deletion</div></div><span class="tag tag-purple owner">DevOps/IT</span></div>
+                <div class="action-block"><div><div class="action-title">Initiate Trust Payments DPA</div><div class="action-desc">Frame as "replacement copy" request to avoid admitting gap</div></div><span class="tag tag-purple owner">Rick Trout</span></div>
+                <div class="action-block"><div><div class="action-title">Send GDPR DPA template to Rick</div><div class="action-desc">Downloaded from GDPR.eu</div></div><span class="tag tag-purple owner">June</span></div>
+                <div class="action-block"><div><div class="action-title">Share Worldpay optimization materials</div><div class="action-desc">Provide context for proposed optimization to Rick and Ketan</div></div><span class="tag tag-purple owner">Howard</span></div>
+                <div class="action-block"><div><div class="action-title">Send formal amendment to Nuvei</div><div class="action-desc">Document negotiated 1.5% rate in writing</div></div><span class="tag tag-purple owner">Howard</span></div>
+            </div>
+
+            <div style="margin-bottom:24px;">
+                <h3 style="color:#fcd34d; margin-bottom:12px; font-size:15px;">This Month</h3>
+                <div class="action-block"><div><div class="action-title">Establish vault data retention/purging process</div><div class="action-desc">1-year retention for PCI compliance</div></div><span class="tag tag-purple owner">DevOps/IT</span></div>
+                <div class="action-block"><div><div class="action-title">Update EKS log retention periods</div><div class="action-desc">365 days (prod), 90 days (QA)</div></div><span class="tag tag-purple owner">DevOps/IT</span></div>
+                <div class="action-block"><div><div class="action-title">Analyze Mexico BIN data</div><div class="action-desc">Determine Spanish bank frictionless payment impact</div></div><span class="tag tag-purple owner">Howard</span></div>
+                <div class="action-block"><div><div class="action-title">Discuss RMA blackout with Commission team</div><div class="action-desc">Talk to Dan and Sam about redesign options</div></div><span class="tag tag-purple owner">Howard</span></div>
+                <div class="action-block"><div><div class="action-title">Start Snowflake/API integration work</div><div class="action-desc">Build processor API integrations, load data into Snowflake</div></div><span class="tag tag-purple owner">Vietnam Resource</span></div>
+                <div class="action-block"><div><div class="action-title">MCC 5499 trial execution</div><div class="action-desc">Test US volume under MCC 5499 with Nuvei</div></div><span class="tag tag-purple owner">Howard/Risk</span></div>
+                <div class="action-block"><div><div class="action-title">Complete Portal RMA/refund interface rollout</div><div class="action-desc">RMAs processable through portal (one sprint away)</div></div><span class="tag tag-purple owner">Portal Team</span></div>
+                <div class="action-block" style="border-left-color:#f59e0b;"><div><div class="action-title">Recalculate Trust Payments savings using IC++ rates</div><div class="action-desc">Portal summary rates overstated costs. Use EUR 3.08%, GBP 3.26%, CHF 3.53% for corrected savings estimate.</div></div><span class="tag tag-purple owner">Howard</span></div>
+            </div>
+
+            <div style="margin-bottom:24px;">
+                <h3 style="color:#67e8f9; margin-bottom:12px; font-size:15px;">Q1 2026</h3>
+                <div class="action-block"><div><div class="action-title">Create data lifecycle management policy</div><div class="action-desc">PCI DSS v4.0 Requirement 12</div></div><span class="tag tag-purple owner">DevOps/IT</span></div>
+                <div class="action-block"><div><div class="action-title">India 3DS2 go-live</div><div class="action-desc">April 1 mandate compliance</div></div><span class="tag tag-purple owner">Payments</span></div>
+                <div class="action-block"><div><div class="action-title">Accelerate Trust Payments migration to Worldpay</div><div class="action-desc">EU volume migration for rate optimization (recalculate savings with IC++ rates)</div></div><span class="tag tag-purple owner">Payments</span></div>
+                <div class="action-block"><div><div class="action-title">Decline-reason capture enhancement</div><div class="action-desc">Modify order_payments table, create mapping</div></div><span class="tag tag-purple owner">Engineering</span></div>
+                <div class="action-block"><div><div class="action-title">Launch playbook + PM designation</div><div class="action-desc">Stages, tasks, owners, checklists with ClickUp</div></div><span class="tag tag-purple owner">TBD</span></div>
+                <div class="action-block"><div><div class="action-title">Implement quarterly stress testing</div><div class="action-desc">Q1/Q2/Q3/Q4 schedule</div></div><span class="tag tag-purple owner">IT Ops</span></div>
+                <div class="action-block"><div><div class="action-title">HSA vendor evaluation (Flex proposal)</div><div class="action-desc">Begin vendor transition from Truemed to Flex</div></div><span class="tag tag-purple owner">Payments</span></div>
+            </div>
+
+            <div>
+                <h3 style="color:#a78bfa; margin-bottom:12px; font-size:15px;">Q2-Q3 2026 / Ongoing</h3>
+                <div class="action-block"><div><div class="action-title">Bonus clawback system development</div><div class="action-desc">Automated system across 50+ markets ($800K-1.2MM recovery)</div></div><span class="tag tag-purple owner">Engineering</span></div>
+                <div class="action-block"><div><div class="action-title">API key rotation automation</div><div class="action-desc">Move from manual to automated secrets management</div></div><span class="tag tag-purple owner">API Team</span></div>
+                <div class="action-block"><div><div class="action-title">3DS2 deployment across remaining markets</div><div class="action-desc">Prioritized by revenue impact</div></div><span class="tag tag-purple owner">Payments</span></div>
+                <div class="action-block"><div><div class="action-title">Rate transparency audit</div><div class="action-desc">Document all 7 unknown processor rates, create centralized matrix</div></div><span class="tag tag-purple owner">Payments</span></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Risk Matrix -->
+    <div class="subtab-panel" id="sub-con-risk">
+        <div class="panel-content">
+            <div class="section-header">
+                <h2>Consolidated Risk Matrix</h2>
+                <div class="subtitle">All identified risks ranked by severity and impact</div>
+            </div>
+            <div class="card">
+                <table class="data-table">
+                    <thead><tr><th>Risk</th><th>Impact</th><th>Severity</th><th>Status</th></tr></thead>
+                    <tbody>
+                        <tr><td style="color:var(--text-primary);">6.4M unverified distributors (KYC/AML)</td><td>BSA/OFAC criminal penalties</td><td><span class="tag tag-red">Critical</span></td><td>Open</td></tr>
+                        <tr><td style="color:var(--text-primary);">Missing DPA with Trust Payments</td><td>&euro;10M or 2% turnover penalty</td><td><span class="tag tag-red">Critical</span></td><td>Action initiated</td></tr>
+                        <tr><td style="color:var(--text-primary);">EKS deletion protection disabled</td><td>Production infrastructure loss</td><td><span class="tag tag-red">Critical</span></td><td>Action initiated</td></tr>
+                        <tr><td style="color:var(--text-primary);">Trust Payments rates above market <span class="tag tag-amber" style="font-size:9px;">CORRECTED</span></td><td>IC++ rates 2-3x market (down from 5-7x portal)</td><td><span class="tag tag-red">High</span></td><td>Migration planned Q1</td></tr>
+                        <tr><td style="color:var(--text-primary);">No bonus clawback system</td><td>$800K-1.2MM annual exposure</td><td><span class="tag tag-red">High</span></td><td>Policy decisions pending</td></tr>
+                        <tr><td style="color:var(--text-primary);">10 markets on deprecated 3DS1</td><td>Declining auth rates, fraud</td><td><span class="tag tag-amber">High</span></td><td>4 resolved, 6 remaining</td></tr>
+                        <tr><td style="color:var(--text-primary);">55% transaction monitoring gap</td><td>Undetected fraud losses</td><td><span class="tag tag-amber">High</span></td><td>Open</td></tr>
+                        <tr><td style="color:var(--text-primary);">70.8% approval rate (target 80-85%)</td><td>Revenue loss across markets</td><td><span class="tag tag-amber">Medium</span></td><td>Analysis underway</td></tr>
+                        <tr><td style="color:var(--text-primary);">Nuvei $0.25 vs $0.05 contracted</td><td>$80K annual overcharge</td><td><span class="tag tag-amber">Medium</span></td><td>Amendment in progress</td></tr>
+                        <tr><td style="color:var(--text-primary);">No centralized data platform</td><td>Delayed issue response</td><td><span class="tag tag-amber">Medium</span></td><td>Snowflake starting</td></tr>
+                        <tr><td style="color:var(--text-primary);">Manual API key rotation</td><td>Security exposure, outage risk</td><td><span class="tag tag-blue">Medium</span></td><td>Automation roadmap</td></tr>
+                        <tr><td style="color:var(--text-primary);">No regular stress testing</td><td>Capacity planning gaps</td><td><span class="tag tag-blue">Low</span></td><td>Quarterly plan proposed</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Savings Summary -->
+    <div class="subtab-panel" id="sub-con-savings">
+        <div class="panel-content">
+            <div class="section-header">
+                <h2>Total Savings Opportunity</h2>
+                <div class="subtitle">Combined cost reduction and revenue recovery across all initiatives</div>
+            </div>
+
+            <div class="correction-box" style="margin-bottom:20px;">
+                <div class="corr-label">&#9888; Savings Estimate Under Review</div>
+                <h3>Trust Payments rate correction (portal summary to IC++ actuals) reduces the processor optimization savings component. Recommend recalculating total savings using corrected rates before presenting final figures.</h3>
+            </div>
+
+            <div class="mermaid-wrap">
+                <h4>Savings Waterfall</h4>
+                <div class="mermaid">
+graph LR
+    A["Processor Rate&lt;br/&gt;Optimization&lt;br/&gt;&lt;b&gt;$500K-800K+&lt;/b&gt;&lt;br/&gt;(needs recalc w/ IC++)"] --> E["Total Annual&lt;br/&gt;Savings&lt;br/&gt;&lt;b&gt;$1.3-1.8MM+&lt;/b&gt;&lt;br/&gt;(pending correction)"]
+    B["Bonus Clawback&lt;br/&gt;System&lt;br/&gt;&lt;b&gt;$800K-1.2MM&lt;/b&gt;"] --> E
+    C["HSA Vendor&lt;br/&gt;Transition&lt;br/&gt;&lt;b&gt;$46,521&lt;/b&gt;"] --> E
+    D["MCC Optimization&lt;br/&gt;&lt;b&gt;TBD&lt;/b&gt;&lt;br/&gt;(2-5% auth lift)"] --> E
+    F["Nuvei Overcharge&lt;br/&gt;Recovery&lt;br/&gt;&lt;b&gt;$80K&lt;/b&gt;"] --> E
+    style A fill:#d97706,stroke:#f59e0b,color:#fef3c7
+    style B fill:#059669,stroke:#10b981,color:#d1fae5
+    style C fill:#059669,stroke:#10b981,color:#d1fae5
+    style D fill:#0891b2,stroke:#22d3ee,color:#ecfeff
+    style E fill:#0d9488,stroke:#14b8a6,color:#fff
+    style F fill:#059669,stroke:#10b981,color:#d1fae5
+                </div>
+            </div>
+
+            <div style="margin-top:40px; padding-top:24px; border-top:1px solid var(--border-subtle); text-align:center;">
+                <div style="font-size:11px; color:var(--text-muted);">Payments Audit 2025 &mdash; Unicity International &mdash; Consolidated Master Recap</div>
+                <div style="font-size:11px; color:rgba(148,163,184,0.5); margin-top:4px;">Sections A, B, C, D, E, H, I &mdash; Generated February 2026</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ================================================================ -->
+<!-- JAVASCRIPT -->
+<!-- ================================================================ -->
+<script>
+    // Initialize Mermaid
+    mermaid.initialize({
+        startOnLoad: false,
+        theme: 'dark',
+        themeVariables: {
+            darkMode: true,
+            background: '#1a2236',
+            primaryColor: '#1e3a5f',
+            primaryTextColor: '#f1f5f9',
+            primaryBorderColor: '#475569',
+            lineColor: '#475569',
+            secondaryColor: '#1e293b',
+            tertiaryColor: '#111827',
+            fontSize: '13px'
+        },
+        flowchart: { htmlLabels: true, curve: 'basis', nodeSpacing: 30, rankSpacing: 40 }
+    });
+
+    // Render mermaid in active panel
+    async function renderMermaid(panelId) {
+        const panel = document.getElementById(panelId);
+        if (!panel) return;
+        const charts = panel.querySelectorAll('.mermaid:not([data-processed])');
+        for (const chart of charts) {
+            const id = 'mermaid-' + Math.random().toString(36).substr(2, 9);
+            try {
+                const { svg } = await mermaid.render(id, chart.textContent.trim());
+                chart.innerHTML = svg;
+                chart.setAttribute('data-processed', 'true');
+            } catch(e) { console.warn('Mermaid render error:', e); }
+        }
+    }
+
+    // Tab switching
+    function switchTab(tabId) {
+        // Hide all panels
+        document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        // Show target
+        const panel = document.getElementById('panel-' + tabId);
+        panel.classList.add('active');
+        event.target.closest('.tab-btn').classList.add('active');
+        // Render mermaid diagrams in this panel
+        renderMermaid('panel-' + tabId);
+        // Also render in active subtab
+        const activeSub = panel.querySelector('.subtab-panel.active');
+        if (activeSub) renderMermaid(activeSub.id);
+    }
+
+    // Sub-tab switching
+    function switchSubTab(parentTab, subId) {
+        const panel = document.getElementById('panel-' + parentTab);
+        panel.querySelectorAll('.subtab-panel').forEach(p => p.classList.remove('active'));
+        panel.querySelectorAll('.subtab-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById('sub-' + subId).classList.add('active');
+        event.target.closest('.subtab-btn').classList.add('active');
+        // Render mermaid in the newly visible subtab
+        renderMermaid('sub-' + subId);
+    }
+
+    // Initial render for first tab
+    document.addEventListener('DOMContentLoaded', () => {
+        renderMermaid('panel-exec');
+    });
+</script>
+
+</body>
+</html>
