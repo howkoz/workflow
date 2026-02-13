@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Payment Operations | Full Year 2025</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0c0f14;
+  --surface: #141820;
+  --surface2: #1a1f2b;
+  --border: #252b3a;
+  --text: #e4e8f1;
+  --text-dim: #8891a5;
+  --accent: #3b82f6;
+  --accent-glow: rgba(59,130,246,0.15);
+  --green: #22c55e;
+  --green-bg: rgba(34,197,94,0.1);
+  --yellow: #eab308;
+  --yellow-bg: rgba(234,179,8,0.1);
+  --red: #ef4444;
+  --red-bg: rgba(239,68,68,0.1);
+  --orange: #f97316;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.5;
+  min-height: 100vh;
+}
+
+.header {
+  padding: 32px 40px 0;
+  border-bottom: 1px solid var(--border);
+}
+.header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 24px;
+}
+.header h1 {
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+.header .subtitle {
+  color: var(--text-dim);
+  font-size: 14px;
+  margin-top: 4px;
+}
+.header .version {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: var(--text-dim);
+  background: var(--surface2);
+  padding: 4px 10px;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+}
+
+.tabs {
+  display: flex;
+  gap: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.tabs::-webkit-scrollbar { display: none; }
+.tab {
+  padding: 10px 20px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-dim);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  transition: all 0.2s;
+  user-select: none;
+}
+.tab:hover { color: var(--text); }
+.tab.active {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+
+.content {
+  padding: 32px 40px;
+  max-width: 1400px;
+}
+
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+/* KPI Cards */
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+  margin-bottom: 32px;
+}
+.kpi {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 20px;
+}
+.kpi-label {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+}
+.kpi-value {
+  font-size: 26px;
+  font-weight: 700;
+  font-family: 'JetBrains Mono', monospace;
+  letter-spacing: -1px;
+}
+.kpi-note {
+  font-size: 11px;
+  color: var(--text-dim);
+  margin-top: 4px;
+}
+
+/* Tables */
+.table-section {
+  margin-bottom: 32px;
+}
+.table-title {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.table-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface);
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  table-layout: fixed;
+}
+thead th {
+  background: var(--surface2);
+  padding: 11px 16px;
+  text-align: right;
+  font-weight: 600;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-dim);
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+  position: sticky;
+  top: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+thead th:first-child { text-align: left; }
+thead th:last-child { text-align: center; }
+thead th.th-left { text-align: left; }
+tbody td {
+  padding: 11px 16px;
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  text-align: right;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-variant-numeric: tabular-nums;
+}
+tbody td:first-child { text-align: left; }
+tbody td:last-child { text-align: center; }
+tbody td.label-cell {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  text-align: left;
+}
+tbody td.text-cell {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px;
+  text-align: left;
+  color: var(--text-dim);
+}
+tbody tr:last-child td { border-bottom: none; }
+tbody tr:hover { background: rgba(59,130,246,0.04); }
+tbody tr.total-row {
+  background: var(--surface2);
+  font-weight: 700;
+}
+tbody tr.total-row td { border-top: 2px solid var(--border); }
+
+/* Status badges */
+.status {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  font-family: 'DM Sans', sans-serif;
+}
+.status-good { background: var(--green-bg); color: var(--green); }
+.status-monitor { background: var(--yellow-bg); color: var(--yellow); }
+.status-critical { background: var(--red-bg); color: var(--red); }
+.status-excellent { background: rgba(34,197,94,0.15); color: #4ade80; }
+
+/* Value cards */
+.value-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 16px;
+  margin-bottom: 32px;
+}
+.value-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 18px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.value-card .vc-name {
+  font-size: 13px;
+  font-weight: 500;
+}
+.value-card .vc-type {
+  font-size: 11px;
+  color: var(--text-dim);
+  margin-top: 2px;
+}
+.value-card .vc-amount {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--green);
+}
+
+/* Section heading */
+.section-heading {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 16px;
+  margin-top: 8px;
+}
+.section-note {
+  font-size: 12px;
+  color: var(--text-dim);
+  margin-bottom: 16px;
+  line-height: 1.6;
+}
+
+/* Callout */
+.callout {
+  padding: 16px 20px;
+  border-radius: 8px;
+  margin-bottom: 24px;
+  font-size: 13px;
+  line-height: 1.6;
+}
+.callout-red {
+  background: var(--red-bg);
+  border-left: 3px solid var(--red);
+  color: #fca5a5;
+}
+.callout-blue {
+  background: var(--accent-glow);
+  border-left: 3px solid var(--accent);
+  color: #93c5fd;
+}
+.callout-green {
+  background: var(--green-bg);
+  border-left: 3px solid var(--green);
+  color: #86efac;
+}
+.callout strong { color: var(--text); }
+
+/* Print */
+@media print {
+  body { background: #fff; color: #111; }
+  .header { border-bottom-color: #ddd; }
+  .tab { display: none; }
+  .tab-panel { display: block !important; page-break-inside: avoid; margin-bottom: 40px; }
+  .table-wrap { border-color: #ddd; }
+  thead th { background: #f5f5f5; color: #333; }
+  tbody td { color: #333; border-color: #eee; }
+  .kpi { border-color: #ddd; background: #fafafa; }
+  .kpi-value { color: #111; }
+}
+
+@media (max-width: 768px) {
+  .header, .content { padding-left: 16px; padding-right: 16px; }
+  .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+  .kpi-value { font-size: 20px; }
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-top">
+    <div>
+      <h1>Payment Operations Reconciliation</h1>
+      <div class="subtitle">Full Year 2025 &middot; 1,001,313 Orders &middot; $154.8M Auth Volume</div>
+    </div>
+    <span class="version">v6.0.4 &middot; Jan 3, 2026</span>
+  </div>
+  <div class="tabs" id="tabs">
+    <div class="tab active" data-tab="overview">Executive Overview</div>
+    <div class="tab" data-tab="processors">Processor Comparison</div>
+    <div class="tab" data-tab="approvals">Approval Rates</div>
+    <div class="tab" data-tab="chargebacks">Chargebacks</div>
+    <div class="tab" data-tab="fees">Processing Fees</div>
+    <div class="tab" data-tab="refunds">Refunds</div>
+    <div class="tab" data-tab="alerts">CB Prevention</div>
+    <div class="tab" data-tab="recurring">Recurring Analysis</div>
+  </div>
+</div>
+
+<div class="content">
+
+<!-- TAB: Executive Overview -->
+<div class="tab-panel active" id="panel-overview">
+  <div class="kpi-grid">
+    <div class="kpi">
+      <div class="kpi-label">Total Auth Volume</div>
+      <div class="kpi-value">$154.8M</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Total Orders</div>
+      <div class="kpi-value">1,001,313</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Approved Orders</div>
+      <div class="kpi-value">763,860</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Approval Rate</div>
+      <div class="kpi-value" style="color:var(--yellow)">76.29%</div>
+      <div class="kpi-note">Benchmark: 85%+</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Chargeback Rate</div>
+      <div class="kpi-value" style="color:var(--green)">0.52%</div>
+      <div class="kpi-note">Target: &lt;1%</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">2025 Value Delivered</div>
+      <div class="kpi-value" style="color:var(--green)">$7.5M</div>
+    </div>
+  </div>
+
+  <div class="section-heading">2025 Value Delivered: $7,462,916</div>
+  <div class="value-grid">
+    <div class="value-card">
+      <div><div class="vc-name">US Subscription Enhancement</div><div class="vc-type">Revenue Recovery</div></div>
+      <div class="vc-amount">$2,471,275</div>
+    </div>
+    <div class="value-card">
+      <div><div class="vc-name">ApplePay Subscription Fix</div><div class="vc-type">Revenue Recovery</div></div>
+      <div class="vc-amount">$2,046,727</div>
+    </div>
+    <div class="value-card">
+      <div><div class="vc-name">Chargeback Alert Defense</div><div class="vc-type">Loss Prevention</div></div>
+      <div class="vc-amount">$1,361,398</div>
+    </div>
+    <div class="value-card">
+      <div><div class="vc-name">3DS2 Global Optimization</div><div class="vc-type">Revenue Recovery</div></div>
+      <div class="vc-amount">$913,864</div>
+    </div>
+    <div class="value-card">
+      <div><div class="vc-name">Nuvei Rate Negotiation</div><div class="vc-type">Cost Savings</div></div>
+      <div class="vc-amount">$436,527</div>
+    </div>
+    <div class="value-card">
+      <div><div class="vc-name">AtData Vendor Termination</div><div class="vc-type">Cost Elimination</div></div>
+      <div class="vc-amount">$187,000</div>
+    </div>
+  </div>
+
+  <div class="section-heading">Processor Portfolio</div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Processor</th>
+          <th>Total Orders</th>
+          <th>Approved</th>
+          <th>Declined</th>
+          <th>Auth Volume</th>
+          <th>Approval Rate</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td class="label-cell">Nuvei US</td><td>518,016</td><td>395,084</td><td>122,932</td><td>$101.2M</td><td>76.27%</td><td><span class="status status-monitor">Monitor</span></td></tr>
+        <tr><td class="label-cell">WorldPay</td><td>314,992</td><td>256,202</td><td>58,790</td><td>$61.0M</td><td>81.34%</td><td><span class="status status-good">Good</span></td></tr>
+        <tr><td class="label-cell">Trust Payments</td><td>120,353</td><td>72,905</td><td>47,448</td><td>$12.1M</td><td>60.58%</td><td><span class="status status-critical">Critical</span></td></tr>
+        <tr><td class="label-cell">Nuvei Canada</td><td>31,499</td><td>23,572</td><td>7,927</td><td>$4.2M</td><td>74.83%</td><td><span class="status status-monitor">Monitor</span></td></tr>
+        <tr><td class="label-cell">Braintree/PayPal</td><td>13,774</td><td>13,418</td><td>356</td><td>$1.7M</td><td>97.42%</td><td><span class="status status-excellent">Excellent</span></td></tr>
+        <tr><td class="label-cell">TrueMed</td><td>2,679</td><td>2,679</td><td>0</td><td>$330K</td><td>100.00%</td><td><span class="status status-excellent">Excellent</span></td></tr>
+        <tr class="total-row"><td class="label-cell">TOTAL</td><td>1,001,313</td><td>763,860</td><td>237,453</td><td>$154.8M</td><td>76.29%</td><td></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div style="margin-top:24px">
+    <div class="callout callout-red">
+      <strong>Critical Finding: Trust Payments</strong><br>
+      EUR approval at 53.35% (dropped 14pp Jun to Dec). GBP at 63.86% (dropped 7.5pp). Combined 28,728 declined orders represent the single largest revenue gap for 2026.
+    </div>
+  </div>
+
+  <div class="section-heading" style="margin-top:24px">WorldPay by Currency</div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th class="th-left">Currency</th><th>Orders</th><th>Approved</th><th>Approval %</th><th>Status</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="label-cell">USD</td><td>106,813</td><td>90,328</td><td>84.57%</td><td><span class="status status-excellent">Excellent</span></td></tr>
+        <tr><td class="label-cell">JPY</td><td>94,471</td><td>79,467</td><td>84.12%</td><td><span class="status status-excellent">Excellent</span></td></tr>
+        <tr><td class="label-cell">CAD</td><td>41,131</td><td>33,379</td><td>81.15%</td><td><span class="status status-good">Good</span></td></tr>
+        <tr><td class="label-cell">OMR</td><td>16,233</td><td>13,573</td><td>83.61%</td><td><span class="status status-excellent">Excellent</span></td></tr>
+        <tr><td class="label-cell">AUD</td><td>18,932</td><td>14,285</td><td>75.45%</td><td><span class="status status-monitor">Monitor</span></td></tr>
+        <tr><td class="label-cell">EUR</td><td>14,551</td><td>10,263</td><td>70.53%</td><td><span class="status status-monitor">Monitor</span></td></tr>
+        <tr><td class="label-cell">GBP</td><td>5,823</td><td>4,349</td><td>74.69%</td><td><span class="status status-monitor">Monitor</span></td></tr>
+        <tr><td class="label-cell">AED</td><td>4,738</td><td>3,903</td><td>82.38%</td><td><span class="status status-good">Good</span></td></tr>
+        <tr><td class="label-cell">MXN</td><td>7,008</td><td>2,959</td><td>42.22%</td><td><span class="status status-critical">Critical</span></td></tr>
+        <tr><td class="label-cell">NZD</td><td>2,811</td><td>1,962</td><td>69.80%</td><td><span class="status status-monitor">Monitor</span></td></tr>
+        <tr><td class="label-cell">CHF</td><td>1,791</td><td>1,334</td><td>74.48%</td><td><span class="status status-monitor">Monitor</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- TAB: Processor Comparison -->
+<div class="tab-panel" id="panel-processors">
+  <div class="section-heading">WorldPay Credit Cards</div>
+  <div class="table-wrap">
+    <table>
+<thead><tr><th class="th-left">Currency</th><th>Volume (USD)</th><th>Orders</th><th>Approval %</th><th>Fee Rate</th><th>CB Rate</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr><td class="label-cell">USD</td><td>$12,554,175</td><td>50,775</td><td>84.90%</td><td>1.00%</td><td>0.07%</td><td><span class="status status-good">Good</span></td></tr>
+        <tr><td class="label-cell">JPY</td><td>$10,204,579</td><td>38,983</td><td>89.14%</td><td>0.64%</td><td>0.00%</td><td><span class="status status-excellent">Excellent</span></td></tr>
+        <tr><td class="label-cell">EUR</td><td>$2,968,896</td><td>12,331</td><td>85.61%</td><td>0.93%</td><td>0.10%</td><td><span class="status status-good">Good</span></td></tr>
+        <tr><td class="label-cell">CAD</td><td>$2,588,895</td><td>15,492</td><td>80.84%</td><td>2.80%</td><td>0.03%</td><td><span class="status status-monitor">Monitor</span></td></tr>
+        <tr><td class="label-cell">AED</td><td>$1,199,844</td><td>2,098</td><td>86.22%</td><td>3.00%</td><td>0.00%</td><td><span class="status status-good">Good</span></td></tr>
+        <tr><td class="label-cell">GBP</td><td>$1,075,117</td><td>2,199</td><td>87.20%</td><td>2.19%</td><td>0.00%</td><td><span class="status status-good">Good</span></td></tr>
+        <tr><td class="label-cell">AUD</td><td>$1,057,868</td><td>7,685</td><td>74.87%</td><td>2.96%</td><td>0.15%</td><td><span class="status status-critical">Low Appr</span></td></tr>
+        <tr><td class="label-cell">CHF</td><td>$163,263</td><td>550</td><td>86.22%</td><td>3.00%</td><td>0.00%</td><td><span class="status status-good">Good</span></td></tr>
+        <tr><td class="label-cell">NZD</td><td>$141,445</td><td>1,081</td><td>68.18%</td><td>3.09%</td><td>0.00%</td><td><span class="status status-critical">Low Appr</span></td></tr>
+        <tr class="total-row"><td class="label-cell">Total</td><td>$31,954,082</td><td>131,194</td><td>85.21%</td><td>2.19%</td><td>0.12%</td><td></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section-heading">WorldPay Apple Pay</div>
+  <div class="table-wrap">
+    <table>
+<thead><tr><th class="th-left">Currency</th><th>Volume (USD)</th><th>Orders</th><th>Approval %</th><th>Fee Rate</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr><td class="label-cell">USD</td><td>$4,500,000</td><td>22,117</td><td>83.18%</td><td>2.50%</td><td><span class="status status-good">Good</span></td></tr>
+        <tr><td class="label-cell">GBP</td><td>$1,080,000</td><td>864</td><td>92.94%</td><td>2.50%</td><td><span class="status status-excellent">Excellent</span></td></tr>
+        <tr><td class="label-cell">EUR</td><td>$498,209</td><td>750</td><td>89.20%</td><td>3.00%</td><td><span class="status status-good">Good</span></td></tr>
+        <tr><td class="label-cell">CAD</td><td>$434,000</td><td>3,045</td><td>79.64%</td><td>2.50%</td><td><span class="status status-monitor">Monitor</span></td></tr>
+        <tr><td class="label-cell">CHF</td><td>$123,210</td><td>111</td><td>97.30%</td><td>3.00%</td><td><span class="status status-excellent">Excellent</span></td></tr>
+        <tr class="total-row"><td class="label-cell">Total</td><td>$6,635,419</td><td>26,887</td><td>83.32%</td><td>2.50%</td><td></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section-heading">Nuvei Credit Cards</div>
+  <div class="table-wrap">
+    <table>
+<thead><tr><th class="th-left">Currency</th><th>Volume (USD)</th><th>Orders</th><th>Approval %</th><th>Fee Rate</th><th>CB Rate</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr><td class="label-cell">USD</td><td>$31,547,166</td><td>258,569</td><td>78.05%</td><td>3.66%</td><td>0.38%</td><td><span class="status status-monitor">Monitor</span></td></tr>
+        <tr><td class="label-cell">CAD</td><td>$1,678,681</td><td>18,109</td><td>75.50%</td><td>3.40%</td><td>1.33%</td><td><span class="status status-critical">High CB</span></td></tr>
+        <tr class="total-row"><td class="label-cell">Total</td><td>$33,225,847</td><td>276,678</td><td>77.70%</td><td>3.64%</td><td>0.46%</td><td></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section-heading">Trust Payments Credit Cards</div>
+  <div class="table-wrap">
+    <table>
+<thead><tr><th class="th-left">Currency</th><th>Volume (USD)</th><th>Orders</th><th>Approval %</th><th>Fee Rate</th><th>CB Rate</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr><td class="label-cell">EUR</td><td>$4,736,260</td><td>49,809</td><td>53.80%</td><td>3.08%</td><td>0.34%</td><td><span class="status status-critical">Critical</span></td></tr>
+        <tr><td class="label-cell">GBP</td><td>$3,483,577</td><td>26,531</td><td>63.89%</td><td>4.20%</td><td>0.58%</td><td><span class="status status-critical">Critical</span></td></tr>
+        <tr><td class="label-cell">CHF</td><td>$503,399</td><td>2,496</td><td>79.21%</td><td>3.26%</td><td>0.00%</td><td><span class="status status-monitor">Monitor</span></td></tr>
+        <tr class="total-row"><td class="label-cell">Total</td><td>$8,723,236</td><td>78,836</td><td>58.38%</td><td>3.53%</td><td>0.46%</td><td></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section-heading">Trust Payments PayPal</div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th class="th-left">Currency</th><th>Volume (USD)</th><th>Orders</th><th>Approval %</th><th>Fee Rate</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr><td class="label-cell">EUR</td><td>$499,200</td><td>2,700</td><td>98.41%</td><td>3.53%</td><td><span class="status status-excellent">Excellent</span></td></tr>
+        <tr><td class="label-cell">GBP</td><td>$300,000</td><td>817</td><td>99.63%</td><td>3.53%</td><td><span class="status status-excellent">Excellent</span></td></tr>
+        <tr class="total-row"><td class="label-cell">Total</td><td>$799,200</td><td>3,517</td><td>98.74%</td><td>3.53%</td><td></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section-heading">Amex Credit Cards</div>
+  <div class="table-wrap">
+    <table>
+<thead><tr><th class="th-left">Currency</th><th>Volume (USD)</th><th>Orders</th><th>Approval %</th><th>Fee Rate</th><th>CB Rate</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr><td class="label-cell">JPY</td><td>$906,770</td><td>2,833</td><td>91.21%</td><td>2.26%</td><td>0.00%</td><td><span class="status status-good">Good</span></td></tr>
+        <tr><td class="label-cell">USD</td><td>$380,000</td><td>4,140</td><td>92.25%</td><td>2.50%</td><td>0.00%</td><td><span class="status status-good">Good</span></td></tr>
+        <tr><td class="label-cell">CAD</td><td>$310,326</td><td>1,100</td><td>89.64%</td><td>3.07%</td><td>0.97%</td><td><span class="status status-monitor">Watch CB</span></td></tr>
+        <tr><td class="label-cell">GBP</td><td>$39,310</td><td>131</td><td>94.66%</td><td>2.28%</td><td>0.00%</td><td><span class="status status-excellent">Excellent</span></td></tr>
+        <tr><td class="label-cell">EUR</td><td>$21,612</td><td>83</td><td>97.59%</td><td>2.46%</td><td>0.00%</td><td><span class="status status-excellent">Excellent</span></td></tr>
+        <tr><td class="label-cell">AUD</td><td>$18,600</td><td>211</td><td>89.10%</td><td>2.50%</td><td>0.00%</td><td><span class="status status-good">Good</span></td></tr>
+        <tr><td class="label-cell">CHF</td><td>$5,168</td><td>19</td><td>89.47%</td><td>3.48%</td><td>0.00%</td><td><span class="status status-good">Good</span></td></tr>
+        <tr><td class="label-cell">MXN</td><td>$9,000</td><td>59</td><td>83.05%</td><td>2.50%</td><td>0.00%</td><td><span class="status status-monitor">Watch</span></td></tr>
+        <tr><td class="label-cell">NZD</td><td>$960</td><td>6</td><td>83.33%</td><td>2.29%</td><td>0.00%</td><td><span class="status status-monitor">Watch</span></td></tr>
+        <tr class="total-row"><td class="label-cell">Total</td><td>$1,281,455</td><td>8,582</td><td>91.51%</td><td>2.47%</td><td>0.34%</td><td></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section-heading">PayPal / Braintree</div>
+  <div class="table-wrap">
+    <table>
+<thead><tr><th class="th-left">Currency</th><th>Volume (USD)</th><th>Orders</th><th>Approval %</th><th>Fee Rate</th><th>CB Rate</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr><td class="label-cell">USD</td><td>$1,485,605</td><td>5,825</td><td>97.65%</td><td>4.12%</td><td>0.36%</td><td><span class="status status-good">Good</span></td></tr>
+        <tr><td class="label-cell">CAD</td><td>$101,304</td><td>312</td><td>98.08%</td><td>5.45%</td><td>0.00%</td><td><span class="status status-good">Good</span></td></tr>
+        <tr class="total-row"><td class="label-cell">Total</td><td>$1,586,909</td><td>6,137</td><td>97.67%</td><td>4.31%</td><td>0.34%</td><td></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section-heading">TrueMed HSA/Stripe</div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th class="th-left">Currency</th><th>Volume (USD)</th><th>Orders</th><th>Approval %</th><th>Fee Rate</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr><td class="label-cell">USD</td><td>$327,436</td><td>1,170</td><td>100.00%</td><td>8.08%</td><td><span class="status status-monitor">High Fee</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- TAB: Approval Rates -->
+<div class="tab-panel" id="panel-approvals">
+  <div class="section-heading">Approval Rate Detail (Deduplicated by Order ID)</div>
+  <div class="section-note">Each order counted once regardless of retry attempts. If ANY attempt approved, order counts as approved.</div>
+
+  <div class="callout callout-red">
+    <strong>Trust Payments EUR declined 14pp (60.8% to 46.8%) Jun through Dec.</strong> GBP declined 7.5pp (66.5% to 59.0%). Requires immediate investigation.
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Processor</th><th class="th-left">Method</th><th class="th-left">Currency</th><th>Orders</th><th>Approved</th><th>Declined</th><th>Rate</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr><td class="label-cell">TrueMed</td><td class="text-cell">HSA/Stripe</td><td class="text-cell">USD</td><td>1,170</td><td>1,170</td><td>0</td><td>100.00%</td><td><span class="status status-good">Good</span></td></tr>
+        <tr><td class="label-cell">PayPal</td><td class="text-cell">Trust Payments</td><td class="text-cell">GBP</td><td>817</td><td>814</td><td>3</td><td>99.63%</td><td><span class="status status-good">Good</span></td></tr>
+        <tr><td class="label-cell">PayPal</td><td class="text-cell">Trust Payments</td><td class="text-cell">EUR</td><td>2,700</td><td>2,657</td><td>43</td><td>98.41%</td><td><span class="status status-good">Good</span></td></tr>
+        <tr><td class="label-cell">PayPal</td><td class="text-cell">Braintree</td><td class="text-cell">CAD</td><td>312</td><td>306</td><td>6</td><td>98.08%</td><td><span class="status status-good">Good</span></td></tr>
+        <tr><td class="label-cell">PayPal</td><td class="text-cell">Braintree</td><td class="text-cell">USD</td><td>5,825</td><td>5,688</td><td>137</td><td>97.65%</td><td><span class="status status-good">Good</span></td></tr>
+        <tr><td class="label-cell">Amex</td><td class="text-cell">Credit Card</td><td class="text-cell">EUR</td><td>83</td><td>81</td><td>2</td><td>97.59%</td><td><span class="status status-good">Good</span></td></tr>
+        <tr><td class="label-cell">WP Apple</td><td class="text-cell">Apple Pay</td><td class="text-cell">CHF</td><td>111</td><td>108</td><td>3</td><td>97.30%</td><td><span class="status status-good">Good</span></td></tr>
+        <tr><td class="label-cell">Amex</td><td class="text-cell">Credit Card</td><td class="text-cell">GBP</td><td>131</td><td>124</td><td>7</td><td>94.66%</td><td><span class="status status-good">Good</span></td></tr>
+        <tr><td class="label-cell">WP Apple</td><td class="text-cell">Apple Pay</td><td class="text-cell">GBP</td><td>864</td><td>803</td><td>61</td><td>92.94%</td><td><span class="status status-good">Good</span></td></tr>
+        <tr><td class="label-cell">Amex</td><td class="text-cell">Credit Card</td><td class="text-cell">USD</td><td>4,140</td><td>3,819</td><td>321</td><td>92.25%</td><td><span class="status status-good">Good</span></td></tr>
+        <tr><td class="label-cell">Amex</td><td class="text-cell">Credit Card</td><td class="text-cell">JPY</td><td>2,833</td><td>2,584</td><td>249</td><td>91.21%</td><td><span class="status status-good">Good</span></td></tr>
+        <tr><td class="label-cell">Amex</td><td class="text-cell">Credit Card</td><td class="text-cell">CAD</td><td>1,100</td><td>986</td><td>114</td><td>89.64%</td><td><span class="status status-good">Good</span></td></tr>
+        <tr><td class="label-cell">WP Apple</td><td class="text-cell">Apple Pay</td><td class="text-cell">EUR</td><td>750</td><td>669</td><td>81</td><td>89.20%</td><td><span class="status status-good">Good</span></td></tr>
+        <tr><td class="label-cell">WorldPay</td><td class="text-cell">Credit Card</td><td class="text-cell">JPY</td><td>47,189</td><td>42,063</td><td>5,126</td><td>89.14%</td><td><span class="status status-good">Good</span></td></tr>
+        <tr><td class="label-cell">WorldPay</td><td class="text-cell">Credit Card</td><td class="text-cell">GBP</td><td>2,688</td><td>2,344</td><td>344</td><td>87.20%</td><td><span class="status status-good">Good</span></td></tr>
+        <tr><td class="label-cell">WorldPay</td><td class="text-cell">Credit Card</td><td class="text-cell">AED</td><td>2,417</td><td>2,084</td><td>333</td><td>86.22%</td><td><span class="status status-good">Good</span></td></tr>
+        <tr><td class="label-cell">WorldPay</td><td class="text-cell">Credit Card</td><td class="text-cell">CHF</td><td>704</td><td>607</td><td>97</td><td>86.22%</td><td><span class="status status-good">Good</span></td></tr>
+        <tr><td class="label-cell">WorldPay</td><td class="text-cell">Credit Card</td><td class="text-cell">EUR</td><td>5,615</td><td>4,807</td><td>808</td><td>85.61%</td><td><span class="status status-good">Good</span></td></tr>
+        <tr><td class="label-cell">WorldPay</td><td class="text-cell">Credit Card</td><td class="text-cell">USD</td><td>62,010</td><td>52,648</td><td>9,362</td><td>84.90%</td><td><span class="status status-monitor">Monitor</span></td></tr>
+        <tr><td class="label-cell">WP Apple</td><td class="text-cell">Apple Pay</td><td class="text-cell">USD</td><td>22,117</td><td>18,396</td><td>3,721</td><td>83.18%</td><td><span class="status status-monitor">Monitor</span></td></tr>
+        <tr><td class="label-cell">WorldPay</td><td class="text-cell">Credit Card</td><td class="text-cell">CAD</td><td>19,892</td><td>16,080</td><td>3,812</td><td>80.84%</td><td><span class="status status-monitor">Monitor</span></td></tr>
+        <tr><td class="label-cell">WP Apple</td><td class="text-cell">Apple Pay</td><td class="text-cell">CAD</td><td>3,045</td><td>2,425</td><td>620</td><td>79.64%</td><td><span class="status status-monitor">Monitor</span></td></tr>
+        <tr><td class="label-cell">Trust</td><td class="text-cell">Credit Card</td><td class="text-cell">CHF</td><td>2,144</td><td>1,698</td><td>446</td><td>79.20%</td><td><span class="status status-monitor">Monitor</span></td></tr>
+        <tr><td class="label-cell">Nuvei</td><td class="text-cell">Credit Card</td><td class="text-cell">USD</td><td>258,569</td><td>201,825</td><td>56,744</td><td>78.05%</td><td><span class="status status-monitor">Monitor</span></td></tr>
+        <tr><td class="label-cell">Nuvei</td><td class="text-cell">Credit Card</td><td class="text-cell">CAD</td><td>18,109</td><td>13,673</td><td>4,436</td><td>75.50%</td><td><span class="status status-monitor">Monitor</span></td></tr>
+        <tr><td class="label-cell">WorldPay</td><td class="text-cell">Credit Card</td><td class="text-cell">AUD</td><td>10,577</td><td>7,919</td><td>2,658</td><td>74.87%</td><td><span class="status status-critical">Action</span></td></tr>
+        <tr><td class="label-cell">WorldPay</td><td class="text-cell">Credit Card</td><td class="text-cell">NZD</td><td>1,631</td><td>1,112</td><td>519</td><td>68.18%</td><td><span class="status status-critical">Action</span></td></tr>
+        <tr><td class="label-cell">Trust</td><td class="text-cell">Credit Card</td><td class="text-cell">GBP</td><td>22,968</td><td>14,669</td><td>8,299</td><td>63.87%</td><td><span class="status status-critical">Action</span></td></tr>
+        <tr><td class="label-cell">Trust</td><td class="text-cell">Credit Card</td><td class="text-cell">EUR</td><td>42,833</td><td>22,850</td><td>19,983</td><td>53.35%</td><td><span class="status status-critical">Action</span></td></tr>
+        <tr class="total-row"><td class="label-cell" colspan="3">TOTAL</td><td>1,001,313</td><td>763,860</td><td>237,260</td><td>76.26%</td><td></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section-heading" style="margin-top:32px">Trust Payments EUR/GBP Monthly Trend</div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th class="th-left">Currency</th><th>Jun</th><th>Jul</th><th>Aug</th><th>Sep</th><th>Oct</th><th>Nov</th><th>Dec</th><th>Change</th></tr></thead>
+      <tbody>
+        <tr><td class="label-cell">EUR</td><td>60.8%</td><td>60.1%</td><td>56.3%</td><td>54.1%</td><td>52.0%</td><td>50.5%</td><td style="color:var(--red)">46.8%</td><td style="color:var(--red)">-14.0pp</td></tr>
+        <tr><td class="label-cell">GBP</td><td>66.5%</td><td>69.0%</td><td>67.1%</td><td>65.4%</td><td>64.0%</td><td>61.5%</td><td style="color:var(--red)">59.0%</td><td style="color:var(--red)">-7.5pp</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- TAB: Chargebacks -->
+<div class="tab-panel" id="panel-chargebacks">
+  <div class="section-heading">Chargeback Rate by Processor and Currency</div>
+  <div class="section-note">CB Rate = Chargeback Amount / Net Settled Volume. Target: below 1.0%.</div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Processor</th><th class="th-left">Currency</th><th>Volume (USD)</th><th>CB Count</th><th>CB Amount</th><th>CB Rate</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr><td class="label-cell">WorldPay</td><td class="text-cell">JPY</td><td>$10,204,579</td><td>15</td><td>$2,850</td><td>0.03%</td><td><span class="status status-good">Good</span></td></tr>
+        <tr><td class="label-cell">WorldPay</td><td class="text-cell">USD</td><td>$12,554,175</td><td>185</td><td>$35,200</td><td>0.28%</td><td><span class="status status-monitor">Monitor</span></td></tr>
+        <tr><td class="label-cell">WorldPay</td><td class="text-cell">AED</td><td>$1,199,844</td><td>8</td><td>$1,520</td><td>0.13%</td><td><span class="status status-good">Good</span></td></tr>
+        <tr><td class="label-cell">WorldPay</td><td class="text-cell">EUR</td><td>$3,467,105</td><td>42</td><td>$7,980</td><td>0.23%</td><td><span class="status status-monitor">Monitor</span></td></tr>
+        <tr><td class="label-cell">WorldPay</td><td class="text-cell">GBP</td><td>$2,155,117</td><td>35</td><td>$6,650</td><td>0.31%</td><td><span class="status status-monitor">Monitor</span></td></tr>
+        <tr><td class="label-cell">WorldPay</td><td class="text-cell">CHF</td><td>$286,473</td><td>3</td><td>$570</td><td>0.20%</td><td><span class="status status-good">Good</span></td></tr>
+        <tr><td class="label-cell">WorldPay</td><td class="text-cell">CAD</td><td>$3,208,895</td><td>45</td><td>$8,550</td><td>0.27%</td><td><span class="status status-monitor">Monitor</span></td></tr>
+        <tr><td class="label-cell">WorldPay</td><td class="text-cell">NZD</td><td>$141,445</td><td>2</td><td>$380</td><td>0.27%</td><td><span class="status status-good">Good</span></td></tr>
+        <tr><td class="label-cell">WorldPay</td><td class="text-cell">AUD</td><td>$1,057,868</td><td>115</td><td>$61,300</td><td style="color:var(--red)">5.79%</td><td><span class="status status-critical">High</span></td></tr>
+        <tr><td class="label-cell">Nuvei</td><td class="text-cell">USD</td><td>$62,283,265</td><td>1,104</td><td>$203,857</td><td>0.33%</td><td><span class="status status-monitor">Monitor</span></td></tr>
+        <tr><td class="label-cell">Nuvei</td><td class="text-cell">CAD</td><td>$3,654,540</td><td>234</td><td>$205,658</td><td style="color:var(--red)">5.63%</td><td><span class="status status-critical">High</span></td></tr>
+        <tr><td class="label-cell">Trust</td><td class="text-cell">EUR</td><td>$4,736,260</td><td>85</td><td>$14,620</td><td>0.31%</td><td><span class="status status-monitor">Monitor</span></td></tr>
+        <tr><td class="label-cell">Trust</td><td class="text-cell">GBP</td><td>$3,483,577</td><td>142</td><td>$24,430</td><td style="color:var(--red)">0.70%</td><td><span class="status status-critical">High</span></td></tr>
+        <tr><td class="label-cell">Trust</td><td class="text-cell">CHF</td><td>$503,399</td><td>8</td><td>$1,376</td><td>0.27%</td><td><span class="status status-monitor">Monitor</span></td></tr>
+        <tr><td class="label-cell">Amex</td><td class="text-cell">All</td><td>$1,987,972</td><td>32</td><td>$8,500</td><td>0.43%</td><td><span class="status status-monitor">Monitor</span></td></tr>
+        <tr><td class="label-cell">PayPal</td><td class="text-cell">Braintree</td><td>$1,586,909</td><td>12</td><td>$2,100</td><td>0.13%</td><td><span class="status status-good">Good</span></td></tr>
+        <tr><td class="label-cell">TrueMed</td><td class="text-cell">USD</td><td>$327,436</td><td>3</td><td>$850</td><td>0.26%</td><td><span class="status status-good">Good</span></td></tr>
+        <tr class="total-row"><td class="label-cell" colspan="2">TOTAL</td><td>$113,638,859</td><td>2,103</td><td>$592,255</td><td>0.52%</td><td></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="callout callout-red" style="margin-top:20px">
+    <strong>Hot spots:</strong> WorldPay AUD (5.79%) and Nuvei CAD (5.63%) are well above the 1% threshold. Nuvei CAD shows 329 total CBs with 234 net losses after 95 won/cancelled.
+  </div>
+</div>
+
+<!-- TAB: Processing Fees -->
+<div class="tab-panel" id="panel-fees">
+  <div class="section-heading">Processing Fee Rates by Processor and Currency</div>
+  <div class="section-note">Fee Rate = Total Fees / Net Settled Volume. Sorted lowest to highest.</div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Processor</th><th class="th-left">Method</th><th class="th-left">Currency</th><th>Volume (USD)</th><th>Fees (USD)</th><th>Fee Rate</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr><td class="label-cell">WorldPay</td><td class="text-cell">Credit Card</td><td class="text-cell">JPY</td><td>$10,204,579</td><td>$65,309</td><td>0.64%</td><td><span class="status status-excellent">Excellent</span></td></tr>
+        <tr><td class="label-cell">WorldPay</td><td class="text-cell">Credit Card</td><td class="text-cell">USD</td><td>$12,554,175</td><td>$125,542</td><td>1.00%</td><td><span class="status status-excellent">Excellent</span></td></tr>
+        <tr><td class="label-cell">Amex</td><td class="text-cell">Credit Card</td><td class="text-cell">JPY</td><td>$906,770</td><td>$20,517</td><td>2.26%</td><td><span class="status status-good">Good</span></td></tr>
+        <tr><td class="label-cell">Amex</td><td class="text-cell">Credit Card</td><td class="text-cell">EUR</td><td>$21,612</td><td>$531</td><td>2.46%</td><td><span class="status status-good">Good</span></td></tr>
+        <tr><td class="label-cell">Amex</td><td class="text-cell">Credit Card</td><td class="text-cell">USD</td><td>$650,000</td><td>$16,055</td><td>2.47%</td><td><span class="status status-good">Good</span></td></tr>
+        <tr><td class="label-cell">WP Apple</td><td class="text-cell">Apple Pay</td><td class="text-cell">Multi</td><td>$6,635,419</td><td>$165,886</td><td>2.50%</td><td><span class="status status-good">Good</span></td></tr>
+        <tr><td class="label-cell">WorldPay</td><td class="text-cell">Credit Card</td><td class="text-cell">CAD</td><td>$2,588,895</td><td>$72,489</td><td>2.80%</td><td><span class="status status-good">Good</span></td></tr>
+        <tr><td class="label-cell">WorldPay</td><td class="text-cell">Credit Card</td><td class="text-cell">EUR</td><td>$2,968,896</td><td>$89,067</td><td>3.00%</td><td><span class="status status-good">Good</span></td></tr>
+        <tr><td class="label-cell">Amex</td><td class="text-cell">Credit Card</td><td class="text-cell">CAD</td><td>$310,326</td><td>$9,539</td><td>3.07%</td><td><span class="status status-good">Good</span></td></tr>
+        <tr><td class="label-cell">Trust</td><td class="text-cell">Credit Card</td><td class="text-cell">EUR</td><td>$4,736,260</td><td>$145,739</td><td>3.08%</td><td><span class="status status-good">Good</span></td></tr>
+        <tr><td class="label-cell">Trust</td><td class="text-cell">Credit Card</td><td class="text-cell">CHF</td><td>$503,399</td><td>$16,429</td><td>3.26%</td><td><span class="status status-good">Good</span></td></tr>
+        <tr><td class="label-cell">Nuvei</td><td class="text-cell">Credit Card</td><td class="text-cell">CAD</td><td>$3,195,785</td><td>$159,956</td><td>3.40%</td><td><span class="status status-monitor">Monitor</span></td></tr>
+        <tr><td class="label-cell">Trust</td><td>PayPal</td><td class="text-cell">EUR/GBP</td><td>$800,000</td><td>$28,240</td><td>3.53%</td><td><span class="status status-monitor">Monitor</span></td></tr>
+        <tr><td class="label-cell">Nuvei</td><td class="text-cell">Credit Card</td><td class="text-cell">USD</td><td>$62,283,265</td><td>$2,638,269</td><td>4.24%</td><td><span class="status status-monitor">Monitor</span></td></tr>
+        <tr><td class="label-cell">PayPal</td><td class="text-cell">Braintree</td><td class="text-cell">USD</td><td>$1,485,605</td><td>$61,249</td><td>4.12%</td><td><span class="status status-monitor">Monitor</span></td></tr>
+        <tr><td class="label-cell">Trust</td><td class="text-cell">Credit Card</td><td class="text-cell">GBP</td><td>$3,483,577</td><td>$146,161</td><td>4.20%</td><td><span class="status status-monitor">Monitor</span></td></tr>
+        <tr><td class="label-cell">WorldPay</td><td class="text-cell">Credit Card</td><td class="text-cell">AUD</td><td>$1,057,868</td><td>$50,518</td><td>4.78%</td><td><span class="status status-critical">High</span></td></tr>
+        <tr><td class="label-cell">PayPal</td><td class="text-cell">Braintree</td><td class="text-cell">CAD</td><td>$101,304</td><td>$5,517</td><td>5.45%</td><td><span class="status status-critical">High</span></td></tr>
+        <tr><td class="label-cell">TrueMed</td><td class="text-cell">HSA/Stripe</td><td class="text-cell">USD</td><td>$327,436</td><td>$26,453</td><td>8.08%</td><td><span class="status status-critical">High</span></td></tr>
+        <tr class="total-row"><td class="label-cell" colspan="3">TOTAL</td><td>$117,672,976</td><td>$3,930,954</td><td>3.34%</td><td></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- TAB: Refunds -->
+<div class="tab-panel" id="panel-refunds">
+  <div class="section-heading">Refund Rates by Processor and Currency</div>
+  <div class="section-note">Refund Rate = Refund Amount / Net Settled Volume.</div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Processor</th><th class="th-left">Currency</th><th>Volume (USD)</th><th>Ref Count</th><th>Refund Amt (USD)</th><th>Rate</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr><td class="label-cell">WorldPay</td><td class="text-cell">JPY</td><td>$10,269,888</td><td>580</td><td>$65,309</td><td>0.64%</td><td><span class="status status-good">Good</span></td></tr>
+        <tr><td class="label-cell">WorldPay</td><td class="text-cell">USD</td><td>$12,679,717</td><td>1,425</td><td>$125,542</td><td>0.99%</td><td><span class="status status-good">Good</span></td></tr>
+        <tr><td class="label-cell">Nuvei</td><td class="text-cell">USD</td><td>$31,547,166</td><td>4,383</td><td>$913,939</td><td>2.90%</td><td><span class="status status-monitor">Monitor</span></td></tr>
+        <tr><td class="label-cell">WorldPay</td><td class="text-cell">EUR</td><td>$3,557,963</td><td>385</td><td>$89,067</td><td>2.50%</td><td><span class="status status-monitor">Monitor</span></td></tr>
+        <tr><td class="label-cell">WorldPay</td><td class="text-cell">GBP</td><td>$2,195,371</td><td>280</td><td>$59,254</td><td>2.70%</td><td><span class="status status-monitor">Monitor</span></td></tr>
+        <tr><td class="label-cell">WorldPay</td><td class="text-cell">AED</td><td>$1,235,839</td><td>120</td><td>$35,995</td><td>2.91%</td><td><span class="status status-monitor">Monitor</span></td></tr>
+        <tr><td class="label-cell">WorldPay</td><td class="text-cell">CAD</td><td>$3,281,384</td><td>295</td><td>$87,989</td><td>2.68%</td><td><span class="status status-monitor">Monitor</span></td></tr>
+        <tr><td class="label-cell">Trust</td><td class="text-cell">EUR</td><td>$4,881,999</td><td>380</td><td>$145,739</td><td>2.99%</td><td><span class="status status-monitor">Monitor</span></td></tr>
+        <tr><td class="label-cell">Trust</td><td class="text-cell">GBP</td><td>$3,629,738</td><td>295</td><td>$146,161</td><td style="color:var(--red)">4.03%</td><td><span class="status status-critical">High</span></td></tr>
+        <tr><td class="label-cell">Nuvei</td><td class="text-cell">CAD</td><td>$1,678,681</td><td>384</td><td>$69,718</td><td>4.15%</td><td><span class="status status-monitor">Monitor</span></td></tr>
+        <tr><td class="label-cell">Amex</td><td class="text-cell">CAD</td><td>$310,326</td><td>60</td><td>$18,131</td><td style="color:var(--red)">5.84%</td><td><span class="status status-critical">High</span></td></tr>
+        <tr><td class="label-cell">WorldPay</td><td>CAD (WP)</td><td>$2,588,895</td><td>872</td><td>$221,675</td><td style="color:var(--red)">8.56%</td><td><span class="status status-critical">High</span></td></tr>
+        <tr><td class="label-cell">WorldPay</td><td class="text-cell">AUD</td><td>$1,108,386</td><td>185</td><td>$100,518</td><td style="color:var(--red)">9.07%</td><td><span class="status status-critical">High</span></td></tr>
+        <tr class="total-row"><td class="label-cell" colspan="2">TOTAL</td><td>$124,739,506</td><td>10,619</td><td>$4,071,048</td><td>3.26%</td><td></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- TAB: CB Prevention -->
+<div class="tab-panel" id="panel-alerts">
+  <div class="section-heading">Chargeback Alert Program Performance</div>
+
+  <div class="kpi-grid" style="margin-bottom:24px">
+    <div class="kpi">
+      <div class="kpi-label">Total Alerts</div>
+      <div class="kpi-value" style="color:var(--green)">2,069</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Prevented Amount</div>
+      <div class="kpi-value" style="color:var(--green)">$1,436,305</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Avg Alert Value</div>
+      <div class="kpi-value">$694</div>
+    </div>
+  </div>
+
+  <div class="section-heading">Program Breakdown</div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Program</th><th>Alert Count</th><th>Prevented Amount</th><th>Avg Value</th></tr></thead>
+      <tbody>
+        <tr><td class="label-cell">Verifi RDR</td><td>1,012</td><td>$776,629</td><td>$767</td></tr>
+        <tr><td class="label-cell">Ethoca</td><td>966</td><td>$595,868</td><td>$617</td></tr>
+        <tr><td class="label-cell">Verifi (Non-RDR)</td><td>91</td><td>$63,808</td><td>$701</td></tr>
+        <tr class="total-row"><td class="label-cell">TOTAL</td><td>2,069</td><td>$1,436,305</td><td>$694</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section-heading" style="margin-top:24px">Alerts by Processor</div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Processor</th><th>RDR #</th><th>RDR $</th><th>Ethoca #</th><th>Ethoca $</th><th>Verifi #</th><th>Verifi $</th><th>Total Alerts</th><th>Total Prevented</th></tr></thead>
+      <tbody>
+        <tr><td class="label-cell">Nuvei USA</td><td>653</td><td>$144,505</td><td>486</td><td>$160,945</td><td>66</td><td>$22,979</td><td>1,205</td><td>$328,429</td></tr>
+        <tr><td class="label-cell">Nuvei Canada</td><td>183</td><td>$59,937</td><td>75</td><td>$28,003</td><td>0</td><td>$0</td><td>258</td><td>$87,940</td></tr>
+        <tr><td class="label-cell">WorldPay USD</td><td>121</td><td>$49,137</td><td>80</td><td>$71,563</td><td>21</td><td>$8,824</td><td>222</td><td>$129,524</td></tr>
+        <tr><td class="label-cell">WorldPay CAD</td><td>25</td><td>$12,235</td><td>88</td><td>$74,803</td><td>0</td><td>$0</td><td>113</td><td>$87,037</td></tr>
+        <tr><td class="label-cell">Trust EUR</td><td>13</td><td>$491,581</td><td>131</td><td>$196,892</td><td>0</td><td>$0</td><td>144</td><td>$688,473</td></tr>
+        <tr><td class="label-cell">Trust GBP</td><td>14</td><td>$17,862</td><td>106</td><td>$63,662</td><td>4</td><td>$32,004</td><td>124</td><td>$113,529</td></tr>
+        <tr><td class="label-cell">Trust CHF</td><td>3</td><td>$1,373</td><td>0</td><td>$0</td><td>0</td><td>$0</td><td>3</td><td>$1,373</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- TAB: Recurring Analysis -->
+<div class="tab-panel" id="panel-recurring">
+  <div class="section-heading">Recurring vs Non-Recurring Analysis</div>
+  <div class="callout callout-blue">
+    <strong>Key Finding:</strong> Recurring orders have LOWER approval rates than non-recurring at Nuvei US and WorldPay. This baseline is critical for evaluating subscription optimization projects.
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Processor</th><th class="th-left">Currency</th><th>Total Orders</th><th>Total Rate</th><th>Recurring Orders</th><th>Rec Rate</th><th>Non-Rec Orders</th><th>Non-Rec Rate</th><th>Gap</th></tr></thead>
+      <tbody>
+        <tr><td class="label-cell">Nuvei US</td><td class="text-cell">USD</td><td>518,016</td><td>76.27%</td><td>437,301</td><td>75.93%</td><td>80,715</td><td>78.10%</td><td style="color:var(--red)">-2.17pp</td></tr>
+        <tr><td class="label-cell">WorldPay</td><td class="text-cell">Multi</td><td>314,992</td><td>81.34%</td><td>113,855</td><td>78.77%</td><td>199,347</td><td>82.73%</td><td style="color:var(--red)">-3.96pp</td></tr>
+        <tr><td class="label-cell">Nuvei CA</td><td class="text-cell">CAD</td><td>31,499</td><td>74.83%</td><td>25,553</td><td>76.83%</td><td>5,946</td><td>66.25%</td><td style="color:var(--green)">+10.58pp</td></tr>
+        <tr><td class="label-cell">Trust Cards</td><td class="text-cell">EUR/GBP/CHF</td><td>120,353</td><td>60.58%</td><td>53,772</td><td>98.81%</td><td>66,581</td><td>29.70%</td><td style="color:var(--green)">+69.11pp</td></tr>
+        <tr><td class="label-cell">PayPal</td><td class="text-cell">USD</td><td>13,774</td><td>97.42%</td><td colspan="5" style="color:var(--text-dim);text-align:center">N/A</td></tr>
+        <tr><td class="label-cell">TrueMed</td><td class="text-cell">USD</td><td>2,679</td><td>100.00%</td><td colspan="5" style="color:var(--text-dim);text-align:center">N/A</td></tr>
+        <tr class="total-row"><td class="label-cell" colspan="2">TOTAL</td><td>1,001,313</td><td>76.26%</td><td colspan="5"></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout callout-green" style="margin-top:20px">
+    <strong>Project Opportunity:</strong><br>
+    Nuvei US: 437,301 recurring x 2.17pp gap = ~9,500 additional approvals/year<br>
+    WorldPay: 113,855 recurring x 3.96pp gap = ~4,500 additional approvals/year<br>
+    Combined revenue impact: $1.4M to $2.8M annually at $100 to $200 AOV<br>
+    Key levers: MIT/CIT labeling, OTI implementation, retry optimization
+  </div>
+</div>
+
+</div><!-- end content -->
+
+<script>
+document.querySelectorAll('.tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById('panel-' + tab.dataset.tab).classList.add('active');
+  });
+});
+</script>
+
+</body>
+</html>
