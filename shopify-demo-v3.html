@@ -1869,4 +1869,13 @@ function reset(){
 
 // ========== KEYBOARD NAV ==========
 document.addEventListener('keydown',function(e){
-  
+  if(e.key==='ArrowRight') next();
+  else if(e.key==='ArrowLeft') prev();
+  else if(e.key.toLowerCase()==='r') reset();
+});
+
+// ========== INIT ==========
+buildDots();updNav();
+</script>
+</body>
+</html>
