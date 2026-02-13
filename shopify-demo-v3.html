@@ -449,6 +449,79 @@ body{font-family:'Inter',system-ui,sans-serif;background:linear-gradient(145deg,
 .tap-amount{font-size:42px;font-weight:800;color:#fff;margin-bottom:8px;font-family:'Montserrat',sans-serif}
 .tap-label{font-size:13px;color:#8b949e;margin-bottom:36px}
 
+/* P3b: Payment Selection */
+.ps-grid{padding:16px 20px 100px}
+.ps-title{font-size:13px;font-weight:600;color:#8b949e;text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;padding:0 4px}
+.ps-method{display:flex;align-items:center;gap:14px;padding:14px 16px;background:#161b22;border:1.5px solid #30363d;border-radius:12px;margin-bottom:8px;cursor:pointer;transition:all 0.15s}
+.ps-method:active{transform:scale(0.98);border-color:var(--pos-green);background:#0d2818}
+.ps-method .pm-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.ps-method .pm-icon.nfc{background:#0d2818;color:var(--pos-green)}
+.ps-method .pm-icon.reader{background:#1a1f36;color:#818cf8}
+.ps-method .pm-icon.manual{background:#1a1a2e;color:#a78bfa}
+.ps-method .pm-icon.cash{background:#1a2e1a;color:#6ee7b7}
+.ps-method .pm-icon.gift{background:#2e1a2e;color:#f0abfc}
+.ps-method .pm-icon.credit{background:#1a2e2e;color:#67e8f9}
+.ps-method .pm-icon.install{background:#1e1a2e;color:#c4b5fd}
+.ps-method .pm-icon.custom{background:#2e2a1a;color:#fcd34d}
+.ps-method .pm-info{flex:1}
+.ps-method .pm-name{font-size:14px;font-weight:600;color:#e6edf3}
+.ps-method .pm-desc{font-size:11px;color:#8b949e;margin-top:1px}
+.ps-method .pm-arrow{color:#484f58;font-size:16px}
+.ps-split{margin-top:6px;padding:12px 16px;background:transparent;border:1.5px dashed #30363d;border-radius:12px;display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;color:#8b949e;font-size:13px;font-weight:500;transition:all 0.15s}
+.ps-split:active{border-color:var(--pos-green);color:var(--pos-green)}
+.ps-total-bar{position:absolute;bottom:0;left:0;right:0;padding:14px 20px;background:linear-gradient(transparent,#0d1117 30%);z-index:10}
+.ps-total{font-size:11px;color:#8b949e;text-align:center;margin-bottom:4px}
+.ps-total strong{color:#e6edf3;font-size:16px}
+/* Dynamic payment views inside P4 */
+.pay-screen{display:none;width:100%;height:100%;flex-direction:column;align-items:center;justify-content:center;padding:40px 24px;text-align:center}
+.pay-screen.active{display:flex}
+#payNfc.active{display:block}
+.pay-back{position:absolute;top:60px;left:16px;z-index:10;cursor:pointer}
+.pay-back svg{width:24px;height:24px}
+.pay-reader-icon{width:100px;height:100px;background:#161b22;border:3px solid #818cf8;border-radius:16px;display:flex;align-items:center;justify-content:center;margin-bottom:24px;font-size:44px;animation:readerPulse 2s ease-in-out infinite}
+@keyframes readerPulse{0%,100%{box-shadow:0 0 0 0 rgba(129,140,248,0.3)}50%{box-shadow:0 0 0 16px rgba(129,140,248,0)}}
+.pay-manual-form{width:100%;max-width:280px;text-align:left}
+.pay-manual-form .pmf-field{margin-bottom:12px}
+.pay-manual-form label{font-size:11px;color:#8b949e;display:block;margin-bottom:4px}
+.pay-manual-form input{width:100%;padding:11px 14px;background:#161b22;border:1.5px solid #30363d;border-radius:8px;font-size:14px;color:#e6edf3;font-family:inherit;outline:none;box-sizing:border-box}
+.pay-manual-form input:focus{border-color:var(--pos-green)}
+.pay-manual-form input::placeholder{color:#484f58}
+.pmf-row{display:flex;gap:10px}
+.pmf-row .pmf-field{flex:1}
+.pay-cash-display{width:100%;max-width:280px}
+.cash-due{font-size:32px;font-weight:700;color:var(--pos-green);margin-bottom:16px}
+.cash-presets{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;justify-content:center}
+.cash-preset{padding:8px 14px;background:#161b22;border:1px solid #30363d;border-radius:8px;color:#e6edf3;font-size:13px;font-weight:600;cursor:pointer;transition:all 0.15s}
+.cash-preset:active,.cash-preset.sel{background:var(--pos-green);color:#000;border-color:var(--pos-green)}
+.cash-input-wrap{position:relative;margin-bottom:14px}
+.cash-input-wrap input{width:100%;padding:14px 14px 14px 28px;background:#161b22;border:2px solid #30363d;border-radius:10px;font-size:20px;font-weight:600;color:#e6edf3;font-family:inherit;outline:none;text-align:center;box-sizing:border-box}
+.cash-input-wrap input:focus{border-color:var(--pos-green)}
+.cash-dollar{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:#8b949e;font-size:20px;font-weight:600}
+.cash-change{padding:12px;background:#0d2818;border:1px solid #1a4028;border-radius:8px;display:none}
+.cash-change.show{display:block}
+.cash-change-label{font-size:11px;color:#6ee7b7;text-transform:uppercase;letter-spacing:1px}
+.cash-change-amount{font-size:24px;font-weight:700;color:#6ee7b7;margin-top:4px}
+.gift-input{width:100%;max-width:280px;padding:14px;background:#161b22;border:2px solid #30363d;border-radius:10px;font-size:16px;color:#e6edf3;font-family:inherit;outline:none;text-align:center;letter-spacing:2px;box-sizing:border-box}
+.gift-input:focus{border-color:#f0abfc}
+.gift-input::placeholder{color:#484f58;letter-spacing:0}
+.credit-lookup input{width:100%;max-width:280px;padding:14px;background:#161b22;border:2px solid #30363d;border-radius:10px;font-size:14px;color:#e6edf3;font-family:inherit;outline:none;text-align:center;box-sizing:border-box}
+.credit-lookup input:focus{border-color:#67e8f9}
+.credit-lookup input::placeholder{color:#484f58}
+.credit-bal{margin-top:12px;padding:12px;background:#0d2818;border:1px solid #1a4028;border-radius:8px;display:none;max-width:280px;width:100%}
+.credit-bal.show{display:block}
+.install-qr{width:120px;height:120px;background:#fff;border-radius:12px;display:grid;grid-template-columns:repeat(8,1fr);grid-template-rows:repeat(8,1fr);gap:1px;padding:8px;margin:0 auto 16px;overflow:hidden}
+.install-qr i{background:#000;border-radius:1px}
+.install-qr i.w{background:#fff}
+.btn-pay-confirm{width:100%;max-width:280px;padding:14px;border:none;border-radius:10px;background:var(--pos-green);color:#000;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;margin-top:16px;transition:all 0.15s}
+.btn-pay-confirm:active{transform:scale(0.97)}
+.btn-pay-confirm.purple{background:#818cf8}
+.btn-pay-confirm.pink{background:#f0abfc;color:#1a0020}
+.btn-pay-confirm.cyan{background:#67e8f9;color:#0a1a1a}
+.btn-pay-confirm.yellow{background:#fcd34d;color:#1a1500}
+.btn-pay-confirm.violet{background:#c4b5fd;color:#0f0a1e}
+.pay-method-label{font-size:12px;color:#8b949e;margin-top:8px}
+.pay-title{font-size:18px;font-weight:700;color:#e6edf3;margin-bottom:6px}
+.pay-sub{font-size:13px;color:#8b949e;margin-bottom:20px}
 /* NFC waves animation */
 .nfc-zone{width:180px;height:180px;position:relative;display:flex;align-items:center;justify-content:center;margin-bottom:32px}
 .nfc-ring{position:absolute;width:100%;height:100%;border-radius:50%;border:2px solid var(--pos-green);opacity:0;animation:nfcPulse 2.4s ease-out infinite}
@@ -892,32 +965,276 @@ body{font-family:'Inter',system-ui,sans-serif;background:linear-gradient(145deg,
     <!-- Filled dynamically -->
   </div>
   <div class="pos-cart-bottom">
-    <button class="btn-collect" onclick="posGoTap()">Collect Payment</button>
+    <button class="btn-collect" onclick="posGoPaySelect()">Collect Payment</button>
   </div>
 </div>
 
-<!-- P4: TAP TO PAY -->
+<!-- P3b: SELECT PAYMENT METHOD -->
+<div class="view pos-view" id="p3b">
+  <div class="statusbar light"><span>9:41</span><span class="statusbar-icons">&#9679;&#9679;&#9679;</span></div>
+  <div class="pos-cart-hdr">
+    <div class="back" onclick="posGo('p3')" style="cursor:pointer"><svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="#e6edf3" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></div>
+    <div style="font-size:16px;font-weight:600;color:#e6edf3">Select Payment</div>
+    <div style="width:36px"></div>
+  </div>
+  <div class="ps-grid" id="psGrid">
+    <div class="ps-title">Payment Methods</div>
+
+    <div class="ps-method" onclick="selectPayMethod('nfc')">
+      <div class="pm-icon nfc"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6.5 13.5c1-1.5 2.5-2.5 5.5-2.5s4.5 1 5.5 2.5"/><path d="M4 16c1.5-2.5 4-4 8-4s6.5 1.5 8 4"/><circle cx="12" cy="9" r="1.2" fill="currentColor"/></svg></div>
+      <div class="pm-info"><div class="pm-name">Tap to Pay on iPhone</div><div class="pm-desc">Contactless NFC payment</div></div>
+      <div class="pm-arrow">&#8250;</div>
+    </div>
+
+    <div class="ps-method" onclick="selectPayMethod('reader')">
+      <div class="pm-icon reader"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="M2 10h20"/><path d="M6 15h4"/></svg></div>
+      <div class="pm-info"><div class="pm-name">Card Reader</div><div class="pm-desc">Chip insert, swipe, or tap</div></div>
+      <div class="pm-arrow">&#8250;</div>
+    </div>
+
+    <div class="ps-method" onclick="selectPayMethod('manual')">
+      <div class="pm-icon manual"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="M2 10h20"/><path d="M6 15h8"/></svg></div>
+      <div class="pm-info"><div class="pm-name">Manual Card Entry</div><div class="pm-desc">Key in card number (MOTO)</div></div>
+      <div class="pm-arrow">&#8250;</div>
+    </div>
+
+    <div class="ps-method" onclick="selectPayMethod('cash')">
+      <div class="pm-icon cash"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="1" y="5" width="22" height="14" rx="2"/><circle cx="12" cy="12" r="3.5"/><circle cx="4.5" cy="12" r="1" fill="currentColor"/><circle cx="19.5" cy="12" r="1" fill="currentColor"/></svg></div>
+      <div class="pm-info"><div class="pm-name">Cash</div><div class="pm-desc">Accept cash payment</div></div>
+      <div class="pm-arrow">&#8250;</div>
+    </div>
+
+    <div class="ps-method" onclick="selectPayMethod('gift')">
+      <div class="pm-icon gift"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="8" width="18" height="13" rx="2"/><path d="M3 13h18"/><path d="M12 8v13"/><path d="M12 8c-1.5-2-4-3-4-3s2-.5 4 3c2-3.5 4-3 4-3s-2.5 1-4 3"/></svg></div>
+      <div class="pm-info"><div class="pm-name">Gift Card</div><div class="pm-desc">Redeem Shopify gift card</div></div>
+      <div class="pm-arrow">&#8250;</div>
+    </div>
+
+    <div class="ps-method" onclick="selectPayMethod('storecredit')">
+      <div class="pm-icon credit"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M15 9.5c-.5-1-1.5-1.5-3-1.5-2 0-3 1-3 2.2s1 1.8 3 2.3 3 1.3 3 2.5-1 2.2-3 2.2c-1.5 0-2.5-.5-3-1.5"/><path d="M12 6v2m0 8v2"/></svg></div>
+      <div class="pm-info"><div class="pm-name">Store Credit</div><div class="pm-desc">Apply customer store credit</div></div>
+      <div class="pm-arrow">&#8250;</div>
+    </div>
+
+    <div class="ps-method" onclick="selectPayMethod('installments')">
+      <div class="pm-icon install"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M8 12h8"/><path d="M8 8h8"/><path d="M8 16h5"/></svg></div>
+      <div class="pm-info"><div class="pm-name">Shop Pay Installments</div><div class="pm-desc">Buy now, pay later in 4</div></div>
+      <div class="pm-arrow">&#8250;</div>
+    </div>
+
+    <div class="ps-method" onclick="selectPayMethod('custom')">
+      <div class="pm-icon custom"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="M8 12h8"/><path d="M12 8v8"/></svg></div>
+      <div class="pm-info"><div class="pm-name">Custom / External Terminal</div><div class="pm-desc">Mark as paid externally</div></div>
+      <div class="pm-arrow">&#8250;</div>
+    </div>
+
+    <div class="ps-split" onclick="selectPayMethod('split')">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M2 12h20"/></svg>
+      Split Payment
+    </div>
+  </div>
+  <div class="ps-total-bar">
+    <div class="ps-total">Total: <strong id="psTotalLabel">$0.00</strong></div>
+  </div>
+</div>
+
+<!-- P4: PAYMENT PROCESSING (dynamic content based on method) -->
 <div class="view pos-view" id="p4">
   <div class="statusbar light"><span>9:41</span><span class="statusbar-icons">&#9679;&#9679;&#9679;</span></div>
-  <div class="tap-view" id="tapZone" onclick="doTap()">
-    <div class="tap-amount" id="tapAmount">$59.95</div>
-    <div class="tap-label">Ready to accept payment</div>
-    <div class="nfc-zone">
-      <div class="nfc-ring"></div>
-      <div class="nfc-ring"></div>
-      <div class="nfc-ring"></div>
-      <div class="nfc-icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#00c853" stroke-width="1.5">
-          <path d="M6.5 13.5c1-1.5 2.5-2.5 5.5-2.5s4.5 1 5.5 2.5"/>
-          <path d="M4 16c1.5-2.5 4-4 8-4s6.5 1.5 8 4"/>
-          <path d="M9 11c.7-1 1.8-1.5 3-1.5s2.3.5 3 1.5"/>
-          <circle cx="12" cy="9" r="1" fill="#00c853"/>
-        </svg>
+  <div class="pay-back" onclick="posGo('p3b')"><svg viewBox="0 0 24 24" fill="none" stroke="#e6edf3" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></div>
+
+  <!-- NFC Tap to Pay -->
+  <div class="pay-screen" id="payNfc">
+    <div class="tap-view" id="tapZone" onclick="doTap()">
+      <div class="tap-amount" id="tapAmount">$59.95</div>
+      <div class="tap-label">Ready to accept payment</div>
+      <div class="nfc-zone">
+        <div class="nfc-ring"></div>
+        <div class="nfc-ring"></div>
+        <div class="nfc-ring"></div>
+        <div class="nfc-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#00c853" stroke-width="1.5">
+            <path d="M6.5 13.5c1-1.5 2.5-2.5 5.5-2.5s4.5 1 5.5 2.5"/>
+            <path d="M4 16c1.5-2.5 4-4 8-4s6.5 1.5 8 4"/>
+            <path d="M9 11c.7-1 1.8-1.5 3-1.5s2.3.5 3 1.5"/>
+            <circle cx="12" cy="9" r="1" fill="#00c853"/>
+          </svg>
+        </div>
+      </div>
+      <div class="tap-instruction" id="tapInstr">Hold card near iPhone</div>
+      <div class="tap-sub" id="tapSub">NFC contactless payment</div>
+      <div class="tap-hint">Click anywhere to simulate tap</div>
+    </div>
+  </div>
+
+  <!-- Card Reader -->
+  <div class="pay-screen" id="payReader">
+    <div class="pay-reader-icon">
+      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#818cf8" stroke-width="1.5"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="M2 10h20"/><path d="M6 15h4"/></svg>
+    </div>
+    <div class="pay-title">Insert, Swipe, or Tap</div>
+    <div class="pay-sub">Waiting for card reader...</div>
+    <div class="tap-amount" id="readerAmount" style="font-size:28px;color:#818cf8;margin-bottom:20px">$0.00</div>
+    <div style="display:flex;gap:10px;margin-bottom:20px">
+      <div style="padding:8px 14px;background:#161b22;border:1px solid #30363d;border-radius:8px;font-size:12px;color:#8b949e;text-align:center">
+        <div style="font-size:20px;margin-bottom:4px">&#x1F4B3;</div>Chip
+      </div>
+      <div style="padding:8px 14px;background:#161b22;border:1px solid #30363d;border-radius:8px;font-size:12px;color:#8b949e;text-align:center">
+        <div style="font-size:20px;margin-bottom:4px">&#x1F4F1;</div>Tap
+      </div>
+      <div style="padding:8px 14px;background:#161b22;border:1px solid #30363d;border-radius:8px;font-size:12px;color:#8b949e;text-align:center">
+        <div style="font-size:20px;margin-bottom:4px">&#x1F501;</div>Swipe
       </div>
     </div>
-    <div class="tap-instruction" id="tapInstr">Hold card near iPhone</div>
-    <div class="tap-sub" id="tapSub">NFC contactless payment</div>
-    <div class="tap-hint">Click anywhere to simulate tap</div>
+    <button class="btn-pay-confirm purple" onclick="simPayComplete('reader','Card Reader','Visa ****3842','Card present')">Simulate Card Read</button>
+    <div class="pay-method-label">POS Terminal / WisePad 3 / Tap &amp; Chip</div>
+  </div>
+
+  <!-- Manual Card Entry (MOTO) -->
+  <div class="pay-screen" id="payManual">
+    <div class="pay-title">Manual Card Entry</div>
+    <div class="pay-sub">Key in card number (MOTO rate applies)</div>
+    <div class="pay-manual-form">
+      <div class="pmf-field">
+        <label>Card Number</label>
+        <input type="text" placeholder="4242 4242 4242 4242" maxlength="19" id="motoCard">
+      </div>
+      <div class="pmf-row">
+        <div class="pmf-field">
+          <label>Expiry</label>
+          <input type="text" placeholder="MM / YY" maxlength="7" id="motoExp">
+        </div>
+        <div class="pmf-field">
+          <label>CVV</label>
+          <input type="text" placeholder="123" maxlength="4" id="motoCvv">
+        </div>
+      </div>
+      <div class="pmf-field">
+        <label>Cardholder Name</label>
+        <input type="text" placeholder="John Smith" id="motoName">
+      </div>
+    </div>
+    <button class="btn-pay-confirm" onclick="simPayComplete('manual','Manual Entry (MOTO)','Visa ****4242','Card not present')" id="btnMotoCharge">Charge <span id="motoTotal">$0.00</span></button>
+    <div class="pay-method-label">Online credit card rate applies</div>
+  </div>
+
+  <!-- Cash -->
+  <div class="pay-screen" id="payCash">
+    <div class="pay-title">Cash Payment</div>
+    <div class="pay-cash-display">
+      <div class="cash-due" id="cashDue">$0.00</div>
+      <div class="cash-presets" id="cashPresets"></div>
+      <div class="cash-input-wrap">
+        <span class="cash-dollar">$</span>
+        <input type="number" placeholder="0.00" id="cashTendered" oninput="calcChange()">
+      </div>
+      <div class="cash-change" id="cashChangeBox">
+        <div class="cash-change-label">Change Due</div>
+        <div class="cash-change-amount" id="cashChangeAmt">$0.00</div>
+      </div>
+    </div>
+    <button class="btn-pay-confirm" onclick="simPayComplete('cash','Cash','Tendered','Cash payment')" id="btnCashComplete" style="opacity:0.4;pointer-events:none">Complete Cash Payment</button>
+    <div class="pay-method-label">No processing fees</div>
+  </div>
+
+  <!-- Gift Card -->
+  <div class="pay-screen" id="payGift">
+    <div class="pay-title">Gift Card</div>
+    <div class="pay-sub">Scan or enter gift card code</div>
+    <div style="font-size:40px;margin-bottom:16px">&#x1F381;</div>
+    <input class="gift-input" type="text" placeholder="Enter gift card code" maxlength="20" id="giftCode" oninput="checkGiftCode()">
+    <div style="margin-top:8px;font-size:12px;color:#8b949e" id="giftStatus"></div>
+    <button class="btn-pay-confirm pink" onclick="simPayComplete('gift','Gift Card','GC ****'+($('giftCode').value.slice(-4)||'0000'),'Gift card redemption')" id="btnGiftRedeem" style="opacity:0.4;pointer-events:none">Redeem Gift Card</button>
+    <div class="pay-method-label">Shopify gift card</div>
+  </div>
+
+  <!-- Store Credit -->
+  <div class="pay-screen" id="payStoreCredit">
+    <div class="pay-title">Store Credit</div>
+    <div class="pay-sub">Look up customer to apply credit</div>
+    <div class="credit-lookup">
+      <input type="text" placeholder="Customer email or phone" id="creditLookup" oninput="checkCreditLookup()">
+    </div>
+    <div class="credit-bal" id="creditBal">
+      <div style="font-size:11px;color:#67e8f9;text-transform:uppercase;letter-spacing:1px">Available Credit</div>
+      <div style="font-size:24px;font-weight:700;color:#67e8f9;margin-top:4px" id="creditAmount">$150.00</div>
+      <div style="font-size:11px;color:#8b949e;margin-top:4px">Customer: Jane Smith</div>
+    </div>
+    <button class="btn-pay-confirm cyan" onclick="simPayComplete('storecredit','Store Credit','Credit applied','Store credit redemption')" id="btnCreditApply" style="opacity:0.4;pointer-events:none">Apply Store Credit</button>
+    <div class="pay-method-label">POS Pro required</div>
+  </div>
+
+  <!-- Shop Pay Installments -->
+  <div class="pay-screen" id="payInstallments">
+    <div class="pay-title">Shop Pay Installments</div>
+    <div class="pay-sub">Customer pays in 4 interest-free payments</div>
+    <div style="background:#fff;border-radius:12px;padding:16px;margin-bottom:16px;width:100%;max-width:280px;box-sizing:border-box">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+        <div style="background:#5a31f4;color:#fff;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:700">shop</div>
+        <div style="font-size:13px;color:#333;font-weight:600">Pay in 4</div>
+      </div>
+      <div style="display:flex;justify-content:space-between;padding:0 4px" id="installBreakdown">
+        <div style="text-align:center"><div style="font-size:10px;color:#888">Today</div><div style="font-size:14px;font-weight:700;color:#333" id="inst1">$0</div></div>
+        <div style="text-align:center"><div style="font-size:10px;color:#888">2 wks</div><div style="font-size:14px;font-weight:700;color:#333" id="inst2">$0</div></div>
+        <div style="text-align:center"><div style="font-size:10px;color:#888">4 wks</div><div style="font-size:14px;font-weight:700;color:#333" id="inst3">$0</div></div>
+        <div style="text-align:center"><div style="font-size:10px;color:#888">6 wks</div><div style="font-size:14px;font-weight:700;color:#333" id="inst4">$0</div></div>
+      </div>
+    </div>
+    <div style="font-size:12px;color:#8b949e;margin-bottom:12px;max-width:280px">Customer scans QR code with their phone to complete Shop Pay Installments checkout</div>
+    <div style="width:120px;height:120px;background:#fff;border-radius:12px;padding:12px;display:flex;align-items:center;justify-content:center;margin-bottom:12px">
+      <svg width="90" height="90" viewBox="0 0 90 90"><rect width="90" height="90" fill="#fff"/><g fill="#000"><rect x="5" y="5" width="25" height="25"/><rect x="8" y="8" width="19" height="19" fill="#fff"/><rect x="11" y="11" width="13" height="13"/><rect x="60" y="5" width="25" height="25"/><rect x="63" y="8" width="19" height="19" fill="#fff"/><rect x="66" y="11" width="13" height="13"/><rect x="5" y="60" width="25" height="25"/><rect x="8" y="63" width="19" height="19" fill="#fff"/><rect x="11" y="66" width="13" height="13"/><rect x="35" y="5" width="5" height="5"/><rect x="35" y="15" width="5" height="5"/><rect x="45" y="5" width="5" height="5"/><rect x="35" y="35" width="5" height="5"/><rect x="45" y="35" width="5" height="5"/><rect x="55" y="35" width="5" height="5"/><rect x="35" y="45" width="5" height="5"/><rect x="60" y="45" width="5" height="5"/><rect x="70" y="45" width="5" height="5"/><rect x="80" y="45" width="5" height="5"/><rect x="45" y="55" width="5" height="5"/><rect x="60" y="55" width="5" height="5"/><rect x="80" y="55" width="5" height="5"/><rect x="35" y="60" width="5" height="5"/><rect x="45" y="65" width="5" height="5"/><rect x="55" y="65" width="5" height="5"/><rect x="70" y="65" width="5" height="5"/><rect x="35" y="75" width="5" height="5"/><rect x="55" y="75" width="5" height="5"/><rect x="65" y="75" width="5" height="5"/><rect x="80" y="75" width="5" height="5"/><rect x="45" y="80" width="5" height="5"/><rect x="60" y="80" width="5" height="5"/><rect x="80" y="80" width="5" height="5"/></g></svg>
+    </div>
+    <button class="btn-pay-confirm violet" onclick="simPayComplete('installments','Shop Pay Installments','4 payments','Installment plan')">Simulate Approval</button>
+    <div class="pay-method-label">Customer must have Shop Pay account</div>
+  </div>
+
+  <!-- Custom / External Terminal -->
+  <div class="pay-screen" id="payCustom">
+    <div class="pay-title">External Payment</div>
+    <div class="pay-sub">Process on your external terminal, then mark as paid</div>
+    <div style="font-size:48px;margin-bottom:16px">&#x1F4B0;</div>
+    <div class="tap-amount" id="customAmount" style="font-size:28px;color:#fcd34d;margin-bottom:16px">$0.00</div>
+    <div style="font-size:13px;color:#8b949e;max-width:260px;margin-bottom:16px">Process payment on your external card terminal or accept payment via another method, then tap below to record the sale.</div>
+    <div style="display:flex;flex-direction:column;gap:8px;width:100%;max-width:280px;margin-bottom:12px">
+      <select id="customType" style="width:100%;padding:12px;background:#161b22;border:1.5px solid #30363d;border-radius:8px;color:#e6edf3;font-size:14px;font-family:inherit;outline:none">
+        <option>External Card Terminal</option>
+        <option>Wire Transfer</option>
+        <option>Check</option>
+        <option>Money Order</option>
+        <option>Other</option>
+      </select>
+    </div>
+    <button class="btn-pay-confirm yellow" onclick="simPayComplete('custom',$('customType').value,'External','Marked as paid')">Mark as Paid</button>
+    <div class="pay-method-label">No Shopify processing fees</div>
+  </div>
+
+  <!-- Split Payment -->
+  <div class="pay-screen" id="paySplit">
+    <div class="pay-title">Split Payment</div>
+    <div class="pay-sub">Divide across multiple payment methods</div>
+    <div class="tap-amount" id="splitTotal" style="font-size:24px;color:#e6edf3;margin-bottom:16px">$0.00</div>
+    <div style="width:100%;max-width:280px">
+      <div style="background:#161b22;border:1px solid #30363d;border-radius:10px;padding:14px;margin-bottom:8px">
+        <div style="font-size:11px;color:#8b949e;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">Payment 1</div>
+        <div style="display:flex;gap:8px;align-items:center">
+          <select style="flex:1;padding:10px;background:#0d1117;border:1px solid #30363d;border-radius:6px;color:#e6edf3;font-size:13px;font-family:inherit;outline:none">
+            <option>Tap to Pay</option><option>Card Reader</option><option>Cash</option><option>Gift Card</option><option>Store Credit</option>
+          </select>
+          <input type="text" placeholder="$0.00" style="width:80px;padding:10px;background:#0d1117;border:1px solid #30363d;border-radius:6px;color:#e6edf3;font-size:13px;font-family:inherit;outline:none;text-align:right;box-sizing:border-box">
+        </div>
+      </div>
+      <div style="background:#161b22;border:1px solid #30363d;border-radius:10px;padding:14px;margin-bottom:8px">
+        <div style="font-size:11px;color:#8b949e;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">Payment 2</div>
+        <div style="display:flex;gap:8px;align-items:center">
+          <select style="flex:1;padding:10px;background:#0d1117;border:1px solid #30363d;border-radius:6px;color:#e6edf3;font-size:13px;font-family:inherit;outline:none">
+            <option>Cash</option><option>Tap to Pay</option><option>Card Reader</option><option>Gift Card</option><option>Store Credit</option>
+          </select>
+          <input type="text" placeholder="$0.00" style="width:80px;padding:10px;background:#0d1117;border:1px solid #30363d;border-radius:6px;color:#e6edf3;font-size:13px;font-family:inherit;outline:none;text-align:right;box-sizing:border-box">
+        </div>
+      </div>
+    </div>
+    <button class="btn-pay-confirm" onclick="simPayComplete('split','Split Payment','Multiple methods','Split payment')">Process Split Payment</button>
+    <div class="pay-method-label">Combine any payment methods</div>
   </div>
 </div>
 
@@ -933,8 +1250,8 @@ body{font-family:'Inter',system-ui,sans-serif;background:linear-gradient(145deg,
     <div class="pos-rcpt-details">
       <div class="prd"><span class="prl">Order Number</span><span class="prv" id="posOrderNum">#POS-2026-0213</span></div>
       <div class="prd"><span class="prl">Items</span><span class="prv" id="posRcptItems">1x Unimate</span></div>
-      <div class="prd"><span class="prl">Payment Method</span><span class="prv">Contactless (NFC)</span></div>
-      <div class="prd"><span class="prl">Card</span><span class="prv">Visa ****7891</span></div>
+      <div class="prd"><span class="prl">Payment Method</span><span class="prv" id="posRcptMethod">Tap to Pay (NFC)</span></div>
+      <div class="prd"><span class="prl">Card</span><span class="prv" id="posRcptCard">Visa ****7891</span></div>
       <div class="prd"><span class="prl">Total</span><span class="prv" id="posRcptTotal" style="color:var(--pos-green);font-weight:700">$59.95</span></div>
     </div>
     <!-- Distributor Attribution -->
@@ -949,8 +1266,8 @@ body{font-family:'Inter',system-ui,sans-serif;background:linear-gradient(145deg,
     <!-- Shopify Fee Breakdown -->
     <div class="pos-fees">
       <div class="pf-title">Shopify Payments Fee Breakdown</div>
-      <div class="pf-row"><span class="pfl">Base rate (2.15%)</span><span class="pfv" id="posFeeBase">$1.29</span></div>
-      <div class="pf-row"><span class="pfl">Per-transaction</span><span class="pfv">$0.30</span></div>
+      <div class="pf-row"><span class="pfl" id="posFeeLabel">In-person rate (2.15%)</span><span class="pfv" id="posFeeBase">$1.29</span></div>
+      <div class="pf-row"><span class="pfl">Per-transaction</span><span class="pfv" id="posFeePerTxn">$0.30</span></div>
       <div class="pf-row"><span class="pfl">Variable (0.25%)</span><span class="pfv" id="posFeeVar">$0.15</span></div>
       <div class="pf-row"><span class="pfl">Total fees</span><span class="pfv" id="posFeeTot">$1.74</span></div>
       <div class="pf-row net"><span class="pfl">Net payout</span><span class="pfv" id="posFeeNet">$58.21</span></div>
@@ -984,7 +1301,7 @@ let posCur='p1';
 let pinVal='';
 let posCart=[];
 let posStaff='';
-const POS_SCREENS=['p1','p2','p3','p4','p5'];
+const POS_SCREENS=['p1','p2','p3','p3b','p4','p5'];
 
 // Staff directory for demo
 const STAFF={
@@ -1305,15 +1622,128 @@ function posGoCart(){
   body.innerHTML=html;
   posGo('p3');
 }
-function posGoTap(){
+let posPayMethod='nfc'; // track selected method
+function posGoPaySelect(){
   const total=posCart.reduce((s,x)=>s+x.total,0);
   const tax=total*0.0825;
   const grand=total+tax;
-  $('tapAmount').textContent='$'+grand.toFixed(2);
-  $('tapZone').classList.remove('tapped');
-  $('tapInstr').textContent='Hold card near iPhone';
-  $('tapSub').textContent='NFC contactless payment';
+  $('psTotalLabel').textContent='$'+grand.toFixed(2);
+  posGo('p3b');
+}
+function selectPayMethod(method){
+  posPayMethod=method;
+  const total=posCart.reduce((s,x)=>s+x.total,0);
+  const tax=total*0.0825;
+  const grand=total+tax;
+  // Hide all pay screens
+  document.querySelectorAll('.pay-screen').forEach(s=>s.classList.remove('active'));
+  // Show selected
+  const screenMap={nfc:'payNfc',reader:'payReader',manual:'payManual',cash:'payCash',gift:'payGift',storecredit:'payStoreCredit',installments:'payInstallments',custom:'payCustom',split:'paySplit'};
+  const screen=$(screenMap[method]);
+  if(screen)screen.classList.add('active');
+  // Set amounts
+  const gf='$'+grand.toFixed(2);
+  if(method==='nfc'){
+    $('tapAmount').textContent=gf;
+    $('tapZone').classList.remove('tapped');
+    $('tapInstr').textContent='Hold card near iPhone';
+    $('tapSub').textContent='NFC contactless payment';
+  }
+  if(method==='reader')$('readerAmount').textContent=gf;
+  if(method==='manual')$('motoTotal').textContent=gf;
+  if(method==='cash'){
+    $('cashDue').textContent=gf;
+    $('cashTendered').value='';
+    $('cashChangeBox').classList.remove('show');
+    $('btnCashComplete').style.opacity='0.4';
+    $('btnCashComplete').style.pointerEvents='none';
+    // Build presets
+    const presets=[];
+    const rounded=Math.ceil(grand);
+    presets.push(rounded);
+    if(rounded+5<=grand*3)presets.push(rounded+5);
+    const next10=Math.ceil(grand/10)*10;
+    if(next10>rounded)presets.push(next10);
+    const next20=Math.ceil(grand/20)*20;
+    if(next20>next10)presets.push(next20);
+    presets.push(100);
+    const unique=[...new Set(presets)].sort((a,b)=>a-b).slice(0,5);
+    $('cashPresets').innerHTML=unique.map(v=>'<div class="cash-preset" onclick="setCashPreset('+v+')">$'+v.toFixed(2)+'</div>').join('');
+  }
+  if(method==='custom')$('customAmount').textContent=gf;
+  if(method==='split')$('splitTotal').textContent=gf;
+  if(method==='installments'){
+    const quarter=(grand/4);
+    $('inst1').textContent='$'+quarter.toFixed(2);
+    $('inst2').textContent='$'+quarter.toFixed(2);
+    $('inst3').textContent='$'+quarter.toFixed(2);
+    $('inst4').textContent='$'+quarter.toFixed(2);
+  }
+  // Reset interactive states
+  if(method==='gift'){$('giftCode').value='';$('giftStatus').textContent='';$('btnGiftRedeem').style.opacity='0.4';$('btnGiftRedeem').style.pointerEvents='none'}
+  if(method==='storecredit'){$('creditLookup').value='';$('creditBal').classList.remove('show');$('btnCreditApply').style.opacity='0.4';$('btnCreditApply').style.pointerEvents='none'}
   posGo('p4');
+}
+// Cash helpers
+function setCashPreset(val){
+  $('cashTendered').value=val.toFixed(2);
+  document.querySelectorAll('.cash-preset').forEach(p=>p.classList.remove('sel'));
+  event.target.classList.add('sel');
+  calcChange();
+}
+function calcChange(){
+  const total=posCart.reduce((s,x)=>s+x.total,0);
+  const tax=total*0.0825;
+  const grand=total+tax;
+  const tendered=parseFloat($('cashTendered').value)||0;
+  const change=tendered-grand;
+  if(tendered>=grand){
+    $('cashChangeBox').classList.add('show');
+    $('cashChangeAmt').textContent='$'+change.toFixed(2);
+    $('btnCashComplete').style.opacity='1';
+    $('btnCashComplete').style.pointerEvents='auto';
+  }else{
+    $('cashChangeBox').classList.remove('show');
+    $('btnCashComplete').style.opacity='0.4';
+    $('btnCashComplete').style.pointerEvents='none';
+  }
+}
+// Gift card check
+function checkGiftCode(){
+  const code=$('giftCode').value.trim();
+  if(code.length>=8){
+    $('giftStatus').textContent='Gift card found: $75.00 balance';
+    $('giftStatus').style.color='#f0abfc';
+    $('btnGiftRedeem').style.opacity='1';
+    $('btnGiftRedeem').style.pointerEvents='auto';
+  }else{
+    $('giftStatus').textContent=code.length>0?'Enter at least 8 characters':'';
+    $('giftStatus').style.color='#8b949e';
+    $('btnGiftRedeem').style.opacity='0.4';
+    $('btnGiftRedeem').style.pointerEvents='none';
+  }
+}
+// Store credit check
+function checkCreditLookup(){
+  const val=$('creditLookup').value.trim();
+  if(val.length>=5){
+    $('creditBal').classList.add('show');
+    $('btnCreditApply').style.opacity='1';
+    $('btnCreditApply').style.pointerEvents='auto';
+  }else{
+    $('creditBal').classList.remove('show');
+    $('btnCreditApply').style.opacity='0.4';
+    $('btnCreditApply').style.pointerEvents='none';
+  }
+}
+// Universal payment completion
+function simPayComplete(method,methodLabel,cardInfo,subLabel){
+  showLoad('Processing payment...',true);
+  setTimeout(()=>{
+    hideLoad();
+    updPosReceipt(method,methodLabel,cardInfo,subLabel);
+    posGo('p5');
+  },1500);
 }
 function doTap(){
   const tz=$('tapZone');
@@ -1321,17 +1751,11 @@ function doTap(){
   tz.classList.add('tapped');
   $('tapInstr').textContent='Card detected!';
   $('tapSub').textContent='Authorizing...';
-  // Simulate processing
   setTimeout(()=>{
-    showLoad('Authorizing payment...',true);
-    setTimeout(()=>{
-      hideLoad();
-      updPosReceipt();
-      posGo('p5');
-    },1500);
+    simPayComplete('nfc','Tap to Pay (NFC)','Visa ****7891','Card present / NFC tap');
   },600);
 }
-function updPosReceipt(){
+function updPosReceipt(method,methodLabel,cardInfo,subLabel){
   const total=posCart.reduce((s,x)=>s+x.total,0);
   const tax=total*0.0825;
   const grand=total+tax;
@@ -1340,18 +1764,31 @@ function updPosReceipt(){
   $('posRcptItems').textContent=items;
   $('posRcptTotal').textContent='$'+grand.toFixed(2);
   $('posOrderNum').textContent='#POS-2026-'+String(Math.floor(Math.random()*9000)+1000);
+  $('posRcptSub').textContent=subLabel||'Card present / NFC tap';
+  // Update payment method and card fields in receipt
+  $('posRcptMethod').textContent=methodLabel||'Tap to Pay (NFC)';
+  $('posRcptCard').textContent=cardInfo||'Visa ****7891';
   // Attribution
   if(posStaff){
     $('posAttrPin').textContent=posStaff.name+' / '+pinVal;
     $('posAttrDist').textContent=posStaff.dist;
   }
-  // Fee calc
-  const baseRate=grand*0.0215;
-  const perTxn=0.30;
-  const variable=grand*0.0025;
-  const totalFee=baseRate+perTxn+variable;
+  // Fee calc: different rates per method
+  let basePercent=0.0215, perTxn=0.30, varPercent=0.0025;
+  let feeLabel='In-person rate (2.15%)';
+  if(method==='manual'){basePercent=0.029;feeLabel='Online/MOTO rate (2.9%)'}
+  if(method==='cash'){basePercent=0;perTxn=0;varPercent=0;feeLabel='No processing fees'}
+  if(method==='gift'){basePercent=0;perTxn=0;varPercent=0;feeLabel='Gift card (no fees)'}
+  if(method==='storecredit'){basePercent=0;perTxn=0;varPercent=0;feeLabel='Store credit (no fees)'}
+  if(method==='custom'){basePercent=0;perTxn=0;varPercent=0;feeLabel='External (no Shopify fees)'}
+  if(method==='installments'){basePercent=0.059;perTxn=0.30;varPercent=0;feeLabel='Installments rate (5.9%)'}
+  const baseFee=grand*basePercent;
+  const variable=grand*varPercent;
+  const totalFee=baseFee+perTxn+variable;
   const net=grand-totalFee;
-  $('posFeeBase').textContent='$'+baseRate.toFixed(2);
+  $('posFeeLabel').textContent=feeLabel;
+  $('posFeeBase').textContent='$'+baseFee.toFixed(2);
+  $('posFeePerTxn').textContent='$'+perTxn.toFixed(2);
   $('posFeeVar').textContent='$'+variable.toFixed(2);
   $('posFeeTot').textContent='$'+totalFee.toFixed(2);
   $('posFeeNet').textContent='$'+net.toFixed(2);
