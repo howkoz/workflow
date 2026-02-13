@@ -1,0 +1,1572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Payment Provider Integration SOP | Unicity Payment Operations</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&family=Instrument+Serif&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-primary: #0a0e17;
+  --bg-secondary: #111827;
+  --bg-card: #1a2236;
+  --bg-card-hover: #1e2a42;
+  --bg-sidebar: #0d1220;
+  --border: #1e2d4a;
+  --text-primary: #e2e8f0;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+  --accent-blue: #3b82f6;
+  --accent-cyan: #06b6d4;
+  --accent-green: #10b981;
+  --accent-amber: #f59e0b;
+  --accent-red: #ef4444;
+  --accent-purple: #8b5cf6;
+  --accent-orange: #f97316;
+  --accent-pink: #ec4899;
+  --sidebar-w: 280px;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'DM Sans',sans-serif; background:var(--bg-primary); color:var(--text-primary); line-height:1.6; overflow-x:hidden; }
+
+/* SIDEBAR */
+.sidebar { position:fixed; top:0; left:0; width:var(--sidebar-w); height:100vh; background:var(--bg-sidebar); border-right:1px solid var(--border); display:flex; flex-direction:column; z-index:100; transition:transform .3s; }
+.sidebar-header { padding:20px 18px 14px; border-bottom:1px solid var(--border); }
+.sidebar-header h1 { font-family:'Instrument Serif',serif; font-size:20px; font-weight:400; letter-spacing:-0.02em; }
+.sidebar-header .subtitle { font-size:11px; color:var(--text-muted); text-transform:uppercase; letter-spacing:.08em; margin-top:4px; font-family:'JetBrains Mono',monospace; }
+.sidebar-search { padding:12px 14px; border-bottom:1px solid var(--border); }
+.sidebar-search input { width:100%; padding:8px 12px; background:var(--bg-primary); border:1px solid var(--border); border-radius:6px; color:var(--text-primary); font-size:13px; font-family:'DM Sans',sans-serif; outline:none; transition:border-color .2s; }
+.sidebar-search input:focus { border-color:var(--accent-blue); }
+.sidebar-search input::placeholder { color:var(--text-muted); }
+.sidebar-nav { flex:1; overflow-y:auto; padding:8px 0; }
+.sidebar-nav::-webkit-scrollbar { width:4px; }
+.sidebar-nav::-webkit-scrollbar-track { background:transparent; }
+.sidebar-nav::-webkit-scrollbar-thumb { background:var(--border); border-radius:4px; }
+.nav-section { padding:6px 14px; margin-top:8px; }
+.nav-section-title { font-size:10px; font-family:'JetBrains Mono',monospace; text-transform:uppercase; letter-spacing:.1em; color:var(--text-muted); margin-bottom:4px; }
+.nav-item { display:flex; align-items:center; gap:10px; padding:8px 14px; cursor:pointer; border-radius:6px; font-size:13px; color:var(--text-secondary); transition:all .15s; position:relative; }
+.nav-item:hover { background:var(--bg-card); color:var(--text-primary); }
+.nav-item.active { background:rgba(59,130,246,.12); color:var(--accent-blue); }
+.nav-item .phase-num { font-family:'JetBrains Mono',monospace; font-size:10px; font-weight:600; width:22px; height:22px; display:flex; align-items:center; justify-content:center; border-radius:5px; background:var(--bg-card); color:var(--text-muted); flex-shrink:0; }
+.nav-item.active .phase-num { background:var(--accent-blue); color:#fff; }
+.nav-item .nav-progress { position:absolute; right:14px; font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--text-muted); }
+.nav-item .nav-progress.complete { color:var(--accent-green); }
+.sidebar-footer { padding:12px 14px; border-top:1px solid var(--border); font-size:11px; color:var(--text-muted); font-family:'JetBrains Mono',monospace; }
+.progress-bar-mini { height:3px; background:var(--bg-primary); border-radius:3px; margin-top:8px; overflow:hidden; }
+.progress-bar-mini .fill { height:100%; background:linear-gradient(90deg,var(--accent-blue),var(--accent-cyan)); border-radius:3px; transition:width .5s ease; }
+
+/* MAIN */
+.main { margin-left:var(--sidebar-w); min-height:100vh; }
+.topbar { position:sticky; top:0; height:56px; background:rgba(10,14,23,.85); backdrop-filter:blur(12px); border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; padding:0 28px; z-index:50; }
+.topbar-left { display:flex; align-items:center; gap:12px; }
+.breadcrumb { font-size:13px; color:var(--text-muted); font-family:'JetBrains Mono',monospace; }
+.breadcrumb .current { color:var(--text-primary); }
+.topbar-right { display:flex; align-items:center; gap:16px; }
+.btn-sm { padding:6px 14px; font-size:12px; font-family:'JetBrains Mono',monospace; border-radius:6px; border:1px solid var(--border); background:var(--bg-card); color:var(--text-secondary); cursor:pointer; transition:all .15s; }
+.btn-sm:hover { background:var(--bg-card-hover); color:var(--text-primary); border-color:var(--accent-blue); }
+.global-progress { display:flex; align-items:center; gap:8px; font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--text-muted); }
+.global-progress .bar { width:120px; height:6px; background:var(--bg-card); border-radius:6px; overflow:hidden; }
+.global-progress .bar .fill { height:100%; background:linear-gradient(90deg,var(--accent-blue),var(--accent-green)); border-radius:6px; transition:width .5s ease; }
+.content { padding:32px 36px 80px; max-width:1000px; }
+.page { display:none; }
+.page.active { display:block; }
+
+/* PHASE HEADER */
+.phase-header { margin-bottom:28px; }
+.phase-header .phase-badge { display:inline-flex; align-items:center; gap:8px; font-family:'JetBrains Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:.1em; color:var(--accent-blue); margin-bottom:8px; }
+.phase-header .phase-badge .dot { width:8px; height:8px; border-radius:50%; background:var(--accent-blue); }
+.phase-header h2 { font-family:'Instrument Serif',serif; font-size:32px; font-weight:400; letter-spacing:-0.02em; margin-bottom:6px; }
+.phase-header .phase-meta { display:flex; gap:20px; font-size:13px; color:var(--text-muted); flex-wrap:wrap; }
+.phase-progress-bar { margin-top:16px; display:flex; align-items:center; gap:12px; }
+.phase-progress-bar .bar { flex:1; height:8px; background:var(--bg-card); border-radius:8px; overflow:hidden; }
+.phase-progress-bar .bar .fill { height:100%; border-radius:8px; background:linear-gradient(90deg,var(--accent-blue),var(--accent-cyan)); transition:width .5s ease; }
+.phase-progress-bar .pct { font-family:'JetBrains Mono',monospace; font-size:13px; color:var(--accent-cyan); min-width:42px; text-align:right; }
+
+/* STEP SECTIONS */
+.step-section { margin-bottom:6px; border:1px solid var(--border); border-radius:10px; overflow:hidden; transition:border-color .2s; }
+.step-section:hover { border-color:var(--bg-card-hover); }
+.step-section.completed { border-color:rgba(16,185,129,.3); }
+.step-header { display:flex; align-items:center; gap:12px; padding:14px 18px; background:var(--bg-card); cursor:pointer; user-select:none; transition:background .15s; }
+.step-header:hover { background:var(--bg-card-hover); }
+.step-chevron { font-size:14px; color:var(--text-muted); transition:transform .2s; flex-shrink:0; }
+.step-section.open .step-chevron { transform:rotate(90deg); }
+.step-num { font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--text-muted); flex-shrink:0; min-width:52px; }
+.step-title { flex:1; font-size:14px; font-weight:500; }
+.step-check-count { font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--text-muted); }
+.step-check-count.done { color:var(--accent-green); }
+.step-body { display:none; padding:16px 20px; background:var(--bg-secondary); border-top:1px solid var(--border); }
+.step-section.open .step-body { display:block; }
+
+/* CHECKLIST with TASK TYPE + OWNER */
+.cl { display:flex; align-items:flex-start; gap:10px; padding:7px 0; border-bottom:1px solid rgba(30,45,74,.4); }
+.cl:last-child { border-bottom:none; }
+.cl input[type="checkbox"] { appearance:none; width:18px; height:18px; border:2px solid var(--border); border-radius:4px; cursor:pointer; flex-shrink:0; margin-top:2px; position:relative; transition:all .15s; }
+.cl input[type="checkbox"]:hover { border-color:var(--accent-blue); }
+.cl input[type="checkbox"]:checked { background:var(--accent-green); border-color:var(--accent-green); }
+.cl input[type="checkbox"]:checked::after { content:'✓'; position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-size:12px; font-weight:700; color:#fff; }
+.cl label { flex:1; font-size:13px; color:var(--text-secondary); cursor:pointer; line-height:1.5; }
+.cl input[type="checkbox"]:checked + .cl-body label { color:var(--text-muted); text-decoration:line-through; }
+.cl-body { flex:1; display:flex; flex-direction:column; gap:2px; }
+.cl-body label { font-size:13px; color:var(--text-secondary); cursor:pointer; line-height:1.5; }
+.cl-body .cl-detail { font-size:11px; color:var(--text-muted); line-height:1.4; }
+.cl-meta { display:flex; gap:6px; margin-top:3px; flex-wrap:wrap; align-items:center; }
+
+/* TASK TYPE BADGES */
+.tt { display:inline-flex; padding:1px 6px; border-radius:3px; font-size:9px; font-family:'JetBrains Mono',monospace; font-weight:600; letter-spacing:.04em; text-transform:uppercase; flex-shrink:0; }
+.tt-t { background:rgba(59,130,246,.12); color:var(--accent-blue); }
+.tt-d { background:rgba(245,158,11,.15); color:var(--accent-amber); }
+.tt-doc { background:rgba(139,92,246,.12); color:var(--accent-purple); }
+.tt-m { background:rgba(236,72,153,.12); color:var(--accent-pink); }
+.tt-mon { background:rgba(6,182,212,.12); color:var(--accent-cyan); }
+.tt-rep { background:rgba(16,185,129,.12); color:var(--accent-green); }
+.tt-email { background:rgba(249,115,22,.12); color:var(--accent-orange); }
+
+/* OWNER TAG */
+.owner { display:inline-flex; padding:1px 6px; border-radius:3px; font-size:9px; font-family:'JetBrains Mono',monospace; background:rgba(148,163,184,.1); color:var(--text-muted); letter-spacing:.02em; }
+
+/* CONTENT BLOCKS */
+.content-block { margin:14px 0; }
+.content-block h4 { font-size:14px; font-weight:600; color:var(--text-primary); margin-bottom:8px; }
+.content-block p { font-size:13px; color:var(--text-secondary); line-height:1.7; margin-bottom:8px; }
+
+/* TABLES */
+.data-table { width:100%; border-collapse:collapse; font-size:12px; margin:12px 0; }
+.data-table th { text-align:left; padding:8px 12px; background:var(--bg-card); color:var(--text-muted); font-family:'JetBrains Mono',monospace; font-size:10px; text-transform:uppercase; letter-spacing:.06em; border-bottom:1px solid var(--border); }
+.data-table td { padding:8px 12px; border-bottom:1px solid rgba(30,45,74,.4); color:var(--text-secondary); }
+.data-table tr:hover td { background:rgba(30,45,74,.3); }
+
+/* GATE PANELS */
+.gate-panel { border:2px solid var(--border); border-radius:12px; margin:20px 0; overflow:hidden; }
+.gate-panel-header { display:flex; align-items:center; gap:12px; padding:16px 20px; background:rgba(220,38,38,.08); border-bottom:1px solid var(--border); }
+.gate-icon { width:32px; height:32px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:16px; flex-shrink:0; background:rgba(239,68,68,.15); }
+.gate-panel-header h3 { font-size:15px; font-weight:600; }
+.gate-status { margin-left:auto; font-family:'JetBrains Mono',monospace; font-size:12px; padding:4px 12px; border-radius:20px; font-weight:600; }
+.gate-status.pending { background:rgba(100,116,139,.2); color:var(--text-muted); }
+.gate-status.pass { background:rgba(16,185,129,.15); color:var(--accent-green); }
+.gate-status.fail { background:rgba(239,68,68,.15); color:var(--accent-red); }
+.gate-panel-body { padding:16px 20px; }
+.gate-criterion { display:flex; align-items:center; gap:12px; padding:10px 0; border-bottom:1px solid rgba(30,45,74,.4); }
+.gate-criterion:last-child { border-bottom:none; }
+.gate-toggle { display:flex; gap:4px; }
+.gate-btn { padding:4px 10px; font-size:11px; font-family:'JetBrains Mono',monospace; border-radius:4px; border:1px solid var(--border); background:var(--bg-card); color:var(--text-muted); cursor:pointer; transition:all .15s; }
+.gate-btn:hover { border-color:var(--text-muted); }
+.gate-btn.pass-btn.selected { background:rgba(16,185,129,.2); border-color:var(--accent-green); color:var(--accent-green); }
+.gate-btn.fail-btn.selected { background:rgba(239,68,68,.2); border-color:var(--accent-red); color:var(--accent-red); }
+.gate-criterion-text { flex:1; font-size:13px; color:var(--text-secondary); }
+.gate-criterion-text strong { color:var(--text-primary); font-weight:600; }
+.gate-decision { margin-top:16px; padding:16px; border-radius:8px; text-align:center; font-family:'JetBrains Mono',monospace; font-size:14px; font-weight:600; }
+.gate-decision.go { background:rgba(16,185,129,.12); border:1px solid rgba(16,185,129,.3); color:var(--accent-green); }
+.gate-decision.nogo { background:rgba(239,68,68,.12); border:1px solid rgba(239,68,68,.3); color:var(--accent-red); }
+.gate-decision.waiting { background:var(--bg-card); border:1px solid var(--border); color:var(--text-muted); }
+
+/* CALLOUTS */
+.callout { padding:14px 16px; border-radius:8px; margin:12px 0; font-size:13px; line-height:1.6; }
+.callout.info { background:rgba(59,130,246,.08); border-left:3px solid var(--accent-blue); color:var(--text-secondary); }
+.callout.warn { background:rgba(245,158,11,.08); border-left:3px solid var(--accent-amber); color:var(--text-secondary); }
+.callout.danger { background:rgba(239,68,68,.08); border-left:3px solid var(--accent-red); color:var(--text-secondary); }
+.callout.success { background:rgba(16,185,129,.08); border-left:3px solid var(--accent-green); color:var(--text-secondary); }
+
+/* CODE */
+.code-block { background:var(--bg-primary); border:1px solid var(--border); border-radius:8px; padding:14px 16px; margin:12px 0; font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--accent-cyan); overflow-x:auto; white-space:pre; line-height:1.6; }
+
+/* FLOW */
+/* Mermaid container handled inline */
+
+/* EMERGENCY SCENARIO */
+.emergency-scenario { margin:16px 0; border:1px solid var(--border); border-radius:10px; overflow:hidden; }
+.emergency-scenario-header { display:flex; align-items:center; gap:12px; padding:14px 18px; cursor:pointer; user-select:none; transition:background .15s; }
+.emergency-scenario-header:hover { background:var(--bg-card-hover); }
+.emergency-scenario-header .es-icon { width:28px; height:28px; border-radius:6px; display:flex; align-items:center; justify-content:center; font-size:14px; flex-shrink:0; }
+.es-outage .es-icon { background:rgba(239,68,68,.15); }
+.es-outage .emergency-scenario-header { background:rgba(239,68,68,.06); }
+.es-chargeback .es-icon { background:rgba(245,158,11,.15); }
+.es-chargeback .emergency-scenario-header { background:rgba(245,158,11,.06); }
+.es-settlement .es-icon { background:rgba(59,130,246,.15); }
+.es-settlement .emergency-scenario-header { background:rgba(59,130,246,.06); }
+.es-fraud .es-icon { background:rgba(139,92,246,.15); }
+.es-fraud .emergency-scenario-header { background:rgba(139,92,246,.06); }
+.es-title { flex:1; font-size:14px; font-weight:600; }
+.es-chevron { font-size:14px; color:var(--text-muted); transition:transform .2s; }
+.emergency-scenario.open .es-chevron { transform:rotate(90deg); }
+.es-body { display:none; border-top:1px solid var(--border); }
+.emergency-scenario.open .es-body { display:block; }
+.es-step { display:flex; align-items:flex-start; gap:12px; padding:10px 20px; border-bottom:1px solid rgba(30,45,74,.3); }
+.es-step:last-child { border-bottom:none; }
+.es-step-num { font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--text-muted); width:20px; flex-shrink:0; padding-top:2px; }
+.es-step-content { flex:1; }
+.es-step-action { font-size:13px; color:var(--text-secondary); }
+.es-step-decision { font-size:11px; color:var(--accent-amber); font-style:italic; margin-top:2px; }
+.es-step-meta { display:flex; gap:8px; margin-top:4px; }
+
+/* TASK TYPE LEGEND */
+.legend { display:flex; gap:12px; flex-wrap:wrap; margin:12px 0; padding:12px 16px; background:var(--bg-card); border-radius:8px; border:1px solid var(--border); }
+.legend-item { display:flex; align-items:center; gap:6px; font-size:11px; color:var(--text-muted); }
+
+/* SEARCH */
+.search-results { display:none; padding:20px 0; }
+.search-results.active { display:block; }
+.search-result-item { padding:12px 16px; margin:6px 0; background:var(--bg-card); border:1px solid var(--border); border-radius:8px; cursor:pointer; transition:all .15s; }
+.search-result-item:hover { border-color:var(--accent-blue); background:var(--bg-card-hover); }
+.search-result-item .result-phase { font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--accent-blue); text-transform:uppercase; letter-spacing:.06em; }
+.search-result-item .result-title { font-size:14px; font-weight:500; margin:2px 0; }
+.search-result-item .result-snippet { font-size:12px; color:var(--text-muted); }
+
+/* MOBILE */
+.hamburger { display:none; background:none; border:none; color:var(--text-primary); font-size:20px; cursor:pointer; padding:4px; }
+.overlay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,.5); z-index:90; }
+@media(max-width:768px) {
+  .sidebar { transform:translateX(-100%); }
+  .sidebar.open { transform:translateX(0); }
+  .overlay.active { display:block; }
+  .main { margin-left:0; }
+  .hamburger { display:block; }
+  .content { padding:20px 16px 60px; }
+}
+
+/* PHASE GATE ADVISORY BANNER */
+.phase-gate-warning { font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--accent-amber); background:rgba(245,158,11,.06); padding:8px 14px; border-radius:6px; border:1px solid rgba(245,158,11,.15); margin-bottom:16px; display:none; }
+.phase-gate-warning.visible { display:block; }
+.nav-item .lock-icon { display:none; }
+
+/* EDITABLE CONTACTS */
+.contact-input { background:var(--bg-primary); border:1px solid var(--border); border-radius:4px; padding:4px 8px; color:var(--text-primary); font-size:12px; font-family:'DM Sans',sans-serif; width:100%; max-width:200px; outline:none; transition:border-color .2s; }
+.contact-input:focus { border-color:var(--accent-blue); }
+.contact-input::placeholder { color:var(--text-muted); font-style:italic; }
+
+/* SEARCH HIGHLIGHT */
+.search-hl { background:rgba(245,158,11,.25); color:var(--accent-amber); padding:0 2px; border-radius:2px; }
+
+/* PRINT */
+@media print {
+  body { background:#fff !important; color:#111 !important; font-size:11pt; }
+  .sidebar, .topbar, .hamburger, .overlay, .btn-sm, .legend, .search-results, #searchInput { display:none !important; }
+  .main { margin-left:0 !important; }
+  .content { padding:0 !important; max-width:100% !important; }
+  .page { display:block !important; page-break-before:always; }
+  .page:first-child { page-break-before:avoid; }
+  .phase-header { margin-bottom:12px; }
+  .phase-header h2 { font-size:18pt; color:#111; }
+  .phase-badge .dot { background:#333 !important; }
+  .phase-progress-bar { display:none; }
+  .step-section { border:1px solid #ccc !important; margin-bottom:8px; page-break-inside:avoid; }
+  .step-section .step-body { display:block !important; }
+  .step-header { background:#f5f5f5 !important; }
+  .step-chevron { display:none; }
+  .cl { border-bottom:1px solid #eee !important; }
+  .cl input[type="checkbox"] { appearance:auto !important; border:1px solid #999 !important; background:transparent !important; }
+  .tt { border:1px solid #ccc; background:transparent !important; color:#333 !important; }
+  .owner { border:1px solid #ddd; }
+  .data-table { border:1px solid #ccc; }
+  .data-table th { background:#eee !important; color:#333 !important; border-bottom:2px solid #999; }
+  .data-table td { border-bottom:1px solid #ddd !important; color:#333 !important; }
+  .callout { border:1px solid #ccc !important; background:#fafafa !important; color:#333 !important; }
+  .gate-panel { border:2px solid #999 !important; page-break-inside:avoid; }
+  .gate-panel-header { background:#f0f0f0 !important; }
+  .gate-btn { border:1px solid #999 !important; }
+  .mermaid-container { background:#f5f5f5 !important; border:1px solid #ccc !important; }
+  .mermaid-container svg { max-width:100% !important; }
+  .emergency-scenario .es-body { display:block !important; }
+  .es-chevron { display:none; }
+  .contact-input { border:1px solid #ccc; background:#fff; color:#111; }
+  .phase-gate-warning { display:block !important; border:1px solid #f59e0b; background:#fffbeb !important; color:#92400e !important; }
+  a { color:#111; text-decoration:underline; }
+}
+</style>
+</head>
+<body>
+<div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-header">
+    <h1>Payment Operations</h1>
+    <div class="subtitle">Provider Integration SOP v5.0</div>
+  </div>
+  <div class="sidebar-search">
+    <input type="text" id="searchInput" placeholder="Search all content..." oninput="handleSearch(this.value)">
+  </div>
+  <nav class="sidebar-nav" id="sidebarNav">
+    <div class="nav-section"><div class="nav-section-title">Process Lifecycle</div></div>
+    <div class="nav-item active" data-page="phase0" onclick="showPage('phase0')"><span class="phase-num">0</span>Discovery &amp; Evaluation<span class="nav-progress" id="nav-prog-phase0">0%</span></div>
+    <div class="nav-item" data-page="phase1" onclick="showPage('phase1')"><span class="phase-num">1</span>Underwriting &amp; Onboarding<span class="nav-progress" id="nav-prog-phase1">0%</span></div>
+    <div class="nav-item" data-page="phase2" onclick="showPage('phase2')"><span class="phase-num">2</span>Integration &amp; Testing<span class="nav-progress" id="nav-prog-phase2">0%</span></div>
+    <div class="nav-item" data-page="phase3" onclick="showPage('phase3')"><span class="phase-num">3</span>Deployment &amp; Go-Live<span class="nav-progress" id="nav-prog-phase3">0%</span></div>
+    <div class="nav-item" data-page="phase4" onclick="showPage('phase4')"><span class="phase-num">4</span>45-Day Monitoring<span class="nav-progress" id="nav-prog-phase4">0%</span></div>
+    <div class="nav-item" data-page="phase5" onclick="showPage('phase5')"><span class="phase-num">5</span>Monitoring &amp; Optimization<span class="nav-progress" id="nav-prog-phase5">0%</span></div>
+    <div class="nav-section" style="margin-top:16px"><div class="nav-section-title">Decision Gates</div></div>
+    <div class="nav-item" data-page="gates" onclick="showPage('gates')"><span class="phase-num" style="background:rgba(239,68,68,.15);color:var(--accent-red)">⛔</span>Deal-Breaker Gates</div>
+    <div class="nav-section" style="margin-top:16px"><div class="nav-section-title">Operations</div></div>
+    <div class="nav-item" data-page="emergency" onclick="showPage('emergency')"><span class="phase-num" style="background:rgba(239,68,68,.15);color:var(--accent-red)">🚨</span>Emergency Response</div>
+    <div class="nav-item" data-page="quickref" onclick="showPage('quickref')"><span class="phase-num" style="background:rgba(6,182,212,.15);color:var(--accent-cyan)">⚡</span>Quick Reference</div>
+  </nav>
+  <div class="sidebar-footer">Overall Progress<div class="progress-bar-mini"><div class="fill" id="globalProgressBar" style="width:0%"></div></div></div>
+</aside>
+
+<main class="main">
+  <div class="topbar">
+    <div class="topbar-left">
+      <button class="hamburger" onclick="toggleSidebar()">☰</button>
+      <div class="breadcrumb">SOP <span style="margin:0 4px;opacity:.4">/</span> <span class="current" id="breadcrumbCurrent">Phase 0: Discovery</span></div>
+    </div>
+    <div class="topbar-right">
+      <div class="global-progress"><span id="globalProgressText">0%</span><div class="bar"><div class="fill" id="topbarProgress" style="width:0%"></div></div></div>
+      <button class="btn-sm" onclick="resetPage()">Reset Current</button>
+      <button class="btn-sm" onclick="window.print()" style="background:rgba(59,130,246,.12);border-color:var(--accent-blue);color:var(--accent-blue)">Print / PDF</button>
+    </div>
+  </div>
+  <div class="content">
+    <div class="search-results" id="searchResults"></div>
+
+    <!-- ==================== PHASE 0 ==================== -->
+    <div class="page active" id="page-phase0" data-title="Phase 0: Discovery & Evaluation">
+      <div class="phase-header">
+        <div class="phase-badge"><span class="dot"></span>Phase 0</div>
+        <h2>Discovery &amp; Evaluation</h2>
+        <div class="phase-meta">
+          <span>⏱ 4-8 weeks</span>
+          <span>👤 Payment Ops + Finance</span>
+          <span>🎯 Select processor, sign contract</span>
+        </div>
+        <div class="phase-progress-bar"><div class="bar"><div class="fill" id="prog-phase0" style="width:0%"></div></div><div class="pct" id="pct-phase0">0%</div></div>
+      </div>
+
+      <div class="legend">
+        <div class="legend-item"><span class="tt tt-t">T</span> Task</div>
+        <div class="legend-item"><span class="tt tt-d">D</span> Decision</div>
+        <div class="legend-item"><span class="tt tt-doc">DOC</span> Document</div>
+        <div class="legend-item"><span class="tt tt-m">M</span> Meeting</div>
+        <div class="legend-item"><span class="tt tt-mon">MON</span> Monitor</div>
+        <div class="legend-item"><span class="tt tt-rep">REP</span> Report</div>
+        <div class="legend-item"><span class="tt tt-email">EMAIL</span> Email</div>
+      </div>
+
+      <div class="step-section" data-step="p0s1">
+        <div class="step-header" onclick="toggleStep(this)">
+          <span class="step-chevron">›</span>
+          <span class="step-num">0.1-0.5</span>
+          <span class="step-title">Market Research &amp; Processor Shortlist</span>
+          <span class="step-check-count" data-counter="p0s1">0/5</span>
+        </div>
+        <div class="step-body">
+          <div class="cl"><input type="checkbox" id="p0c01" onchange="saveCheck(this)"><div class="cl-body"><label for="p0c01">Identify market payment needs and requirements</label><div class="cl-detail">Determine geographic coverage, payment methods needed, volume projections</div><div class="cl-meta"><span class="tt tt-t">T</span><span class="owner">Payment Ops + Finance</span></div></div></div>
+          <div class="cl"><input type="checkbox" id="p0c02" onchange="saveCheck(this)"><div class="cl-body"><label for="p0c02">Research global payment leaders</label><div class="cl-detail">Evaluate Nuvei, GlobalCollect, WorldLine, Ingenico, Worldpay for major markets</div><div class="cl-meta"><span class="tt tt-t">T</span><span class="owner">Payment Ops + Finance</span></div></div></div>
+          <div class="cl"><input type="checkbox" id="p0c03" onchange="saveCheck(this)"><div class="cl-body"><label for="p0c03">Research regional specialists</label><div class="cl-detail">Evaluate Checkout.com, Cybersource, regional and local specific markets</div><div class="cl-meta"><span class="tt tt-t">T</span><span class="owner">Payment Ops + Finance</span></div></div></div>
+          <div class="cl"><input type="checkbox" id="p0c04" onchange="saveCheck(this)"><div class="cl-body"><label for="p0c04">Define evaluation criteria</label><div class="cl-detail">Payment methods, geographic rates, fraud tools, API quality, support, pricing</div><div class="cl-meta"><span class="tt tt-t">T</span><span class="owner">Payment Ops</span></div></div></div>
+          <div class="cl"><input type="checkbox" id="p0c05" onchange="saveCheck(this)"><div class="cl-body"><label for="p0c05">Create processor shortlist</label><div class="cl-detail">Narrow to viable candidates based on criteria fit</div><div class="cl-meta"><span class="tt tt-t">T</span><span class="owner">Payment Ops</span></div></div></div>
+        </div>
+      </div>
+
+      <div class="step-section" data-step="p0s2">
+        <div class="step-header" onclick="toggleStep(this)">
+          <span class="step-chevron">›</span>
+          <span class="step-num">0.6-0.9</span>
+          <span class="step-title">Vendor Meetings &amp; Technical Evaluation</span>
+          <span class="step-check-count" data-counter="p0s2">0/4</span>
+        </div>
+        <div class="step-body">
+          <div class="cl"><input type="checkbox" id="p0c06" onchange="saveCheck(this)"><div class="cl-body"><label for="p0c06">Schedule and conduct discovery calls</label><div class="cl-detail">Initial capability discussions with each vendor</div><div class="cl-meta"><span class="tt tt-m">M</span><span class="owner">Payment Ops</span></div></div></div>
+          <div class="cl"><input type="checkbox" id="p0c07" onchange="saveCheck(this)"><div class="cl-body"><label for="p0c07">Conduct technical deep-dives</label><div class="cl-detail">API review, integration complexity, fraud tool capabilities</div><div class="cl-meta"><span class="tt tt-m">M</span><span class="owner">Payment Ops + Checkout</span></div></div></div>
+          <div class="cl"><input type="checkbox" id="p0c08" onchange="saveCheck(this)"><div class="cl-body"><label for="p0c08">Request formal pricing / rate cards</label><div class="cl-detail">Get IC++ rates, per-transaction fees, monthly fees</div><div class="cl-meta"><span class="tt tt-t">T</span><span class="owner">Payment Ops</span></div></div></div>
+          <div class="cl"><input type="checkbox" id="p0c09" onchange="saveCheck(this)"><div class="cl-body"><label for="p0c09">Conduct reference checks</label><div class="cl-detail">Contact existing customers of shortlisted processors. Ask about actual vs quoted rates, approval rates (85%+)</div><div class="cl-meta"><span class="tt tt-t">T</span><span class="owner">Payment Ops</span></div></div></div>
+        </div>
+      </div>
+
+      <div class="step-section" data-step="p0s3">
+        <div class="step-header" onclick="toggleStep(this)">
+          <span class="step-chevron">›</span>
+          <span class="step-num">0.10-0.12</span>
+          <span class="step-title">Analysis &amp; Documentation</span>
+          <span class="step-check-count" data-counter="p0s3">0/3</span>
+        </div>
+        <div class="step-body">
+          <div class="cl"><input type="checkbox" id="p0c10" onchange="saveCheck(this)"><div class="cl-body"><label for="p0c10">Build processor comparison matrix</label><div class="cl-detail">Side-by-side comparison of all criteria</div><div class="cl-meta"><span class="tt tt-doc">DOC</span><span class="owner">Payment Ops</span></div></div></div>
+          <div class="cl"><input type="checkbox" id="p0c11" onchange="saveCheck(this)"><div class="cl-body"><label for="p0c11">Calculate cost projections for each option</label><div class="cl-detail">Model total cost based on volume mix by region</div><div class="cl-meta"><span class="tt tt-t">T</span><span class="owner">Payment Ops</span></div></div></div>
+          <div class="cl"><input type="checkbox" id="p0c12" onchange="saveCheck(this)"><div class="cl-body"><label for="p0c12">Create cost analysis with savings opportunity</label><div class="cl-detail">Document standard monthly or annual model with savings potential</div><div class="cl-meta"><span class="tt tt-doc">DOC</span><span class="owner">Payment Ops</span></div></div></div>
+
+          <div class="content-block" style="margin-top:12px">
+            <h4>Cost Comparison Benchmark</h4>
+            <table class="data-table">
+              <tr><th>Processor</th><th>Domestic</th><th>APAC</th><th>Europe</th><th>Monthly</th><th>Annual @$414M</th></tr>
+              <tr><td>Worldpay</td><td>IC+0.15%</td><td>IC+2.5%</td><td>IC+0.15%</td><td>$500</td><td>$15.4M</td></tr>
+              <tr><td>Nuvei</td><td>IC+1.5%</td><td>IC+1.5%</td><td>IC+1.5%</td><td>$750</td><td>$14.9M</td></tr>
+              <tr><td style="color:var(--accent-green)">Hybrid ⭐</td><td>IC+0.15%/1.5%</td><td>IC+1.5%</td><td>IC+0.15%</td><td>$1,250</td><td style="color:var(--accent-green)">$12.9M</td></tr>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="step-section" data-step="p0s4">
+        <div class="step-header" onclick="toggleStep(this)">
+          <span class="step-chevron">›</span>
+          <span class="step-num">0.13-0.16</span>
+          <span class="step-title">Selection &amp; Approval</span>
+          <span class="step-check-count" data-counter="p0s4">0/4</span>
+        </div>
+        <div class="step-body">
+          <div class="cl"><input type="checkbox" id="p0c13" onchange="saveCheck(this)"><div class="cl-body"><label for="p0c13">DECISION: Select preferred processor</label><div class="cl-detail">Based on total value: cost, capability, support, risk</div><div class="cl-meta"><span class="tt tt-d">D</span><span class="owner">Payment Ops</span></div></div></div>
+          <div class="cl"><input type="checkbox" id="p0c14" onchange="saveCheck(this)"><div class="cl-body"><label for="p0c14">Present recommendation to management</label><div class="cl-detail">Review comparison matrix and cost analysis</div><div class="cl-meta"><span class="tt tt-m">M</span><span class="owner">Payment Ops</span></div></div></div>
+          <div class="cl"><input type="checkbox" id="p0c15" onchange="saveCheck(this)"><div class="cl-body"><label for="p0c15">DECISION: Management approval to proceed</label><div class="cl-detail">Go/no-go on selected processor</div><div class="cl-meta"><span class="tt tt-d">D</span><span class="owner">Management</span></div></div></div>
+          <div class="cl"><input type="checkbox" id="p0c16" onchange="saveCheck(this)"><div class="cl-body"><label for="p0c16">Obtain approval email authorization</label><div class="cl-detail">Email authorization to proceed</div><div class="cl-meta"><span class="tt tt-email">EMAIL</span><span class="owner">Management</span></div></div></div>
+        </div>
+      </div>
+
+      <div class="step-section" data-step="p0s5">
+        <div class="step-header" onclick="toggleStep(this)">
+          <span class="step-chevron">›</span>
+          <span class="step-num">0.17-0.20</span>
+          <span class="step-title">Contract &amp; Kickoff</span>
+          <span class="step-check-count" data-counter="p0s5">0/4</span>
+        </div>
+        <div class="step-body">
+          <div class="cl"><input type="checkbox" id="p0c17" onchange="saveCheck(this)"><div class="cl-body"><label for="p0c17">Begin contract negotiations</label><div class="cl-detail">Negotiate IC+ spread (&lt;0.20% domestic, &lt;1.5% intl), rates, terms, SLAs. Lock 12-24 months.</div><div class="cl-meta"><span class="tt tt-t">T</span><span class="owner">Payment Ops + Finance</span></div></div></div>
+          <div class="cl"><input type="checkbox" id="p0c18" onchange="saveCheck(this)"><div class="cl-body"><label for="p0c18">Legal review of contract terms</label><div class="cl-detail">Liability, data protection, termination clauses, no auto-renewal, 30-60 day termination notice</div><div class="cl-meta"><span class="tt tt-t">T</span><span class="owner">Legal</span></div></div></div>
+          <div class="cl"><input type="checkbox" id="p0c19" onchange="saveCheck(this)"><div class="cl-body"><label for="p0c19">Execute signed contract</label><div class="cl-detail">Final signatures from both parties. Secure data portability: token migration, 7yr historical access.</div><div class="cl-meta"><span class="tt tt-doc">DOC</span><span class="owner">Finance</span></div></div></div>
+          <div class="cl"><input type="checkbox" id="p0c20" onchange="saveCheck(this)"><div class="cl-body"><label for="p0c20">Schedule project kickoff</label><div class="cl-detail">Set integration timeline with processor: resources, testing strategy, go-live criteria</div><div class="cl-meta"><span class="tt tt-m">M</span><span class="owner">Finance + Payment Ops</span></div></div></div>
+          <div class="callout success">Phase 0 deliverables: Processor Comparison Matrix, Cost Analysis Spreadsheet, Approval Email, Signed Processor Contract</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== PHASE 1 ==================== -->
+    <div class="page" id="page-phase1" data-title="Phase 1: Underwriting & Onboarding">
+      <div class="phase-header">
+        <div class="phase-badge"><span class="dot"></span>Phase 1</div>
+        <h2>Underwriting &amp; Onboarding</h2>
+        <div class="phase-meta">
+          <span>⏱ 2-4 weeks</span>
+          <span>👤 Payment Ops + Finance</span>
+          <span>🎯 Merchant account approved and configured</span>
+        </div>
+        <div class="phase-progress-bar"><div class="bar"><div class="fill" id="prog-phase1" style="width:0%"></div></div><div class="pct" id="pct-phase1">0%</div></div>
+      <div class="phase-gate-warning" id="gate-warn-phase1">⚠ Gate 1 (Pre-Qualification) has not passed yet. You can still work here, but verify gate criteria before proceeding to production.</div>
+      </div>
+
+      <div class="step-section" data-step="p1s1">
+        <div class="step-header" onclick="toggleStep(this)">
+          <span class="step-chevron">›</span>
+          <span class="step-num">1.1-1.7</span>
+          <span class="step-title">Application &amp; Document Gathering</span>
+          <span class="step-check-count" data-counter="p1s1">0/7</span>
+        </div>
+        <div class="step-body">
+          <div class="cl"><input type="checkbox" id="p1c01" onchange="saveCheck(this)"><div class="cl-body"><label for="p1c01">Receive application requirements from processor</label><div class="cl-detail">Checklist of required documents and information</div><div class="cl-meta"><span class="tt tt-t">T</span><span class="owner">Processor</span></div></div></div>
+          <div class="cl"><input type="checkbox" id="p1c02" onchange="saveCheck(this)"><div class="cl-body"><label for="p1c02">Gather company incorporation documents</label><div class="cl-detail">Articles of incorporation, business license</div><div class="cl-meta"><span class="tt tt-t">T</span><span class="owner">Finance</span></div></div></div>
+          <div class="cl"><input type="checkbox" id="p1c03" onchange="saveCheck(this)"><div class="cl-body"><label for="p1c03">Obtain tax identification documents</label><div class="cl-detail">EIN, tax certificates</div><div class="cl-meta"><span class="tt tt-t">T</span><span class="owner">Finance</span></div></div></div>
+          <div class="cl"><input type="checkbox" id="p1c04" onchange="saveCheck(this)"><div class="cl-body"><label for="p1c04">Compile 2 years financial statements</label><div class="cl-detail">Audited financials, bank statements</div><div class="cl-meta"><span class="tt tt-t">T</span><span class="owner">Finance</span></div></div></div>
+          <div class="cl"><input type="checkbox" id="p1c05" onchange="saveCheck(this)"><div class="cl-body"><label for="p1c05">Prepare processing history report</label><div class="cl-detail">Historical volume, chargeback rates, refund rates</div><div class="cl-meta"><span class="tt tt-t">T</span><span class="owner">Payment Ops</span></div></div></div>
+          <div class="cl"><input type="checkbox" id="p1c06" onchange="saveCheck(this)"><div class="cl-body"><label for="p1c06">Document website and product information</label><div class="cl-detail">Product catalog, pricing, return policy</div><div class="cl-meta"><span class="tt tt-t">T</span><span class="owner">Payment Ops</span></div></div></div>
+          <div class="cl"><input type="checkbox" id="p1c07" onchange="saveCheck(this)"><div class="cl-body"><label for="p1c07">Submit complete application package</label><div class="cl-detail">All documents compiled and submitted to processor</div><div class="cl-meta"><span class="tt tt-doc">DOC</span><span class="owner">Finance</span></div></div></div>
+        </div>
+      </div>
+
+      <div class="step-section" data-step="p1s2">
+        <div class="step-header" onclick="toggleStep(this)">
+          <span class="step-chevron">›</span>
+          <span class="step-num">1.8-1.13</span>
+          <span class="step-title">Underwriting Review &amp; Approval</span>
+          <span class="step-check-count" data-counter="p1s2">0/6</span>
+        </div>
+        <div class="step-body">
+          <div class="cl"><input type="checkbox" id="p1c08" onchange="saveCheck(this)"><div class="cl-body"><label for="p1c08">Respond to underwriting questions</label><div class="cl-detail">Clarifications requested by processor risk team. Respond within 24hrs.</div><div class="cl-meta"><span class="tt tt-t">T</span><span class="owner">Finance + Payment Ops</span></div></div></div>
+          <div class="cl"><input type="checkbox" id="p1c09" onchange="saveCheck(this)"><div class="cl-body"><label for="p1c09">Complete PCI self-assessment questionnaire</label><div class="cl-detail">SAQ-D or appropriate level for business (SAQ A for hosted, A-EP for iFrame, D for direct API)</div><div class="cl-meta"><span class="tt tt-t">T</span><span class="owner">IT Ops + Payment Ops</span></div></div></div>
+          <div class="cl"><input type="checkbox" id="p1c10" onchange="saveCheck(this)"><div class="cl-body"><label for="p1c10">Submit PCI SAQ to processor</label><div class="cl-detail">Compliance documentation delivered</div><div class="cl-meta"><span class="tt tt-doc">DOC</span><span class="owner">IT Ops + Payment Ops</span></div></div></div>
+          <div class="cl"><input type="checkbox" id="p1c11" onchange="saveCheck(this)"><div class="cl-body"><label for="p1c11">Set up data protection agreements</label><div class="cl-detail">NDA, privacy terms, GDPR DPA as required</div><div class="cl-meta"><span class="tt tt-t">T</span><span class="owner">Legal</span></div></div></div>
+          <div class="cl"><input type="checkbox" id="p1c12" onchange="saveCheck(this)"><div class="cl-body"><label for="p1c12">DECISION: Processor approves/declines application</label><div class="cl-detail">Risk assessment complete</div><div class="cl-meta"><span class="tt tt-d">D</span><span class="owner">Processor</span></div></div></div>
+          <div class="cl"><input type="checkbox" id="p1c13" onchange="saveCheck(this)"><div class="cl-body"><label for="p1c13">Receive merchant account approval letter</label><div class="cl-detail">Formal approval with MID assignment</div><div class="cl-meta"><span class="tt tt-doc">DOC</span><span class="owner">Processor</span></div></div></div>
+        </div>
+      </div>
+
+      <div class="step-section" data-step="p1s3">
+        <div class="step-header" onclick="toggleStep(this)">
+          <span class="step-chevron">›</span>
+          <span class="step-num">1.14-1.20</span>
+          <span class="step-title">Account Configuration &amp; Environment Setup</span>
+          <span class="step-check-count" data-counter="p1s3">0/7</span>
+        </div>
+        <div class="step-body">
+          <div class="cl"><input type="checkbox" id="p1c14" onchange="saveCheck(this)"><div class="cl-body"><label for="p1c14">Configure merchant account settings</label><div class="cl-detail">Set up payment methods: Visa, MC, Amex. Billing descriptor, settlement currency + bank account.</div><div class="cl-meta"><span class="tt tt-t">T</span><span class="owner">Payment Ops</span></div></div></div>
+          <div class="cl"><input type="checkbox" id="p1c15" onchange="saveCheck(this)"><div class="cl-body"><label for="p1c15">Enable processor fraud tools</label><div class="cl-detail">Activate built-in fraud screening, risk score thresholds, velocity rules</div><div class="cl-meta"><span class="tt tt-t">T</span><span class="owner">Payment Ops</span></div></div></div>
+          <div class="cl"><input type="checkbox" id="p1c16" onchange="saveCheck(this)"><div class="cl-body"><label for="p1c16">Activate RDR alerts (Visa)</label><div class="cl-detail">Configure Rapid Dispute Resolution. Set auto-refund threshold $200.</div><div class="cl-meta"><span class="tt tt-t">T</span><span class="owner">Payment Ops</span></div></div></div>
+          <div class="cl"><input type="checkbox" id="p1c17" onchange="saveCheck(this)"><div class="cl-body"><label for="p1c17">Activate Ethoca alerts (Mastercard)</label><div class="cl-detail">Configure Ethoca alert system, merchant enrollment, alert routing</div><div class="cl-meta"><span class="tt tt-t">T</span><span class="owner">Payment Ops</span></div></div></div>
+          <div class="cl"><input type="checkbox" id="p1c18" onchange="saveCheck(this)"><div class="cl-body"><label for="p1c18">Configure payment models</label><div class="cl-detail">Direct, 3DS, Digital Wallet. Ensure sandbox mirrors real-life scenarios.</div><div class="cl-meta"><span class="tt tt-t">T</span><span class="owner">Payment Ops + Checkout</span></div></div></div>
+          <div class="cl"><input type="checkbox" id="p1c19" onchange="saveCheck(this)"><div class="cl-body"><label for="p1c19">Receive test environment access</label><div class="cl-detail">Sandbox credentials (publishable + secret key) for development</div><div class="cl-meta"><span class="tt tt-t">T</span><span class="owner">Processor + Checkout</span></div></div></div>
+          <div class="cl"><input type="checkbox" id="p1c20" onchange="saveCheck(this)"><div class="cl-body"><label for="p1c20">Conduct team training on new platform</label><div class="cl-detail">Train ops team on processor portal</div><div class="cl-meta"><span class="tt tt-m">M</span><span class="owner">Payment Ops + Checkout</span></div></div></div>
+          <div class="callout success">Phase 1 deliverables: Application Package, Completed PCI SAQ, Approval Letter + MID</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== PHASE 2 ==================== -->
+    <div class="page" id="page-phase2" data-title="Phase 2: Integration & Testing">
+      <div class="phase-header">
+        <div class="phase-badge"><span class="dot"></span>Phase 2</div>
+        <h2>Integration &amp; Testing</h2>
+        <div class="phase-meta">
+          <span>⏱ 4-6 weeks</span>
+          <span>👤 Checkout Team + Payment Ops</span>
+          <span>🎯 Build, test, and validate payment integration</span>
+        </div>
+        <div class="phase-progress-bar"><div class="bar"><div class="fill" id="prog-phase2" style="width:0%"></div></div><div class="pct" id="pct-phase2">0%</div></div>
+      </div>
+
+      <div class="phase-gate-warning" id="gate-warn-phase2">⚠ Gate 2 (Underwriting) has not passed yet. You can still work here, but verify gate criteria before proceeding to production.</div>
+
+      <div class="step-section" data-step="p2s1">
+        <div class="step-header" onclick="toggleStep(this)">
+          <span class="step-chevron">›</span>
+          <span class="step-num">2.1-2.3</span>
+          <span class="step-title">Technical Kickoff &amp; Planning</span>
+          <span class="step-check-count" data-counter="p2s1">0/3</span>
+        </div>
+        <div class="step-body">
+          <div class="cl"><input type="checkbox" id="p2c01" onchange="saveCheck(this)"><div class="cl-body"><label for="p2c01">Receive API documentation from processor</label><div class="cl-detail">Technical specs, endpoints, authentication</div><div class="cl-meta"><span class="tt tt-doc">DOC</span><span class="owner">Processor</span></div></div></div>
+          <div class="cl"><input type="checkbox" id="p2c02" onchange="saveCheck(this)"><div class="cl-body"><label for="p2c02">Hold technical kickoff meeting</label><div class="cl-detail">Align Checkout and processor on integration approach</div><div class="cl-meta"><span class="tt tt-m">M</span><span class="owner">Payment Ops + Checkout</span></div></div></div>
+          <div class="cl"><input type="checkbox" id="p2c03" onchange="saveCheck(this)"><div class="cl-body"><label for="p2c03">Create integration document with details</label><div class="cl-detail">Detailed technical success criteria and possible obstacles</div><div class="cl-meta"><span class="tt tt-doc">DOC</span><span class="owner">Payment Ops + Checkout</span></div></div></div>
+        </div>
+      </div>
+
+      <div class="step-section" data-step="p2s2">
+        <div class="step-header" onclick="toggleStep(this)">
+          <span class="step-chevron">›</span>
+          <span class="step-num">2.4-2.9</span>
+          <span class="step-title">Core API Integration</span>
+          <span class="step-check-count" data-counter="p2s2">0/6</span>
+        </div>
+        <div class="step-body">
+          <div class="cl"><input type="checkbox" id="p2c04" onchange="saveCheck(this)"><div class="cl-body"><label for="p2c04">Build payment form integration</label><div class="cl-detail">Frontend card capture UI, mobile responsive, WCAG 2.1 AA</div><div class="cl-meta"><span class="tt tt-t">T</span><span class="owner">Checkout Team</span></div></div></div>
+          <div class="cl"><input type="checkbox" id="p2c05" onchange="saveCheck(this)"><div class="cl-body"><label for="p2c05">Implement authorization API</label><div class="cl-detail">Real-time auth requests</div><div class="cl-meta"><span class="tt tt-t">T</span><span class="owner">Checkout Team</span></div></div></div>
+          <div class="cl"><input type="checkbox" id="p2c06" onchange="saveCheck(this)"><div class="cl-body"><label for="p2c06">Implement capture API</label><div class="cl-detail">Settlement capture calls</div><div class="cl-meta"><span class="tt tt-t">T</span><span class="owner">Checkout Team</span></div></div></div>
+          <div class="cl"><input type="checkbox" id="p2c07" onchange="saveCheck(this)"><div class="cl-body"><label for="p2c07">Implement refund API</label><div class="cl-detail">Full and partial refund processing capability</div><div class="cl-meta"><span class="tt tt-t">T</span><span class="owner">Checkout Team</span></div></div></div>
+          <div class="cl"><input type="checkbox" id="p2c08" onchange="saveCheck(this)"><div class="cl-body"><label for="p2c08">Configure webhook endpoints</label><div class="cl-detail">Payment status update receivers. Signature verification, idempotency, retry handling.</div><div class="cl-meta"><span class="tt tt-t">T</span><span class="owner">Checkout Team</span></div></div></div>
+          <div class="cl"><input type="checkbox" id="p2c09" onchange="saveCheck(this)"><div class="cl-body"><label for="p2c09">Implement tokenization for recurring billing</label><div class="cl-detail">Secure card storage for subscriptions. PCI compliance critical.</div><div class="cl-meta"><span class="tt tt-t">T</span><span class="owner">Checkout Team</span></div></div></div>
+        </div>
+      </div>
+
+      <div class="step-section" data-step="p2s3">
+        <div class="step-header" onclick="toggleStep(this)">
+          <span class="step-chevron">›</span>
+          <span class="step-num">2.10-2.13</span>
+          <span class="step-title">Fraud, 3DS &amp; Alert Integration</span>
+          <span class="step-check-count" data-counter="p2s3">0/4</span>
+        </div>
+        <div class="step-body">
+          <div class="cl"><input type="checkbox" id="p2c10" onchange="saveCheck(this)"><div class="cl-body"><label for="p2c10">Integrate fraud screening module</label><div class="cl-detail">Pre-auth fraud checks. Risk scoring: &lt;30 approve, 30-60 review, 60-80 3DS, &gt;80 decline</div><div class="cl-meta"><span class="tt tt-t">T</span><span class="owner">Checkout Team</span></div></div></div>
+          <div class="cl"><input type="checkbox" id="p2c11" onchange="saveCheck(this)"><div class="cl-body"><label for="p2c11">Set up 3D Secure authentication flow</label><div class="cl-detail">Challenge/frictionless flow. Trigger on high risk, high value, international, first txn.</div><div class="cl-meta"><span class="tt tt-t">T</span><span class="owner">Checkout Team</span></div></div></div>
+          <div class="cl"><input type="checkbox" id="p2c12" onchange="saveCheck(this)"><div class="cl-body"><label for="p2c12">Configure RDR auto-refund rules</label><div class="cl-detail">Auto-refund for alerts &lt;$200, manual queue &gt;$200, confirm to Verifi</div><div class="cl-meta"><span class="tt tt-t">T</span><span class="owner">Payment Ops</span></div></div></div>
+          <div class="cl"><input type="checkbox" id="p2c13" onchange="saveCheck(this)"><div class="cl-body"><label for="p2c13">Configure Ethoca response automation</label><div class="cl-detail">Receive alert, lookup txn, validate, process refund, confirm to Ethoca</div><div class="cl-meta"><span class="tt tt-t">T</span><span class="owner">Payment Ops</span></div></div></div>
+        </div>
+      </div>
+
+      <div class="step-section" data-step="p2s4">
+        <div class="step-header" onclick="toggleStep(this)">
+          <span class="step-chevron">›</span>
+          <span class="step-num">2.14-2.20</span>
+          <span class="step-title">Testing &amp; Validation</span>
+          <span class="step-check-count" data-counter="p2s4">0/7</span>
+        </div>
+        <div class="step-body">
+          <div class="cl"><input type="checkbox" id="p2c14" onchange="saveCheck(this)"><div class="cl-body"><label for="p2c14">Create test case document</label><div class="cl-detail">All test scenarios defined</div><div class="cl-meta"><span class="tt tt-doc">DOC</span><span class="owner">Checkout Team</span></div></div></div>
+          <div class="cl"><input type="checkbox" id="p2c15" onchange="saveCheck(this)"><div class="cl-body"><label for="p2c15">Execute functional test scenarios</label><div class="cl-detail">All payment flows tested end-to-end</div><div class="cl-meta"><span class="tt tt-t">T</span><span class="owner">Checkout Team</span></div></div></div>
+          <div class="cl"><input type="checkbox" id="p2c16" onchange="saveCheck(this)"><div class="cl-body"><label for="p2c16">Test card brand variations</label><div class="cl-detail">Visa, MC, Amex, Discover</div><div class="cl-meta"><span class="tt tt-t">T</span><span class="owner">Checkout Team</span></div></div></div>
+          <div class="cl"><input type="checkbox" id="p2c17" onchange="saveCheck(this)"><div class="cl-body"><label for="p2c17">Test decline handling</label><div class="cl-detail">All decline codes handled properly with correct user messages</div><div class="cl-meta"><span class="tt tt-t">T</span><span class="owner">Checkout Team</span></div></div></div>
+          <div class="cl"><input type="checkbox" id="p2c18" onchange="saveCheck(this)"><div class="cl-body"><label for="p2c18">Test refund flows</label><div class="cl-detail">Full and partial refunds verified</div><div class="cl-meta"><span class="tt tt-t">T</span><span class="owner">Checkout Team</span></div></div></div>
+          <div class="cl"><input type="checkbox" id="p2c19" onchange="saveCheck(this)"><div class="cl-body"><label for="p2c19">Test chargeback notification handling</label><div class="cl-detail">Webhook processing verified for all CB types</div><div class="cl-meta"><span class="tt tt-t">T</span><span class="owner">Checkout Team</span></div></div></div>
+          <div class="cl"><input type="checkbox" id="p2c20" onchange="saveCheck(this)"><div class="cl-body"><label for="p2c20">Monitor test results</label><div class="cl-detail">All scenarios pass/fail documented</div><div class="cl-meta"><span class="tt tt-mon">MON</span><span class="owner">Checkout + Payment Ops</span></div></div></div>
+        </div>
+      </div>
+
+      <div class="step-section" data-step="p2s5">
+        <div class="step-header" onclick="toggleStep(this)">
+          <span class="step-chevron">›</span>
+          <span class="step-num">2.21-2.25</span>
+          <span class="step-title">Automated Testing &amp; UAT Sign-Off</span>
+          <span class="step-check-count" data-counter="p2s5">0/5</span>
+        </div>
+        <div class="step-body">
+          <div class="cl"><input type="checkbox" id="p2c21" onchange="saveCheck(this)"><div class="cl-body"><label for="p2c21">Execute automated testing</label><div class="cl-detail">Performance under volume. API &lt;200ms p95, checkout &lt;2sec, payment &lt;3sec.</div><div class="cl-meta"><span class="tt tt-t">T</span><span class="owner">Checkout Team</span></div></div></div>
+          <div class="cl"><input type="checkbox" id="p2c22" onchange="saveCheck(this)"><div class="cl-body"><label for="p2c22">DECISION: All test criteria met?</label><div class="cl-detail">Review all test results for go/no-go</div><div class="cl-meta"><span class="tt tt-d">D</span><span class="owner">Payment Ops + Checkout</span></div></div></div>
+          <div class="cl"><input type="checkbox" id="p2c23" onchange="saveCheck(this)"><div class="cl-body"><label for="p2c23">Conduct user acceptance testing</label><div class="cl-detail">Business stakeholder validation: happy path, error handling, mobile, speed</div><div class="cl-meta"><span class="tt tt-t">T</span><span class="owner">Payment Ops</span></div></div></div>
+          <div class="cl"><input type="checkbox" id="p2c24" onchange="saveCheck(this)"><div class="cl-body"><label for="p2c24">DECISION: UAT approval</label><div class="cl-detail">Stakeholders approve for production</div><div class="cl-meta"><span class="tt tt-d">D</span><span class="owner">Stakeholders</span></div></div></div>
+          <div class="cl"><input type="checkbox" id="p2c25" onchange="saveCheck(this)"><div class="cl-body"><label for="p2c25">Obtain UAT sign-off email</label><div class="cl-detail">Email approval document from all stakeholders</div><div class="cl-meta"><span class="tt tt-email">EMAIL</span><span class="owner">Payment Ops</span></div></div></div>
+          <div class="callout success">Phase 2 deliverables: API Documentation, Integration Plan, Test Case Document, Test Results Report, UAT Sign-off Email</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== PHASE 3 ==================== -->
+    <div class="page" id="page-phase3" data-title="Phase 3: Deployment & Go-Live">
+      <div class="phase-header">
+        <div class="phase-badge"><span class="dot"></span>Phase 3</div>
+        <h2>Deployment &amp; Go-Live</h2>
+        <div class="phase-meta">
+          <span>⏱ 1-2 weeks</span>
+          <span>👤 Payment Ops + Checkout</span>
+          <span>🎯 Phased production rollout with monitoring</span>
+        </div>
+        <div class="phase-progress-bar"><div class="bar"><div class="fill" id="prog-phase3" style="width:0%"></div></div><div class="pct" id="pct-phase3">0%</div></div>
+      </div>
+
+      <div class="phase-gate-warning" id="gate-warn-phase3">⚠ Gate 3 (Technical Readiness) has not passed yet. You can still work here, but verify gate criteria before going live.</div>
+
+      <div class="step-section" data-step="p3s1">
+        <div class="step-header" onclick="toggleStep(this)">
+          <span class="step-chevron">›</span>
+          <span class="step-num">3.1-3.7</span>
+          <span class="step-title">Production Setup &amp; Validation</span>
+          <span class="step-check-count" data-counter="p3s1">0/7</span>
+        </div>
+        <div class="step-body">
+          <div class="cl"><input type="checkbox" id="p3c01" onchange="saveCheck(this)"><div class="cl-body"><label for="p3c01">Request production credentials</label><div class="cl-detail">Move from sandbox to live</div><div class="cl-meta"><span class="tt tt-t">T</span><span class="owner">Checkout + Payment Ops</span></div></div></div>
+          <div class="cl"><input type="checkbox" id="p3c02" onchange="saveCheck(this)"><div class="cl-body"><label for="p3c02">Receive production MID credentials</label><div class="cl-detail">Live processing authorization confirmed</div><div class="cl-meta"><span class="tt tt-email">EMAIL</span><span class="owner">Processor</span></div></div></div>
+          <div class="cl"><input type="checkbox" id="p3c03" onchange="saveCheck(this)"><div class="cl-body"><label for="p3c03">Configure production environment</label><div class="cl-detail">Apply live credentials to system</div><div class="cl-meta"><span class="tt tt-t">T</span><span class="owner">Checkout Team</span></div></div></div>
+          <div class="cl"><input type="checkbox" id="p3c04" onchange="saveCheck(this)"><div class="cl-body"><label for="p3c04">Set up Payment Portal report access</label><div class="cl-detail">Provide all teams with necessary access to the Payment Portal apps</div><div class="cl-meta"><span class="tt tt-t">T</span><span class="owner">Payment Ops</span></div></div></div>
+          <div class="cl"><input type="checkbox" id="p3c05" onchange="saveCheck(this)"><div class="cl-body"><label for="p3c05">Set up monitoring dashboards</label><div class="cl-detail">Real-time transaction visibility</div><div class="cl-meta"><span class="tt tt-t">T</span><span class="owner">Payment Ops + Checkout</span></div></div></div>
+          <div class="cl"><input type="checkbox" id="p3c06" onchange="saveCheck(this)"><div class="cl-body"><label for="p3c06">Configure monitoring reports</label><div class="cl-detail">Failure rate, decline spike alerting</div><div class="cl-meta"><span class="tt tt-t">T</span><span class="owner">Payment Ops</span></div></div></div>
+          <div class="cl"><input type="checkbox" id="p3c07" onchange="saveCheck(this)"><div class="cl-body"><label for="p3c07">Process test transactions in production</label><div class="cl-detail">Verify end-to-end flow with real cards</div><div class="cl-meta"><span class="tt tt-t">T</span><span class="owner">Payment Ops</span></div></div></div>
+        </div>
+      </div>
+
+      <div class="step-section" data-step="p3s2">
+        <div class="step-header" onclick="toggleStep(this)">
+          <span class="step-chevron">›</span>
+          <span class="step-num">3.8-3.16</span>
+          <span class="step-title">Phased Traffic Rollout</span>
+          <span class="step-check-count" data-counter="p3s2">0/9</span>
+        </div>
+        <div class="step-body">
+          <div class="callout warn">Phased rollout: 100 orders → 1,000 orders → 100% traffic. Each phase requires explicit go/no-go decision before proceeding.</div>
+          <div class="cl"><input type="checkbox" id="p3c08" onchange="saveCheck(this)"><div class="cl-body"><label for="p3c08">DECISION: Ready for phased rollout?</label><div class="cl-detail">Test transactions successful in production</div><div class="cl-meta"><span class="tt tt-d">D</span><span class="owner">Payment Ops</span></div></div></div>
+          <div class="cl"><input type="checkbox" id="p3c09" onchange="saveCheck(this)"><div class="cl-body"><label for="p3c09">Deploy Phase 1: Route 100 order traffic</label><div class="cl-detail">Initial production traffic batch</div><div class="cl-meta"><span class="tt tt-t">T</span><span class="owner">Checkout Team</span></div></div></div>
+          <div class="cl"><input type="checkbox" id="p3c10" onchange="saveCheck(this)"><div class="cl-body"><label for="p3c10">Monitor hourly (first 24 hours)</label><div class="cl-detail">Watch approval rates, errors, latency</div><div class="cl-meta"><span class="tt tt-mon">MON</span><span class="owner">Payment Ops</span></div></div></div>
+          <div class="cl"><input type="checkbox" id="p3c11" onchange="saveCheck(this)"><div class="cl-body"><label for="p3c11">DECISION: 100 order metrics acceptable?</label><div class="cl-detail">Compare to baseline expectations. Auth &gt;80%, error &lt;1%, latency &lt;2s.</div><div class="cl-meta"><span class="tt tt-d">D</span><span class="owner">Payment Ops</span></div></div></div>
+          <div class="cl"><input type="checkbox" id="p3c12" onchange="saveCheck(this)"><div class="cl-body"><label for="p3c12">Deploy Phase 2: Route 1,000 order traffic</label><div class="cl-detail">Increase if Phase 1 successful</div><div class="cl-meta"><span class="tt tt-t">T</span><span class="owner">Checkout Team</span></div></div></div>
+          <div class="cl"><input type="checkbox" id="p3c13" onchange="saveCheck(this)"><div class="cl-body"><label for="p3c13">Monitor 4x daily (Week 1)</label><div class="cl-detail">Expanded monitoring coverage</div><div class="cl-meta"><span class="tt tt-mon">MON</span><span class="owner">Payment Ops</span></div></div></div>
+          <div class="cl"><input type="checkbox" id="p3c14" onchange="saveCheck(this)"><div class="cl-body"><label for="p3c14">DECISION: 1,000 order metrics acceptable?</label><div class="cl-detail">Compare to baseline expectations</div><div class="cl-meta"><span class="tt tt-d">D</span><span class="owner">Payment Ops</span></div></div></div>
+          <div class="cl"><input type="checkbox" id="p3c15" onchange="saveCheck(this)"><div class="cl-body"><label for="p3c15">Deploy Phase 3: Route 100% traffic</label><div class="cl-detail">Full migration complete</div><div class="cl-meta"><span class="tt tt-t">T</span><span class="owner">Checkout Team</span></div></div></div>
+          <div class="cl"><input type="checkbox" id="p3c16" onchange="saveCheck(this)"><div class="cl-body"><label for="p3c16">Monitor daily (first month)</label><div class="cl-detail">Ongoing stability monitoring</div><div class="cl-meta"><span class="tt tt-mon">MON</span><span class="owner">Payment Ops</span></div></div></div>
+        </div>
+      </div>
+
+      <div class="step-section" data-step="p3s3">
+        <div class="step-header" onclick="toggleStep(this)">
+          <span class="step-chevron">›</span>
+          <span class="step-num">3.17-3.24</span>
+          <span class="step-title">Settlement Validation &amp; Go-Live Confirmation</span>
+          <span class="step-check-count" data-counter="p3s3">0/8</span>
+        </div>
+        <div class="step-body">
+          <div class="cl"><input type="checkbox" id="p3c17" onchange="saveCheck(this)"><div class="cl-body"><label for="p3c17">Verify webhooks functioning</label><div class="cl-detail">Confirm all notifications received and processed</div><div class="cl-meta"><span class="tt tt-t">T</span><span class="owner">Checkout Team</span></div></div></div>
+          <div class="cl"><input type="checkbox" id="p3c18" onchange="saveCheck(this)"><div class="cl-body"><label for="p3c18">Receive first settlement file</label><div class="cl-detail">T+2 settlement arrives from processor</div><div class="cl-meta"><span class="tt tt-t">T</span><span class="owner">Processor + Finance</span></div></div></div>
+          <div class="cl"><input type="checkbox" id="p3c19" onchange="saveCheck(this)"><div class="cl-body"><label for="p3c19">Reconcile first settlement</label><div class="cl-detail">Match transactions to deposit amount</div><div class="cl-meta"><span class="tt tt-t">T</span><span class="owner">Payment Ops + Finance</span></div></div></div>
+          <div class="cl"><input type="checkbox" id="p3c20" onchange="saveCheck(this)"><div class="cl-body"><label for="p3c20">DECISION: Settlement reconciles correctly?</label><div class="cl-detail">No discrepancies found. 100% data integrity.</div><div class="cl-meta"><span class="tt tt-d">D</span><span class="owner">Payment Ops</span></div></div></div>
+          <div class="cl"><input type="checkbox" id="p3c21" onchange="saveCheck(this)"><div class="cl-body"><label for="p3c21">Document reconciliation confirmation</label><div class="cl-detail">First settlement verified and documented</div><div class="cl-meta"><span class="tt tt-mon">MON</span><span class="owner">Finance</span></div></div></div>
+          <div class="cl"><input type="checkbox" id="p3c22" onchange="saveCheck(this)"><div class="cl-body"><label for="p3c22">Compare approval rates vs baseline</label><div class="cl-detail">New processor meeting expectations (target 85%+)</div><div class="cl-meta"><span class="tt tt-t">T</span><span class="owner">Payment Ops</span></div></div></div>
+          <div class="cl"><input type="checkbox" id="p3c23" onchange="saveCheck(this)"><div class="cl-body"><label for="p3c23">Confirm customer support ready</label><div class="cl-detail">Team trained on new processor issues and escalation paths</div><div class="cl-meta"><span class="tt tt-t">T</span><span class="owner">Payment Ops</span></div></div></div>
+          <div class="cl"><input type="checkbox" id="p3c24" onchange="saveCheck(this)"><div class="cl-body"><label for="p3c24">Issue go-live completion email</label><div class="cl-detail">Deployment complete notification to all stakeholders</div><div class="cl-meta"><span class="tt tt-email">EMAIL</span><span class="owner">Payment Ops + Checkout</span></div></div></div>
+          <div class="callout success">Phase 3 deliverables: Production MID Active, Reconciliation Confirmation, Go-Live Confirmation Email</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== PHASE 4 ==================== -->
+    <div class="page" id="page-phase4" data-title="Phase 4: 45-Day Monitoring & Market Handoff">
+      <div class="phase-header">
+        <div class="phase-badge"><span class="dot"></span>Phase 4</div>
+        <h2>45-Day Monitoring &amp; Market Handoff</h2>
+        <div class="phase-meta">
+          <span>⏱ 45 days post go-live</span>
+          <span>👤 Payment Ops → Market Team</span>
+          <span>🎯 Stabilize, validate, then transfer ownership to market</span>
+        </div>
+        <div class="phase-progress-bar"><div class="bar"><div class="fill" id="prog-phase4" style="width:0%"></div></div><div class="pct" id="pct-phase4">0%</div></div>
+      </div>
+
+      <div class="phase-gate-warning" id="gate-warn-phase4">⚠ Gate 4 (Go-Live Validation) has not passed yet. You can still work here, but verify gate criteria before completing handoff.</div>
+
+      <div class="callout info">Payment Ops owns this processor for 45 days after go-live. During this window, Payment Ops monitors daily, resolves issues, and trains the receiving market team. At Day 45, formal handoff transfers ongoing operations to the market the payment is deployed in.</div>
+
+      <div class="step-section" data-step="p4s1">
+        <div class="step-header" onclick="toggleStep(this)">
+          <span class="step-chevron">›</span>
+          <span class="step-num">4.1-4.3</span>
+          <span class="step-title">Days 1-15: Transaction Monitoring</span>
+          <span class="step-check-count" data-counter="p4s1">0/3</span>
+        </div>
+        <div class="step-body">
+          <div class="callout warn">Weeks 1-2: Monitor daily. Check transaction volume, approval rate, and error patterns. Escalate anything abnormal immediately.</div>
+          <div class="cl"><input type="checkbox" id="p4c01" onchange="saveCheck(this)"><div class="cl-body"><label for="p4c01">Review transaction volume against baseline</label><div class="cl-detail">Compare actual daily volume to projected. Flag variance &gt;15%.</div><div class="cl-meta"><span class="tt tt-mon">MON</span><span class="owner">Payment Ops</span></div></div></div>
+          <div class="cl"><input type="checkbox" id="p4c02" onchange="saveCheck(this)"><div class="cl-body"><label for="p4c02">Validate approval rate stability</label><div class="cl-detail">Target: 85%+. Investigate if below. Check for issuer blocks, fraud rule changes, processor issues.</div><div class="cl-meta"><span class="tt tt-mon">MON</span><span class="owner">Payment Ops</span></div></div></div>
+          <div class="cl"><input type="checkbox" id="p4c03" onchange="saveCheck(this)"><div class="cl-body"><label for="p4c03">DECISION: Approval rate holding above threshold?</label><div class="cl-detail">If no, investigate decline reasons and engage processor support before Day 15</div><div class="cl-meta"><span class="tt tt-d">D</span><span class="owner">Payment Ops</span></div></div></div>
+        </div>
+      </div>
+
+      <div class="step-section" data-step="p4s2">
+        <div class="step-header" onclick="toggleStep(this)">
+          <span class="step-chevron">›</span>
+          <span class="step-num">4.4-4.7</span>
+          <span class="step-title">Days 1-15: Alert Processing Validation</span>
+          <span class="step-check-count" data-counter="p4s2">0/4</span>
+        </div>
+        <div class="step-body">
+          <div class="cl"><input type="checkbox" id="p4c04" onchange="saveCheck(this)"><div class="cl-body"><label for="p4c04">Confirm RDR alerts flowing correctly</label><div class="cl-detail">Verify alert receipt, auto-refund triggers, response within 2 hours</div><div class="cl-meta"><span class="tt tt-t">T</span><span class="owner">Payment Ops</span></div></div></div>
+          <div class="cl"><input type="checkbox" id="p4c05" onchange="saveCheck(this)"><div class="cl-body"><label for="p4c05">Validate RDR auto-refund thresholds</label><div class="cl-detail">Confirm &lt;$200 auto-refund working, &gt;$200 routing to manual queue</div><div class="cl-meta"><span class="tt tt-d">D</span><span class="owner">Payment Ops</span></div></div></div>
+          <div class="cl"><input type="checkbox" id="p4c06" onchange="saveCheck(this)"><div class="cl-body"><label for="p4c06">Confirm Ethoca alerts flowing correctly</label><div class="cl-detail">Verify alert receipt, lookup, validation, refund processing</div><div class="cl-meta"><span class="tt tt-t">T</span><span class="owner">Payment Ops</span></div></div></div>
+          <div class="cl"><input type="checkbox" id="p4c07" onchange="saveCheck(this)"><div class="cl-body"><label for="p4c07">Validate Ethoca dispute decision process</label><div class="cl-detail">Confirm refund vs fight logic working as configured</div><div class="cl-meta"><span class="tt tt-d">D</span><span class="owner">Payment Ops</span></div></div></div>
+        </div>
+      </div>
+
+      <div class="step-section" data-step="p4s3">
+        <div class="step-header" onclick="toggleStep(this)">
+          <span class="step-chevron">›</span>
+          <span class="step-num">4.8-4.13</span>
+          <span class="step-title">Days 1-30: Settlement &amp; Reconciliation Validation</span>
+          <span class="step-check-count" data-counter="p4s3">0/6</span>
+        </div>
+        <div class="step-body">
+          <div class="cl"><input type="checkbox" id="p4c08" onchange="saveCheck(this)"><div class="cl-body"><label for="p4c08">Verify settlement file receipt and format</label><div class="cl-detail">Confirm daily settlement files arrive on schedule and parse correctly</div><div class="cl-meta"><span class="tt tt-t">T</span><span class="owner">Payment Ops</span></div></div></div>
+          <div class="cl"><input type="checkbox" id="p4c09" onchange="saveCheck(this)"><div class="cl-body"><label for="p4c09">Confirm reconciliation process is clean</label><div class="cl-detail">Match transactions to deposit amount for 5 consecutive business days with zero variance</div><div class="cl-meta"><span class="tt tt-t">T</span><span class="owner">Payment Ops</span></div></div></div>
+          <div class="cl"><input type="checkbox" id="p4c10" onchange="saveCheck(this)"><div class="cl-body"><label for="p4c10">Resolve any settlement discrepancies</label><div class="cl-detail">Investigate and close all variance issues. Check missing refunds, unreported CBs, fee errors.</div><div class="cl-meta"><span class="tt tt-d">D</span><span class="owner">Payment Ops</span></div></div></div>
+          <div class="cl"><input type="checkbox" id="p4c11" onchange="saveCheck(this)"><div class="cl-body"><label for="p4c11">Establish reconciliation log template for market</label><div class="cl-detail">Create repeatable daily reconciliation process the market team can follow</div><div class="cl-meta"><span class="tt tt-doc">DOC</span><span class="owner">Finance</span></div></div></div>
+          <div class="cl"><input type="checkbox" id="p4c12" onchange="saveCheck(this)"><div class="cl-body"><label for="p4c12">Validate refund processing end-to-end</label><div class="cl-detail">Confirm full and partial refunds settle correctly in production</div><div class="cl-meta"><span class="tt tt-t">T</span><span class="owner">Payment Ops</span></div></div></div>
+          <div class="cl"><input type="checkbox" id="p4c13" onchange="saveCheck(this)"><div class="cl-body"><label for="p4c13">Configure metrics dashboard for market team</label><div class="cl-detail">Build PowerBI views the market team needs: volume, auth rate, CB rate, settlement status</div><div class="cl-meta"><span class="tt tt-t">T</span><span class="owner">Payment Ops</span></div></div></div>
+        </div>
+      </div>
+
+      <div class="step-section" data-step="p4s4">
+        <div class="step-header" onclick="toggleStep(this)">
+          <span class="step-chevron">›</span>
+          <span class="step-num">4.14-4.19</span>
+          <span class="step-title">Days 15-30: Chargeback &amp; Fraud Baseline</span>
+          <span class="step-check-count" data-counter="p4s4">0/6</span>
+        </div>
+        <div class="step-body">
+          <div class="cl"><input type="checkbox" id="p4c14" onchange="saveCheck(this)"><div class="cl-body"><label for="p4c14">Confirm chargeback response process working</label><div class="cl-detail">Validate evidence gathering and submission within 24-hour SLA</div><div class="cl-meta"><span class="tt tt-t">T</span><span class="owner">Payment Ops</span></div></div></div>
+          <div class="cl"><input type="checkbox" id="p4c15" onchange="saveCheck(this)"><div class="cl-body"><label for="p4c15">Conduct first processor check-in call</label><div class="cl-detail">Review first 2-week performance, discuss issues, confirm support channels</div><div class="cl-meta"><span class="tt tt-m">M</span><span class="owner">Payment Ops</span></div></div></div>
+          <div class="cl"><input type="checkbox" id="p4c16" onchange="saveCheck(this)"><div class="cl-body"><label for="p4c16">Analyze initial fraud patterns</label><div class="cl-detail">Review fraud by type, source, geography for first 30 days</div><div class="cl-meta"><span class="tt tt-t">T</span><span class="owner">Payment Ops</span></div></div></div>
+          <div class="cl"><input type="checkbox" id="p4c17" onchange="saveCheck(this)"><div class="cl-body"><label for="p4c17">Tune fraud rules based on first 30 days</label><div class="cl-detail">Adjust thresholds, velocity rules, geo-blocks based on actual data</div><div class="cl-meta"><span class="tt tt-t">T</span><span class="owner">Fraud Team</span></div></div></div>
+          <div class="cl"><input type="checkbox" id="p4c18" onchange="saveCheck(this)"><div class="cl-body"><label for="p4c18">Establish chargeback baseline for this market</label><div class="cl-detail">Document expected CB rate range, top reason codes, seasonal patterns</div><div class="cl-meta"><span class="tt tt-rep">REP</span><span class="owner">Fraud Team</span></div></div></div>
+          <div class="cl"><input type="checkbox" id="p4c19" onchange="saveCheck(this)"><div class="cl-body"><label for="p4c19">Create 30-day performance report</label><div class="cl-detail">KPIs, trends, issues resolved, actions taken. This becomes handoff baseline.</div><div class="cl-meta"><span class="tt tt-rep">REP</span><span class="owner">Payment Ops</span></div></div></div>
+        </div>
+      </div>
+
+      <div class="step-section" data-step="p4s5">
+        <div class="step-header" onclick="toggleStep(this)">
+          <span class="step-chevron">›</span>
+          <span class="step-num">4.20-4.25</span>
+          <span class="step-title">Days 30-45: Market Handoff</span>
+          <span class="step-check-count" data-counter="p4s5">0/6</span>
+        </div>
+        <div class="step-body">
+          <div class="callout info">By Day 30, the processor should be stable. Days 30-45 are about transferring ownership to the market team that will run ongoing operations in their region.</div>
+          <div class="cl"><input type="checkbox" id="p4c20" onchange="saveCheck(this)"><div class="cl-body"><label for="p4c20">Create market operations handoff document</label><div class="cl-detail">Processor portal access, daily tasks, alert handling, escalation paths, contact list</div><div class="cl-meta"><span class="tt tt-doc">DOC</span><span class="owner">Payment Ops</span></div></div></div>
+          <div class="cl"><input type="checkbox" id="p4c21" onchange="saveCheck(this)"><div class="cl-body"><label for="p4c21">Train market team on processor portal</label><div class="cl-detail">Walk through dashboard, reports, settlement download, alert queue</div><div class="cl-meta"><span class="tt tt-m">M</span><span class="owner">Payment Ops + Market Team</span></div></div></div>
+          <div class="cl"><input type="checkbox" id="p4c22" onchange="saveCheck(this)"><div class="cl-body"><label for="p4c22">Train market team on reconciliation process</label><div class="cl-detail">Shadow for 3-5 days, then market team runs independently with Payment Ops backup</div><div class="cl-meta"><span class="tt tt-m">M</span><span class="owner">Payment Ops + Market Team</span></div></div></div>
+          <div class="cl"><input type="checkbox" id="p4c23" onchange="saveCheck(this)"><div class="cl-body"><label for="p4c23">Transfer alert ownership to market team</label><div class="cl-detail">RDR and Ethoca alert routing updated to market team queue</div><div class="cl-meta"><span class="tt tt-t">T</span><span class="owner">Payment Ops + Market Team</span></div></div></div>
+          <div class="cl"><input type="checkbox" id="p4c24" onchange="saveCheck(this)"><div class="cl-body"><label for="p4c24">DECISION: Market team ready for independent operations?</label><div class="cl-detail">Verify market team can handle daily monitoring, alerts, reconciliation, CB response</div><div class="cl-meta"><span class="tt tt-d">D</span><span class="owner">Payment Ops + Market Lead</span></div></div></div>
+          <div class="cl"><input type="checkbox" id="p4c25" onchange="saveCheck(this)"><div class="cl-body"><label for="p4c25">Issue formal handoff confirmation email</label><div class="cl-detail">Document transfer of ownership: effective date, market team lead, escalation path back to Payment Ops</div><div class="cl-meta"><span class="tt tt-email">EMAIL</span><span class="owner">Payment Ops</span></div></div></div>
+          <div class="callout success">Phase 4 deliverables: 30-Day Performance Report, Reconciliation Log Template, Market Handoff Document, Handoff Confirmation Email</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== PHASE 5 ==================== -->
+    <div class="page" id="page-phase5" data-title="Phase 5: Monitoring & Optimization">
+      <div class="phase-header">
+        <div class="phase-badge"><span class="dot"></span>Phase 5</div>
+        <h2>Monitoring &amp; Optimization</h2>
+        <div class="phase-meta">
+          <span>⏱ Continuous</span>
+          <span>👤 Payment Ops</span>
+          <span>🎯 Continuous performance and cost improvement</span>
+        </div>
+        <div class="phase-progress-bar"><div class="bar"><div class="fill" id="prog-phase5" style="width:0%"></div></div><div class="pct" id="pct-phase5">0%</div></div>
+      </div>
+
+      <div class="step-section" data-step="p5s1">
+        <div class="step-header" onclick="toggleStep(this)">
+          <span class="step-chevron">›</span>
+          <span class="step-num">5.1-5.4</span>
+          <span class="step-title">Fee Analysis &amp; Benchmarking</span>
+          <span class="step-check-count" data-counter="p5s1">0/4</span>
+        </div>
+        <div class="step-body">
+          <div class="cl"><input type="checkbox" id="p5c01" onchange="saveCheck(this)"><div class="cl-body"><label for="p5c01">MONTHLY: Analyze processing fees</label><div class="cl-detail">Review actual vs expected rates</div><div class="cl-meta"><span class="tt tt-rep">REP</span><span class="owner">Payment Ops</span></div></div></div>
+          <div class="cl"><input type="checkbox" id="p5c02" onchange="saveCheck(this)"><div class="cl-body"><label for="p5c02">Fees higher than expected?</label><div class="cl-detail">If yes, investigate interchange categories, downgrades, surcharges</div><div class="cl-meta"><span class="tt tt-d">D</span><span class="owner">Payment Ops</span></div></div></div>
+          <div class="cl"><input type="checkbox" id="p5c03" onchange="saveCheck(this)"><div class="cl-body"><label for="p5c03">QUARTERLY: Benchmark against industry</label><div class="cl-detail">Compare rates to market standards</div><div class="cl-meta"><span class="tt tt-rep">REP</span><span class="owner">Payment Ops</span></div></div></div>
+          <div class="cl"><input type="checkbox" id="p5c04" onchange="saveCheck(this)"><div class="cl-body"><label for="p5c04">QUARTERLY: Create rate analysis report</label><div class="cl-detail">Fee breakdown and optimization opportunities</div><div class="cl-meta"><span class="tt tt-rep">REP</span><span class="owner">Payment Ops</span></div></div></div>
+        </div>
+      </div>
+
+      <div class="step-section" data-step="p5s2">
+        <div class="step-header" onclick="toggleStep(this)">
+          <span class="step-chevron">›</span>
+          <span class="step-num">5.5-5.9</span>
+          <span class="step-title">Routing &amp; KPI Tracking</span>
+          <span class="step-check-count" data-counter="p5s2">0/5</span>
+        </div>
+        <div class="step-body">
+          <div class="cl"><input type="checkbox" id="p5c05" onchange="saveCheck(this)"><div class="cl-body"><label for="p5c05">Review smart routing performance</label><div class="cl-detail">Evaluate savings by route quarterly</div><div class="cl-meta"><span class="tt tt-t">T</span><span class="owner">Payment Ops</span></div></div></div>
+          <div class="cl"><input type="checkbox" id="p5c06" onchange="saveCheck(this)"><div class="cl-body"><label for="p5c06">Routing rules need adjustment?</label><div class="cl-detail">If yes, update routing logic</div><div class="cl-meta"><span class="tt tt-d">D</span><span class="owner">Payment Ops</span></div></div></div>
+          <div class="cl"><input type="checkbox" id="p5c07" onchange="saveCheck(this)"><div class="cl-body"><label for="p5c07">Track approval rate improvement</label><div class="cl-detail">Current 87% → 90% goal</div><div class="cl-meta"><span class="tt tt-rep">REP</span><span class="owner">Payment Ops</span></div></div></div>
+          <div class="cl"><input type="checkbox" id="p5c08" onchange="saveCheck(this)"><div class="cl-body"><label for="p5c08">Track chargeback rate reduction</label><div class="cl-detail">Current 0.48% → 0.30% goal</div><div class="cl-meta"><span class="tt tt-rep">REP</span><span class="owner">Payment Ops</span></div></div></div>
+          <div class="cl"><input type="checkbox" id="p5c09" onchange="saveCheck(this)"><div class="cl-body"><label for="p5c09">Track alert prevention improvement</label><div class="cl-detail">Current 62% → 75% goal</div><div class="cl-meta"><span class="tt tt-rep">REP</span><span class="owner">Payment Ops</span></div></div></div>
+        </div>
+      </div>
+
+      <div class="step-section" data-step="p5s3">
+        <div class="step-header" onclick="toggleStep(this)">
+          <span class="step-chevron">›</span>
+          <span class="step-num">5.10-5.14</span>
+          <span class="step-title">Payment Method &amp; Technology Evaluation</span>
+          <span class="step-check-count" data-counter="p5s3">0/5</span>
+        </div>
+        <div class="step-body">
+          <div class="cl"><input type="checkbox" id="p5c10" onchange="saveCheck(this)"><div class="cl-body"><label for="p5c10">Evaluate new payment methods</label><div class="cl-detail">Apple Pay, Google Pay, BNPL, regional APMs</div><div class="cl-meta"><span class="tt tt-t">T</span><span class="owner">Payment Ops</span></div></div></div>
+          <div class="cl"><input type="checkbox" id="p5c11" onchange="saveCheck(this)"><div class="cl-body"><label for="p5c11">New payment method justified?</label><div class="cl-detail">Cost/benefit analysis positive</div><div class="cl-meta"><span class="tt tt-d">D</span><span class="owner">Payment Ops</span></div></div></div>
+          <div class="cl"><input type="checkbox" id="p5c12" onchange="saveCheck(this)"><div class="cl-body"><label for="p5c12">Evaluate advanced fraud detection tools</label><div class="cl-detail">Annual assessment of fraud prevention vendors</div><div class="cl-meta"><span class="tt tt-t">T</span><span class="owner">Payment Ops</span></div></div></div>
+          <div class="cl"><input type="checkbox" id="p5c13" onchange="saveCheck(this)"><div class="cl-body"><label for="p5c13">Evaluate network tokenization</label><div class="cl-detail">Card network token benefits: improved auth rates, reduced fraud</div><div class="cl-meta"><span class="tt tt-t">T</span><span class="owner">Payment Ops</span></div></div></div>
+          <div class="cl"><input type="checkbox" id="p5c14" onchange="saveCheck(this)"><div class="cl-body"><label for="p5c14">Evaluate account updater service</label><div class="cl-detail">Reduce declines from expired cards. Target: recover 3-5% of failed recurring.</div><div class="cl-meta"><span class="tt tt-t">T</span><span class="owner">Payment Ops</span></div></div></div>
+        </div>
+      </div>
+
+      <div class="step-section" data-step="p5s4">
+        <div class="step-header" onclick="toggleStep(this)">
+          <span class="step-chevron">›</span>
+          <span class="step-num">5.15-5.19</span>
+          <span class="step-title">Annual Review &amp; Roadmap</span>
+          <span class="step-check-count" data-counter="p5s4">0/4</span>
+        </div>
+        <div class="step-body">
+          <div class="cl"><input type="checkbox" id="p5c15" onchange="saveCheck(this)"><div class="cl-body"><label for="p5c15">ANNUAL: Negotiate rate reductions</label><div class="cl-detail">Leverage volume growth for better rates. Target 5-15% cost reduction.</div><div class="cl-meta"><span class="tt tt-t">T</span><span class="owner">Payment Ops</span></div></div></div>
+          <div class="cl"><input type="checkbox" id="p5c16" onchange="saveCheck(this)"><div class="cl-body"><label for="p5c16">Document negotiated rate changes</label><div class="cl-detail">Updated rate card filed</div><div class="cl-meta"><span class="tt tt-email">EMAIL</span><span class="owner">Payment Ops</span></div></div></div>
+          <div class="cl"><input type="checkbox" id="p5c17" onchange="saveCheck(this)"><div class="cl-body"><label for="p5c17">Q4: Review full year performance</label><div class="cl-detail">Comprehensive annual review: cost, auth, CB, fraud, uptime</div><div class="cl-meta"><span class="tt tt-t">T</span><span class="owner">Payment Ops</span></div></div></div>
+          <div class="cl"><input type="checkbox" id="p5c19" onchange="saveCheck(this)"><div class="cl-body"><label for="p5c19">Q4: Create annual roadmap</label><div class="cl-detail">Strategic plan for next year</div><div class="cl-meta"><span class="tt tt-doc">DOC</span><span class="owner">Payment Ops + Checkout</span></div></div></div>
+          <div class="callout success">Phase 5 deliverables: Rate Analysis Report, Monthly Performance Report, Updated Contract Terms, Annual Roadmap</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== DEAL-BREAKER GATES ==================== -->
+    <div class="page" id="page-gates" data-title="Deal-Breaker Gates">
+      <div class="phase-header">
+        <div class="phase-badge"><span class="dot" style="background:var(--accent-red)"></span>Decision Gates</div>
+        <h2>Deal-Breaker Gates</h2>
+        <div class="phase-meta">
+          <span>⛔ All criteria must PASS before proceeding</span>
+        </div>
+      </div>
+
+      <div class="gate-panel" data-gate="gate1">
+        <div class="gate-panel-header">
+          <div class="gate-icon">⛔</div>
+          <h3>Gate 1: Pre-Qualification (Before Phase 2)</h3>
+          <span class="gate-status pending" id="gate1-status">PENDING</span>
+        </div>
+        <div class="gate-panel-body">
+          <div class="gate-criterion"><div class="gate-toggle"><button class="gate-btn pass-btn" onclick="setGate('g1c1','pass',this)">PASS</button><button class="gate-btn fail-btn" onclick="setGate('g1c1','fail',this)">FAIL</button></div><div class="gate-criterion-text"><strong>Local currency settlement</strong> supported for target markets</div></div>
+          <div class="gate-criterion"><div class="gate-toggle"><button class="gate-btn pass-btn" onclick="setGate('g1c2','pass',this)">PASS</button><button class="gate-btn fail-btn" onclick="setGate('g1c2','fail',this)">FAIL</button></div><div class="gate-criterion-text"><strong>Direct + 3DS2</strong> payment models available</div></div>
+          <div class="gate-criterion"><div class="gate-toggle"><button class="gate-btn pass-btn" onclick="setGate('g1c3','pass',this)">PASS</button><button class="gate-btn fail-btn" onclick="setGate('g1c3','fail',this)">FAIL</button></div><div class="gate-criterion-text"><strong>OTO + recurring billing</strong> supported natively</div></div>
+          <div class="gate-criterion"><div class="gate-toggle"><button class="gate-btn pass-btn" onclick="setGate('g1c4','pass',this)">PASS</button><button class="gate-btn fail-btn" onclick="setGate('g1c4','fail',this)">FAIL</button></div><div class="gate-criterion-text"><strong>T+2 settlement</strong> or better guaranteed</div></div>
+          <div class="gate-decision waiting" id="gate1-decision">Complete all criteria to determine GO / NO-GO</div>
+        </div>
+      </div>
+
+      <div class="gate-panel" data-gate="gate2">
+        <div class="gate-panel-header">
+          <div class="gate-icon">⛔</div>
+          <h3>Gate 2: Underwriting (Before Phase 3)</h3>
+          <span class="gate-status pending" id="gate2-status">PENDING</span>
+        </div>
+        <div class="gate-panel-body">
+          <div class="gate-criterion"><div class="gate-toggle"><button class="gate-btn pass-btn" onclick="setGate('g2c1','pass',this)">PASS</button><button class="gate-btn fail-btn" onclick="setGate('g2c1','fail',this)">FAIL</button></div><div class="gate-criterion-text"><strong>Chargeback rate &lt;1%</strong> confirmed in processing history</div></div>
+          <div class="gate-criterion"><div class="gate-toggle"><button class="gate-btn pass-btn" onclick="setGate('g2c2','pass',this)">PASS</button><button class="gate-btn fail-btn" onclick="setGate('g2c2','fail',this)">FAIL</button></div><div class="gate-criterion-text"><strong>Financial stability</strong> demonstrated (2yr audited financials)</div></div>
+          <div class="gate-criterion"><div class="gate-toggle"><button class="gate-btn pass-btn" onclick="setGate('g2c3','pass',this)">PASS</button><button class="gate-btn fail-btn" onclick="setGate('g2c3','fail',this)">FAIL</button></div><div class="gate-criterion-text"><strong>MLM/direct sales license</strong> valid for target markets</div></div>
+          <div class="gate-criterion"><div class="gate-toggle"><button class="gate-btn pass-btn" onclick="setGate('g2c4','pass',this)">PASS</button><button class="gate-btn fail-btn" onclick="setGate('g2c4','fail',this)">FAIL</button></div><div class="gate-criterion-text"><strong>Principal credit score &gt;680</strong> verified</div></div>
+          <div class="gate-criterion"><div class="gate-toggle"><button class="gate-btn pass-btn" onclick="setGate('g2c5','pass',this)">PASS</button><button class="gate-btn fail-btn" onclick="setGate('g2c5','fail',this)">FAIL</button></div><div class="gate-criterion-text"><strong>21 required documents</strong> complete and submitted</div></div>
+          <div class="gate-decision waiting" id="gate2-decision">Complete all criteria to determine GO / NO-GO</div>
+        </div>
+      </div>
+
+      <div class="gate-panel" data-gate="gate3">
+        <div class="gate-panel-header">
+          <div class="gate-icon">⛔</div>
+          <h3>Gate 3: Technical Readiness (Before Go-Live)</h3>
+          <span class="gate-status pending" id="gate3-status">PENDING</span>
+        </div>
+        <div class="gate-panel-body">
+          <div class="gate-criterion"><div class="gate-toggle"><button class="gate-btn pass-btn" onclick="setGate('g3c1','pass',this)">PASS</button><button class="gate-btn fail-btn" onclick="setGate('g3c1','fail',this)">FAIL</button></div><div class="gate-criterion-text"><strong>All test criteria met</strong> (functional, card brands, declines, refunds, CBs)</div></div>
+          <div class="gate-criterion"><div class="gate-toggle"><button class="gate-btn pass-btn" onclick="setGate('g3c2','pass',this)">PASS</button><button class="gate-btn fail-btn" onclick="setGate('g3c2','fail',this)">FAIL</button></div><div class="gate-criterion-text"><strong>UAT approved</strong> by business stakeholders</div></div>
+          <div class="gate-criterion"><div class="gate-toggle"><button class="gate-btn pass-btn" onclick="setGate('g3c3','pass',this)">PASS</button><button class="gate-btn fail-btn" onclick="setGate('g3c3','fail',this)">FAIL</button></div><div class="gate-criterion-text"><strong>Performance targets met:</strong> API &lt;200ms, checkout &lt;2sec</div></div>
+          <div class="gate-criterion"><div class="gate-toggle"><button class="gate-btn pass-btn" onclick="setGate('g3c4','pass',this)">PASS</button><button class="gate-btn fail-btn" onclick="setGate('g3c4','fail',this)">FAIL</button></div><div class="gate-criterion-text"><strong>Webhook processing verified</strong> with signature validation</div></div>
+          <div class="gate-criterion"><div class="gate-toggle"><button class="gate-btn pass-btn" onclick="setGate('g3c5','pass',this)">PASS</button><button class="gate-btn fail-btn" onclick="setGate('g3c5','fail',this)">FAIL</button></div><div class="gate-criterion-text"><strong>Zero P0/P1 bugs</strong> open in testing</div></div>
+          <div class="gate-decision waiting" id="gate3-decision">Complete all criteria to determine GO / NO-GO</div>
+        </div>
+      </div>
+
+      <div class="gate-panel" data-gate="gate4">
+        <div class="gate-panel-header">
+          <div class="gate-icon">⛔</div>
+          <h3>Gate 4: Go-Live Validation (After Rollout)</h3>
+          <span class="gate-status pending" id="gate4-status">PENDING</span>
+        </div>
+        <div class="gate-panel-body">
+          <div class="gate-criterion"><div class="gate-toggle"><button class="gate-btn pass-btn" onclick="setGate('g4c1','pass',this)">PASS</button><button class="gate-btn fail-btn" onclick="setGate('g4c1','fail',this)">FAIL</button></div><div class="gate-criterion-text"><strong>Auth rate &gt;80%</strong> at 100 and 1,000 order volumes</div></div>
+          <div class="gate-criterion"><div class="gate-toggle"><button class="gate-btn pass-btn" onclick="setGate('g4c2','pass',this)">PASS</button><button class="gate-btn fail-btn" onclick="setGate('g4c2','fail',this)">FAIL</button></div><div class="gate-criterion-text"><strong>Error rate &lt;1%</strong> across all transaction types</div></div>
+          <div class="gate-criterion"><div class="gate-toggle"><button class="gate-btn pass-btn" onclick="setGate('g4c3','pass',this)">PASS</button><button class="gate-btn fail-btn" onclick="setGate('g4c3','fail',this)">FAIL</button></div><div class="gate-criterion-text"><strong>Latency &lt;2sec</strong> for end-to-end payment flow</div></div>
+          <div class="gate-criterion"><div class="gate-toggle"><button class="gate-btn pass-btn" onclick="setGate('g4c4','pass',this)">PASS</button><button class="gate-btn fail-btn" onclick="setGate('g4c4','fail',this)">FAIL</button></div><div class="gate-criterion-text"><strong>Settlement reconciles correctly</strong> with 100% data integrity</div></div>
+          <div class="gate-criterion"><div class="gate-toggle"><button class="gate-btn pass-btn" onclick="setGate('g4c5','pass',this)">PASS</button><button class="gate-btn fail-btn" onclick="setGate('g4c5','fail',this)">FAIL</button></div><div class="gate-criterion-text"><strong>Customer support team trained</strong> and ready</div></div>
+          <div class="gate-decision waiting" id="gate4-decision">Complete all criteria to determine GO / NO-GO</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== EMERGENCY RESPONSE ==================== -->
+    <div class="page" id="page-emergency" data-title="Emergency Response">
+      <div class="phase-header">
+        <div class="phase-badge"><span class="dot" style="background:var(--accent-red)"></span>Operations</div>
+        <h2>Emergency Response Playbook</h2>
+        <div class="phase-meta">
+          <span>🚨 4 Scenarios with step-by-step response protocols</span>
+        </div>
+      </div>
+
+      <div class="callout danger">Each scenario has defined owners, timelines, and decision points. Follow the steps in order. Escalate immediately if any step fails.</div>
+
+      <!-- PROCESSOR OUTAGE -->
+      <div class="emergency-scenario es-outage" id="es-outage">
+        <div class="emergency-scenario-header" onclick="toggleES(this)">
+          <div class="es-icon">🔴</div>
+          <span class="es-title">Processor Outage</span>
+          <span class="es-chevron">›</span>
+        </div>
+        <div class="es-body">
+          <div class="es-step"><span class="es-step-num">1</span><div class="es-step-content"><div class="es-step-action">Detect: Real-time monitoring triggers alert</div><div class="es-step-meta"><span class="owner">System</span><span class="tt tt-mon">Immediate</span></div></div></div>
+          <div class="es-step"><span class="es-step-num">2</span><div class="es-step-content"><div class="es-step-action">Confirm: Check processor status page</div><div class="es-step-decision">Decision: Is outage confirmed?</div><div class="es-step-meta"><span class="owner">IT</span><span class="tt tt-t">&lt;5 min</span></div></div></div>
+          <div class="es-step"><span class="es-step-num">3</span><div class="es-step-content"><div class="es-step-action">Switch: Route traffic to backup processor</div><div class="es-step-meta"><span class="owner">Checkout</span><span class="tt tt-t">&lt;15 min</span></div></div></div>
+          <div class="es-step"><span class="es-step-num">4</span><div class="es-step-content"><div class="es-step-action">Alert: Notify team via Slack (IT Incidents Channel)</div><div class="es-step-meta"><span class="owner">IT</span><span class="tt tt-t">&lt;15 min</span></div></div></div>
+          <div class="es-step"><span class="es-step-num">5</span><div class="es-step-content"><div class="es-step-action">Ticket: Open critical support ticket with processor</div><div class="es-step-meta"><span class="owner">IT + Payment Ops</span><span class="tt tt-t">&lt;30 min</span></div></div></div>
+          <div class="es-step"><span class="es-step-num">6</span><div class="es-step-content"><div class="es-step-action">Monitor: Watch backup processor performance</div><div class="es-step-meta"><span class="owner">Payment Ops</span><span class="tt tt-mon">Ongoing</span></div></div></div>
+          <div class="es-step"><span class="es-step-num">7</span><div class="es-step-content"><div class="es-step-action">Restore: Switch back when primary recovered</div><div class="es-step-decision">Decision: Primary stable for 30 min?</div><div class="es-step-meta"><span class="owner">Checkout</span><span class="tt tt-t">When ready</span></div></div></div>
+          <div class="es-step"><span class="es-step-num">8</span><div class="es-step-content"><div class="es-step-action">Document: Post-incident report</div><div class="es-step-meta"><span class="owner">Payment Ops</span><span class="tt tt-doc">Within 24 hrs</span></div></div></div>
+        </div>
+      </div>
+
+      <!-- CHARGEBACK SPIKE -->
+      <div class="emergency-scenario es-chargeback" id="es-chargeback">
+        <div class="emergency-scenario-header" onclick="toggleES(this)">
+          <div class="es-icon">🟡</div>
+          <span class="es-title">Chargeback Spike</span>
+          <span class="es-chevron">›</span>
+        </div>
+        <div class="es-body">
+          <div class="es-step"><span class="es-step-num">1</span><div class="es-step-content"><div class="es-step-action">Detect: Weekly monitoring shows CB spike</div><div class="es-step-decision">Decision: CB rate &gt; 0.50%?</div><div class="es-step-meta"><span class="owner">Payment Ops</span><span class="tt tt-mon">Monthly</span></div></div></div>
+          <div class="es-step"><span class="es-step-num">2</span><div class="es-step-content"><div class="es-step-action">Analyze: Identify pattern (fraud? product? merchant code?)</div><div class="es-step-meta"><span class="owner">Payment Ops</span><span class="tt tt-t">Daily</span></div></div></div>
+          <div class="es-step"><span class="es-step-num">3</span><div class="es-step-content"><div class="es-step-action">Check: Verify RDR/Ethoca alerts are functioning</div><div class="es-step-decision">Decision: Alerts working?</div><div class="es-step-meta"><span class="owner">Payment Ops</span><span class="tt tt-t">Weekly</span></div></div></div>
+          <div class="es-step"><span class="es-step-num">4</span><div class="es-step-content"><div class="es-step-action">Isolate: Identify affected products/markets</div><div class="es-step-meta"><span class="owner">CB Team</span><span class="tt tt-t">TBD</span></div></div></div>
+          <div class="es-step"><span class="es-step-num">5</span><div class="es-step-content"><div class="es-step-action">Fix: Address root cause (fraud rules, product issue, etc.)</div><div class="es-step-meta"><span class="owner">CB Team</span><span class="tt tt-t">TBD</span></div></div></div>
+          <div class="es-step"><span class="es-step-num">6</span><div class="es-step-content"><div class="es-step-action">Escalate: Contact processor if systemic issue</div><div class="es-step-decision">Decision: Processor action needed?</div><div class="es-step-meta"><span class="owner">Payment Ops</span><span class="tt tt-t">If needed</span></div></div></div>
+          <div class="es-step"><span class="es-step-num">7</span><div class="es-step-content"><div class="es-step-action">Report: Update leadership on situation and actions</div><div class="es-step-meta"><span class="owner">Payment Ops</span><span class="tt tt-t">Real-Time</span></div></div></div>
+          <div class="es-step"><span class="es-step-num">8</span><div class="es-step-content"><div class="es-step-action">Monitor: Track CB rate daily until normalized</div><div class="es-step-decision">Decision: Rate back below 0.40%?</div><div class="es-step-meta"><span class="owner">CB Team</span><span class="tt tt-mon">TBD</span></div></div></div>
+        </div>
+      </div>
+
+      <!-- SETTLEMENT DISCREPANCY -->
+      <div class="emergency-scenario es-settlement" id="es-settlement">
+        <div class="emergency-scenario-header" onclick="toggleES(this)">
+          <div class="es-icon">🔵</div>
+          <span class="es-title">Settlement Discrepancy</span>
+          <span class="es-chevron">›</span>
+        </div>
+        <div class="es-body">
+          <div class="es-step"><span class="es-step-num">1</span><div class="es-step-content"><div class="es-step-action">Detect: Daily reconciliation shows variance</div><div class="es-step-decision">Decision: Variance &gt; threshold?</div><div class="es-step-meta"><span class="owner">Finance</span><span class="tt tt-mon">Daily</span></div></div></div>
+          <div class="es-step"><span class="es-step-num">2</span><div class="es-step-content"><div class="es-step-action">Calculate: Determine exact difference amount</div><div class="es-step-meta"><span class="owner">Finance</span><span class="tt tt-t">Immediate</span></div></div></div>
+          <div class="es-step"><span class="es-step-num">3</span><div class="es-step-content"><div class="es-step-action">Investigate: Check for missing refunds</div><div class="es-step-decision">Decision: Refunds missing?</div><div class="es-step-meta"><span class="owner">Payment Ops</span><span class="tt tt-t">&lt;2 hrs</span></div></div></div>
+          <div class="es-step"><span class="es-step-num">4</span><div class="es-step-content"><div class="es-step-action">Investigate: Check for unreported chargebacks</div><div class="es-step-decision">Decision: CBs missing?</div><div class="es-step-meta"><span class="owner">Payment Ops</span><span class="tt tt-t">&lt;2 hrs</span></div></div></div>
+          <div class="es-step"><span class="es-step-num">5</span><div class="es-step-content"><div class="es-step-action">Review: Validate fee calculations</div><div class="es-step-decision">Decision: Fees correct?</div><div class="es-step-meta"><span class="owner">Payment Ops</span><span class="tt tt-t">&lt;2 hrs</span></div></div></div>
+          <div class="es-step"><span class="es-step-num">6</span><div class="es-step-content"><div class="es-step-action">Contact: Email processor accounting team</div><div class="es-step-meta"><span class="owner">Payment Ops</span><span class="tt tt-email">&lt;4 hrs</span></div></div></div>
+          <div class="es-step"><span class="es-step-num">7</span><div class="es-step-content"><div class="es-step-action">Resolve: Work with processor to correct</div><div class="es-step-meta"><span class="owner">Payment Ops + Processor</span><span class="tt tt-t">&lt;48 hrs</span></div></div></div>
+          <div class="es-step"><span class="es-step-num">8</span><div class="es-step-content"><div class="es-step-action">Document: Record resolution and root cause</div><div class="es-step-meta"><span class="owner">Payment Ops</span><span class="tt tt-doc">When resolved</span></div></div></div>
+        </div>
+      </div>
+
+      <!-- FRAUD ATTACK -->
+      <div class="emergency-scenario es-fraud" id="es-fraud">
+        <div class="emergency-scenario-header" onclick="toggleES(this)">
+          <div class="es-icon">🟣</div>
+          <span class="es-title">Fraud Attack</span>
+          <span class="es-chevron">›</span>
+        </div>
+        <div class="es-body">
+          <div class="es-step"><span class="es-step-num">1</span><div class="es-step-content"><div class="es-step-action">Detect: Unusual velocity or pattern identified</div><div class="es-step-decision">Decision: Attack confirmed?</div><div class="es-step-meta"><span class="owner">All IT Teams</span><span class="tt tt-mon">Real-time</span></div></div></div>
+          <div class="es-step"><span class="es-step-num">2</span><div class="es-step-content"><div class="es-step-action">Block: Implement emergency fraud rules</div><div class="es-step-meta"><span class="owner">CB Team + Payment Ops</span><span class="tt tt-t">&lt;15 min</span></div></div></div>
+          <div class="es-step"><span class="es-step-num">3</span><div class="es-step-content"><div class="es-step-action">Identify: Determine attack vector (BIN, country, etc.)</div><div class="es-step-meta"><span class="owner">CB Team + Payment Ops</span><span class="tt tt-t">&lt;1 hr</span></div></div></div>
+          <div class="es-step"><span class="es-step-num">4</span><div class="es-step-content"><div class="es-step-action">Expand: Add broader blocking rules if needed</div><div class="es-step-decision">Decision: Attack continuing?</div><div class="es-step-meta"><span class="owner">CB Team + Payment Ops</span><span class="tt tt-t">&lt;1 hr</span></div></div></div>
+          <div class="es-step"><span class="es-step-num">5</span><div class="es-step-content"><div class="es-step-action">Review: Assess transactions already processed</div><div class="es-step-meta"><span class="owner">CB Team + Payment Ops</span><span class="tt tt-t">&lt;4 hrs</span></div></div></div>
+          <div class="es-step"><span class="es-step-num">6</span><div class="es-step-content"><div class="es-step-action">Refund: Proactively refund confirmed fraud</div><div class="es-step-meta"><span class="owner">Customer Service</span><span class="tt tt-t">&lt;3 Days</span></div></div></div>
+          <div class="es-step"><span class="es-step-num">7</span><div class="es-step-content"><div class="es-step-action">Report: Document attack for processor and internal teams</div><div class="es-step-meta"><span class="owner">Payment Ops</span><span class="tt tt-doc">&lt;24 hrs</span></div></div></div>
+          <div class="es-step"><span class="es-step-num">8</span><div class="es-step-content"><div class="es-step-action">Harden: Implement permanent rule changes</div><div class="es-step-meta"><span class="owner">All IT Teams</span><span class="tt tt-t">&lt;48 hrs</span></div></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== QUICK REFERENCE ==================== -->
+    <div class="page" id="page-quickref" data-title="Quick Reference">
+      <div class="phase-header">
+        <div class="phase-badge"><span class="dot" style="background:var(--accent-cyan)"></span>Reference</div>
+        <h2>Quick Reference</h2>
+      </div>
+
+      <div class="content-block">
+        <h4>End-to-End Process Flow</h4>
+        <div class="mermaid-container" style="margin:16px 0;background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:24px 16px;overflow-x:auto">
+        <pre class="mermaid">
+flowchart LR
+  subgraph P0["Phase 0 · 4-8 wks"]
+    R["Research"] --> C["Contract"]
+  end
+  subgraph P1["Phase 1 · 2-4 wks"]
+    A["Apply"] --> AP["Approve"]
+  end
+  subgraph P2["Phase 2 · 4-6 wks"]
+    B["Build"] --> T["Test"] --> U["UAT"]
+  end
+  subgraph P3["Phase 3 · 1-2 wks"]
+    H["100 orders"] --> TH["1K orders"] --> FL["Full traffic"]
+  end
+  subgraph P4["Phase 4 · 45 days"]
+    MO["Monitor"] --> HO["Handoff"]
+  end
+  subgraph P5["Phase 5 · Ongoing"]
+    OP["Optimize"] --> RV["Review"]
+  end
+
+  C --> G1{{"GATE 1\nPre-Qualify"}}
+  G1 --> A
+  AP --> G2{{"GATE 2\nUnderwriting"}}
+  G2 --> B
+  U --> G3{{"GATE 3\nTech Ready"}}
+  G3 --> H
+  FL --> G4{{"GATE 4\nGo-Live OK"}}
+  G4 --> MO
+  HO --> OP
+
+  style G1 fill:#92400e,stroke:#f59e0b,color:#fef3c7
+  style G2 fill:#92400e,stroke:#f59e0b,color:#fef3c7
+  style G3 fill:#92400e,stroke:#f59e0b,color:#fef3c7
+  style G4 fill:#92400e,stroke:#f59e0b,color:#fef3c7
+  style P0 fill:#0f1724,stroke:#3b82f6,color:#93c5fd
+  style P1 fill:#0f1724,stroke:#3b82f6,color:#93c5fd
+  style P2 fill:#0f1724,stroke:#3b82f6,color:#93c5fd
+  style P3 fill:#0f1724,stroke:#3b82f6,color:#93c5fd
+  style P4 fill:#0f1724,stroke:#3b82f6,color:#93c5fd
+  style P5 fill:#0f1724,stroke:#3b82f6,color:#93c5fd
+        </pre>
+        </div>
+      </div>
+
+      <div class="content-block">
+        <h4>Key Benchmarks</h4>
+        <table class="data-table">
+          <tr><th>Metric</th><th>Target</th><th>Red Flag</th><th>Current</th></tr>
+          <tr><td>Authorization Rate</td><td style="color:var(--accent-green)">&gt;85%</td><td style="color:var(--accent-red)">&lt;80%</td><td>87%</td></tr>
+          <tr><td>Chargeback Rate</td><td style="color:var(--accent-green)">&lt;0.40%</td><td style="color:var(--accent-red)">&gt;0.65%</td><td>0.48%</td></tr>
+          <tr><td>Alert Prevention</td><td style="color:var(--accent-green)">&gt;75%</td><td style="color:var(--accent-red)">&lt;50%</td><td>62%</td></tr>
+          <tr><td>API Latency (p95)</td><td style="color:var(--accent-green)">&lt;200ms</td><td style="color:var(--accent-red)">&gt;500ms</td><td>--</td></tr>
+          <tr><td>Checkout Time</td><td style="color:var(--accent-green)">&lt;2sec</td><td style="color:var(--accent-red)">&gt;3sec</td><td>--</td></tr>
+          <tr><td>Settlement Match</td><td style="color:var(--accent-green)">100%</td><td style="color:var(--accent-red)">&lt;99%</td><td>--</td></tr>
+          <tr><td>Processing Cost (Domestic)</td><td style="color:var(--accent-green)">IC+0.15%</td><td style="color:var(--accent-red)">&gt;IC+0.25%</td><td>--</td></tr>
+          <tr><td>Processor Uptime</td><td style="color:var(--accent-green)">99.99%</td><td style="color:var(--accent-red)">&lt;99.9%</td><td>--</td></tr>
+        </table>
+      </div>
+
+      <div class="content-block">
+        <h4>Document Deliverables by Phase</h4>
+        <table class="data-table">
+          <tr><th>Phase</th><th>Key Documents</th></tr>
+          <tr><td>Phase 0</td><td>Processor Comparison Matrix, Cost Analysis, Approval Email, Signed Contract</td></tr>
+          <tr><td>Phase 1</td><td>Application Package, PCI SAQ, Approval Letter + MID</td></tr>
+          <tr><td>Phase 2</td><td>API Documentation, Integration Plan, Test Case Doc, Test Results, UAT Sign-off</td></tr>
+          <tr><td>Phase 3</td><td>Production MID, Reconciliation Confirmation, Go-Live Email</td></tr>
+          <tr><td>Phase 4</td><td>30-Day Performance Report, Reconciliation Log Template, Market Handoff Document, Handoff Confirmation Email</td></tr>
+          <tr><td>Phase 5</td><td>Rate Analysis Report, Updated Contract Terms, Annual Roadmap</td></tr>
+        </table>
+      </div>
+
+      <div class="content-block">
+        <h4>Operations Cadence</h4>
+        <div class="callout info">Phase 4 (45-day window): Payment Ops owns all tasks below. After handoff, market team takes over daily operations.</div>
+        <table class="data-table">
+          <tr><th>Cadence</th><th>Task</th><th>Owner (Pre-Handoff)</th><th>Owner (Post-Handoff)</th></tr>
+          <tr><td>Daily</td><td>Review txn volume + approval rate</td><td>Payment Ops</td><td>Market Team</td></tr>
+          <tr><td>Daily</td><td>Download settlement, reconcile</td><td>Payment Ops</td><td>Market Team</td></tr>
+          <tr><td>As received</td><td>Process RDR + Ethoca alerts (&lt;2hr SLA)</td><td>Payment Ops</td><td>Market Team</td></tr>
+          <tr><td>Within 24hr</td><td>Respond to chargebacks</td><td>Payment Ops</td><td>Market Team</td></tr>
+          <tr><td>Monthly</td><td>Processor check-in call</td><td>Payment Ops</td><td>Market Team + Payment Ops</td></tr>
+          <tr><td>Monthly</td><td>Fraud pattern analysis + rule tuning</td><td>Fraud Team</td><td>Fraud Team</td></tr>
+          <tr><td>Monthly</td><td>CB trend analysis</td><td>Fraud Team</td><td>Fraud Team</td></tr>
+          <tr><td>Monthly</td><td>Performance report (PowerBI)</td><td>Payment Ops</td><td>Market Team</td></tr>
+          <tr><td>Monthly</td><td>Support financial close</td><td>Payment Ops</td><td>Market Team + Finance</td></tr>
+          <tr><td>Quarterly</td><td>Industry benchmark + rate analysis</td><td colspan="2">Payment Ops (retained)</td></tr>
+          <tr><td>Quarterly</td><td>Smart routing review</td><td colspan="2">Payment Ops (retained)</td></tr>
+          <tr><td>Quarterly</td><td>New payment method evaluation</td><td colspan="2">Payment Ops (retained)</td></tr>
+          <tr><td>Annually</td><td>Rate renegotiation</td><td colspan="2">Payment Ops (retained)</td></tr>
+          <tr><td>Annually</td><td>Fraud tool + tokenization evaluation</td><td colspan="2">Payment Ops (retained)</td></tr>
+          <tr><td>Q4</td><td>Annual review + next year roadmap</td><td colspan="2">Payment Ops (retained)</td></tr>
+        </table>
+      </div>
+
+      <div class="content-block">
+        <h4>Escalation Contacts</h4>
+        <div class="callout info">Click any field to edit. Contacts save automatically to your browser.</div>
+        <table class="data-table">
+          <tr><th>Role</th><th>Name</th><th>Channel / Email</th><th>SLA</th></tr>
+          <tr><td>Payment Ops Lead</td><td><input class="contact-input" data-contact="c1-name" placeholder="Enter name..."></td><td><input class="contact-input" data-contact="c1-channel" placeholder="Slack / email..."></td><td>Primary owner</td></tr>
+          <tr><td>Checkout Team Lead</td><td><input class="contact-input" data-contact="c2-name" placeholder="Enter name..."></td><td><input class="contact-input" data-contact="c2-channel" placeholder="Slack / email..."></td><td>&lt;15 min failover</td></tr>
+          <tr><td>Finance Contact</td><td><input class="contact-input" data-contact="c3-name" placeholder="Enter name..."></td><td><input class="contact-input" data-contact="c3-channel" placeholder="Slack / email..."></td><td>Settlement issues</td></tr>
+          <tr><td>Fraud / CB Team</td><td><input class="contact-input" data-contact="c4-name" placeholder="Enter name..."></td><td><input class="contact-input" data-contact="c4-channel" placeholder="Slack / email..."></td><td>&lt;15 min block</td></tr>
+          <tr><td>Legal</td><td><input class="contact-input" data-contact="c5-name" placeholder="Enter name..."></td><td><input class="contact-input" data-contact="c5-channel" placeholder="Slack / email..."></td><td>Contracts / DPA</td></tr>
+          <tr><td>IT / Infrastructure</td><td><input class="contact-input" data-contact="c6-name" placeholder="Enter name..."></td><td><input class="contact-input" data-contact="c6-channel" placeholder="Slack / email..."></td><td>Outage support</td></tr>
+          <tr><td>Processor Account Rep</td><td><input class="contact-input" data-contact="c7-name" placeholder="Enter name..."></td><td><input class="contact-input" data-contact="c7-channel" placeholder="Slack / email..."></td><td>Support escalation</td></tr>
+          <tr><td>Processor Tech Support</td><td><input class="contact-input" data-contact="c8-name" placeholder="Enter name..."></td><td><input class="contact-input" data-contact="c8-channel" placeholder="Slack / email..."></td><td>API / Integration</td></tr>
+          <tr><td>Market Team Lead</td><td><input class="contact-input" data-contact="c9-name" placeholder="Enter name..."></td><td><input class="contact-input" data-contact="c9-channel" placeholder="Slack / email..."></td><td>Post-handoff owner</td></tr>
+          <tr><td>Slack Incident Channel</td><td colspan="2"><input class="contact-input" data-contact="c10-channel" placeholder="#channel-name..." style="max-width:100%;width:100%"></td><td>All emergencies</td></tr>
+        </table>
+      </div>
+
+      <div class="content-block">
+        <h4>Emergency Escalation Matrix</h4>
+        <table class="data-table">
+          <tr><th>Scenario</th><th>Primary</th><th>Escalation</th><th>SLA</th></tr>
+          <tr><td>Processor Outage</td><td>Checkout Team Lead</td><td>IT + Payment Ops Lead</td><td>&lt;15 min failover</td></tr>
+          <tr><td>Chargeback Spike</td><td>Payment Ops Lead</td><td>Fraud/CB Team + Processor Rep</td><td>Same day</td></tr>
+          <tr><td>Settlement Issue</td><td>Payment Ops Lead</td><td>Finance + Processor Rep</td><td>&lt;48 hrs</td></tr>
+          <tr><td>Fraud Attack</td><td>Fraud/CB Team</td><td>All IT Teams + Payment Ops</td><td>&lt;15 min block</td></tr>
+        </table>
+      </div>
+    </div>
+
+  </div><!-- .content -->
+</main>
+<script>
+// ============================
+// STATE MANAGEMENT
+// ============================
+const STORAGE_KEY = 'paymentSOPv5';
+const GATE_KEY = 'paymentSOPv5Gates';
+const CONTACT_KEY = 'paymentSOPv5Contacts';
+
+function loadState() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; } catch(e) { return {}; }
+}
+function saveState(state) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+}
+function loadGates() {
+  try { return JSON.parse(localStorage.getItem(GATE_KEY)) || {}; } catch(e) { return {}; }
+}
+function saveGates(gates) {
+  localStorage.setItem(GATE_KEY, JSON.stringify(gates));
+}
+function loadContacts() {
+  try { return JSON.parse(localStorage.getItem(CONTACT_KEY)) || {}; } catch(e) { return {}; }
+}
+function saveContacts(contacts) {
+  localStorage.setItem(CONTACT_KEY, JSON.stringify(contacts));
+}
+
+// Gate -> Phase dependency map
+const GATE_DEPS = {
+  gate1: 'phase1',
+  gate2: 'phase2',
+  gate3: 'phase3',
+  gate4: 'phase4'
+};
+
+// ============================
+// INITIALIZATION
+// ============================
+document.addEventListener('DOMContentLoaded', () => {
+  restoreChecks();
+  restoreGates();
+  restoreContacts();
+  initContactListeners();
+  updateAllProgress();
+  updatePhaseLocks();
+});
+
+function restoreChecks() {
+  const state = loadState();
+  document.querySelectorAll('.cl input[type="checkbox"]').forEach(cb => {
+    if (state[cb.id]) cb.checked = true;
+  });
+}
+
+function restoreGates() {
+  const gates = loadGates();
+  Object.entries(gates).forEach(([key, val]) => {
+    const btns = document.querySelectorAll(`[onclick*="'${key}'"]`);
+    btns.forEach(btn => {
+      if ((val === 'pass' && btn.classList.contains('pass-btn')) ||
+          (val === 'fail' && btn.classList.contains('fail-btn'))) {
+        btn.classList.add('selected');
+      }
+    });
+  });
+  ['gate1','gate2','gate3','gate4'].forEach(g => updateGateDecision(g));
+}
+
+function restoreContacts() {
+  const contacts = loadContacts();
+  document.querySelectorAll('.contact-input').forEach(input => {
+    const key = input.getAttribute('data-contact');
+    if (contacts[key]) input.value = contacts[key];
+  });
+}
+
+function initContactListeners() {
+  document.querySelectorAll('.contact-input').forEach(input => {
+    input.addEventListener('input', () => {
+      const contacts = loadContacts();
+      contacts[input.getAttribute('data-contact')] = input.value;
+      saveContacts(contacts);
+    });
+  });
+}
+
+// ============================
+// CHECKBOX HANDLING
+// ============================
+function saveCheck(cb) {
+  const state = loadState();
+  if (cb.checked) state[cb.id] = true;
+  else delete state[cb.id];
+  saveState(state);
+  updateAllProgress();
+}
+
+// ============================
+// PROGRESS CALCULATION
+// ============================
+const phaseMap = {
+  phase0: 'p0c', phase1: 'p1c', phase2: 'p2c',
+  phase3: 'p3c', phase4: 'p4c', phase5: 'p5c'
+};
+
+function updateAllProgress() {
+  let totalChecked = 0, totalAll = 0;
+  Object.entries(phaseMap).forEach(([phase, prefix]) => {
+    const cbs = document.querySelectorAll(`[id^="${prefix}"]`);
+    const checked = Array.from(cbs).filter(c => c.checked).length;
+    const total = cbs.length;
+    totalChecked += checked;
+    totalAll += total;
+    const pct = total ? Math.round((checked / total) * 100) : 0;
+    const progBar = document.getElementById(`prog-${phase}`);
+    const pctText = document.getElementById(`pct-${phase}`);
+    const navProg = document.getElementById(`nav-prog-${phase}`);
+    if (progBar) progBar.style.width = pct + '%';
+    if (pctText) pctText.textContent = pct + '%';
+    if (navProg) {
+      navProg.textContent = pct + '%';
+      navProg.classList.toggle('complete', pct === 100);
+    }
+  });
+
+  // Step counters
+  document.querySelectorAll('[data-counter]').forEach(el => {
+    const section = el.closest('.step-section');
+    if (!section) return;
+    const cbs = section.querySelectorAll('input[type="checkbox"]');
+    const checked = Array.from(cbs).filter(c => c.checked).length;
+    el.textContent = `${checked}/${cbs.length}`;
+    el.classList.toggle('done', checked === cbs.length && cbs.length > 0);
+    section.classList.toggle('completed', checked === cbs.length && cbs.length > 0);
+  });
+
+  // Global
+  const globalPct = totalAll ? Math.round((totalChecked / totalAll) * 100) : 0;
+  document.getElementById('globalProgressText').textContent = globalPct + '%';
+  document.getElementById('topbarProgress').style.width = globalPct + '%';
+  document.getElementById('globalProgressBar').style.width = globalPct + '%';
+}
+
+// ============================
+// GATE HANDLING
+// ============================
+function setGate(criterionId, value, btn) {
+  const gates = loadGates();
+  const toggle = btn.parentElement;
+  toggle.querySelectorAll('.gate-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  gates[criterionId] = value;
+  saveGates(gates);
+  const panel = btn.closest('.gate-panel');
+  if (panel) updateGateDecision(panel.getAttribute('data-gate'));
+  updatePhaseLocks();
+}
+
+function getGateStatus(gateId) {
+  const gates = loadGates();
+  const panel = document.querySelector(`[data-gate="${gateId}"]`);
+  if (!panel) return 'pending';
+  const criteria = panel.querySelectorAll('.gate-criterion');
+  let allSet = true, anyFail = false;
+  criteria.forEach((c, i) => {
+    const key = gateId.replace('gate','g') + 'c' + (i + 1);
+    if (!gates[key]) allSet = false;
+    else if (gates[key] === 'fail') anyFail = true;
+  });
+  if (!allSet) return 'pending';
+  if (anyFail) return 'fail';
+  return 'pass';
+}
+
+function updateGateDecision(gateId) {
+  const status = getGateStatus(gateId);
+  const statusEl = document.getElementById(`${gateId}-status`);
+  const decision = document.getElementById(`${gateId}-decision`);
+  if (!statusEl || !decision) return;
+  if (status === 'pending') {
+    statusEl.className = 'gate-status pending'; statusEl.textContent = 'PENDING';
+    decision.className = 'gate-decision waiting';
+    decision.textContent = 'Complete all criteria to determine GO / NO-GO';
+  } else if (status === 'fail') {
+    statusEl.className = 'gate-status fail'; statusEl.textContent = 'NO-GO';
+    decision.className = 'gate-decision nogo';
+    decision.textContent = 'NO-GO: One or more criteria failed. Do not proceed.';
+  } else {
+    statusEl.className = 'gate-status pass'; statusEl.textContent = 'GO';
+    decision.className = 'gate-decision go';
+    decision.textContent = 'GO: All criteria passed. Proceed to next phase.';
+  }
+}
+
+// ============================
+// PHASE GATE ADVISORIES
+// ============================
+function updatePhaseLocks() {
+  Object.entries(GATE_DEPS).forEach(([gateId, phaseId]) => {
+    const status = getGateStatus(gateId);
+    const banner = document.getElementById('gate-warn-' + phaseId);
+    if (banner) {
+      banner.classList.toggle('visible', status !== 'pass');
+    }
+  });
+}
+
+// ============================
+// NAVIGATION
+// ============================
+function showPage(pageId) {
+  clearHighlights();
+  document.querySelectorAll('.page').forEach(p => { p.classList.remove('active'); p.style.display = ''; });
+  const page = document.getElementById('page-' + pageId);
+  if (page) {
+    page.classList.add('active');
+    document.getElementById('breadcrumbCurrent').textContent = page.getAttribute('data-title');
+    // Re-render any mermaid diagrams on newly visible page
+    const mermaidEls = page.querySelectorAll('pre.mermaid');
+    if (mermaidEls.length && typeof mermaid !== 'undefined') {
+      mermaid.run({ nodes: mermaidEls });
+    }
+  }
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  const navItem = document.querySelector(`[data-page="${pageId}"]`);
+  if (navItem) navItem.classList.add('active');
+  document.getElementById('searchResults').classList.remove('active');
+  document.getElementById('searchInput').value = '';
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('overlay').classList.remove('active');
+  window.scrollTo(0, 0);
+}
+
+// ============================
+// STEP TOGGLE
+// ============================
+function toggleStep(header) {
+  header.closest('.step-section').classList.toggle('open');
+}
+
+// ============================
+// EMERGENCY SCENARIO TOGGLE
+// ============================
+function toggleES(header) {
+  header.closest('.emergency-scenario').classList.toggle('open');
+}
+
+// ============================
+// SIDEBAR TOGGLE (MOBILE)
+// ============================
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('overlay').classList.toggle('active');
+}
+
+// ============================
+// RESET
+// ============================
+function resetPage() {
+  const activePage = document.querySelector('.page.active');
+  if (!activePage) return;
+  if (!confirm('Reset all checkboxes on this page?')) return;
+  const state = loadState();
+  activePage.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+    cb.checked = false;
+    delete state[cb.id];
+  });
+  saveState(state);
+  if (activePage.id === 'page-gates') {
+    localStorage.removeItem(GATE_KEY);
+    document.querySelectorAll('.gate-btn').forEach(b => b.classList.remove('selected'));
+    ['gate1','gate2','gate3','gate4'].forEach(g => updateGateDecision(g));
+    updatePhaseLocks();
+  }
+  updateAllProgress();
+}
+
+// ============================
+// SEARCH WITH HIGHLIGHTING
+// ============================
+let lastSearchQuery = '';
+
+function clearHighlights() {
+  document.querySelectorAll('.search-hl').forEach(hl => {
+    const parent = hl.parentNode;
+    parent.replaceChild(document.createTextNode(hl.textContent), hl);
+    parent.normalize();
+  });
+}
+
+function highlightText(element, query) {
+  if (!element || !query) return;
+  const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT, null, false);
+  const textNodes = [];
+  while (walker.nextNode()) textNodes.push(walker.currentNode);
+  const lq = query.toLowerCase();
+  textNodes.forEach(node => {
+    const text = node.textContent;
+    const idx = text.toLowerCase().indexOf(lq);
+    if (idx === -1) return;
+    const before = text.substring(0, idx);
+    const match = text.substring(idx, idx + query.length);
+    const after = text.substring(idx + query.length);
+    const span = document.createElement('span');
+    span.className = 'search-hl';
+    span.textContent = match;
+    const frag = document.createDocumentFragment();
+    if (before) frag.appendChild(document.createTextNode(before));
+    frag.appendChild(span);
+    if (after) frag.appendChild(document.createTextNode(after));
+    node.parentNode.replaceChild(frag, node);
+  });
+}
+
+function escapeHtml(str) {
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+function handleSearch(query) {
+  const resultsDiv = document.getElementById('searchResults');
+  clearHighlights();
+  if (!query || query.length < 2) {
+    resultsDiv.classList.remove('active');
+    document.querySelectorAll('.page').forEach(p => p.style.display = '');
+    return;
+  }
+  lastSearchQuery = query;
+  const q = query.toLowerCase();
+  const results = [];
+  document.querySelectorAll('.page').forEach(page => {
+    const title = page.getAttribute('data-title') || '';
+    const pageId = page.id.replace('page-','');
+    page.querySelectorAll('.cl-body label, .cl-body .cl-detail, .step-title, .es-step-action, .gate-criterion-text, td, p, h4').forEach(el => {
+      const text = el.textContent || '';
+      if (text.toLowerCase().includes(q)) {
+        const idx = text.toLowerCase().indexOf(q);
+        const start = Math.max(0, idx - 30);
+        const end = Math.min(text.length, idx + query.length + 50);
+        let snippet = (start > 0 ? '...' : '') + text.substring(start, end) + (end < text.length ? '...' : '');
+        const hlIdx = snippet.toLowerCase().indexOf(q);
+        if (hlIdx > -1) {
+          snippet = escapeHtml(snippet.substring(0, hlIdx)) +
+            '<span class="search-hl">' + escapeHtml(snippet.substring(hlIdx, hlIdx + query.length)) + '</span>' +
+            escapeHtml(snippet.substring(hlIdx + query.length));
+        } else {
+          snippet = escapeHtml(snippet);
+        }
+        results.push({ phase: title, pageId: pageId,
+          title: el.closest('.step-section')?.querySelector('.step-title')?.textContent || el.closest('.emergency-scenario')?.querySelector('.es-title')?.textContent || title,
+          snippet: snippet
+        });
+      }
+    });
+  });
+
+  const seen = new Set();
+  const unique = results.filter(r => {
+    const key = r.snippet.substring(0, 60);
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  }).slice(0, 15);
+
+  if (unique.length) {
+    resultsDiv.innerHTML = '<div style="font-family:JetBrains Mono,monospace;font-size:12px;color:var(--text-muted);margin-bottom:12px">' + unique.length + ' results for "' + escapeHtml(query) + '"</div>' +
+      unique.map(r => '<div class="search-result-item" onclick="jumpToResult(\'' + r.pageId + '\',\'' + escapeHtml(lastSearchQuery).replace(/'/g,"\\'") + '\')"><div class="result-phase">' + escapeHtml(r.phase) + '</div><div class="result-title">' + escapeHtml(r.title) + '</div><div class="result-snippet">' + r.snippet + '</div></div>').join('');
+    resultsDiv.classList.add('active');
+    document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
+  } else {
+    resultsDiv.innerHTML = '<div style="color:var(--text-muted);font-size:13px;padding:20px 0">No results found.</div>';
+    resultsDiv.classList.add('active');
+    document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
+  }
+}
+
+function jumpToResult(pageId, query) {
+  document.querySelectorAll('.page').forEach(p => { p.classList.remove('active'); p.style.display = ''; });
+  const page = document.getElementById('page-' + pageId);
+  if (!page) return;
+  page.classList.add('active');
+  document.getElementById('breadcrumbCurrent').textContent = page.getAttribute('data-title');
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  const navItem = document.querySelector('[data-page="' + pageId + '"]');
+  if (navItem) navItem.classList.add('active');
+  document.getElementById('searchResults').classList.remove('active');
+  page.querySelectorAll('.step-section').forEach(s => s.classList.add('open'));
+  page.querySelectorAll('.emergency-scenario').forEach(s => s.classList.add('open'));
+  if (query) {
+    highlightText(page, query);
+    setTimeout(() => {
+      const firstHl = page.querySelector('.search-hl');
+      if (firstHl) firstHl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 100);
+  }
+}
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script>
+mermaid.initialize({
+  startOnLoad: false,
+  theme: 'dark',
+  themeVariables: {
+    darkMode: true,
+    background: '#0f1724',
+    primaryColor: '#1e3a5f',
+    primaryTextColor: '#e2e8f0',
+    primaryBorderColor: '#3b82f6',
+    lineColor: '#475569',
+    secondaryColor: '#1a2332',
+    tertiaryColor: '#0f1724',
+    fontSize: '13px',
+    fontFamily: 'DM Sans, sans-serif',
+    nodeBorder: '#3b82f6',
+    clusterBkg: '#111827',
+    clusterBorder: '#1e293b',
+    edgeLabelBackground: '#0f1724',
+    nodeTextColor: '#e2e8f0'
+  },
+  flowchart: { curve: 'basis', padding: 16, htmlLabels: true, useMaxWidth: true }
+});
+</script>
+</body>
+</html>
