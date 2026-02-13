@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Payment Operations | Document Hub</title>
+<title>SOPs & Playbooks | Document Hub</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Outfit:wght@300;400;500;600;700;800&display=swap');
 
@@ -36,6 +36,8 @@
     letter-spacing: -0.8px;
     margin-bottom: 6px;
   }
+
+  .page-header h1 .sop-accent { color: #e85d5d; }
 
   .page-header .subtitle {
     font-size: 14px;
@@ -73,7 +75,7 @@
   }
 
   .hub-nav a:hover { border-color: #3a3d4a; color: #aaa; }
-  .hub-nav a.active { border-color: #5b9bf5; color: #5b9bf5; background: #5b9bf510; }
+  .hub-nav a.active { border-color: #e85d5d; color: #e85d5d; background: #e85d5d10; }
 
   .category {
     margin-bottom: 36px;
@@ -165,7 +167,9 @@
   }
 
   .tag-html { background: #1a1a0d; color: #f5a623; border: 1px solid #3a2a10; }
-  .tag-pdf { background: #1a0d0d; color: #e85d5d; border: 1px solid #3a1010; }
+  .tag-sop { background: #1a0d0d; color: #e85d5d; border: 1px solid #3a1010; }
+  .tag-v5 { background: #1a0d14; color: #e85d5d; border: 1px solid #3a1020; }
+  .tag-playbook { background: #1a0d1a; color: #a78bfa; border: 1px solid #2a103a; }
   .tag-tool { background: #0d1a1a; color: #5bdbb8; border: 1px solid #103a2a; }
 
   .doc-date {
@@ -184,29 +188,32 @@
   }
 
   /* Category colors */
-  .cat-strategy .category-dot { background: #f5c542; }
-  .cat-strategy .category-name { color: #f5c542; }
-  .cat-strategy .doc-card-accent { background: #f5c542; }
+  .cat-provider .category-dot { background: #e85d5d; }
+  .cat-provider .category-name { color: #e85d5d; }
+  .cat-provider .doc-card-accent { background: #e85d5d; }
 
-  .cat-worldpay .category-dot { background: #5b9bf5; }
-  .cat-worldpay .category-name { color: #5b9bf5; }
-  .cat-worldpay .doc-card-accent { background: #5b9bf5; }
+  .cat-emergency .category-dot { background: #ff4d4d; animation: pulse-dot 2s ease-in-out infinite; }
+  .cat-emergency .category-name { color: #ff4d4d; }
+  .cat-emergency .doc-card-accent { background: #ff4d4d; }
+  .cat-emergency .doc-card { border-color: #3a1515; }
+  .cat-emergency .doc-card:hover { border-color: #ff4d4d44; background: #1a1015; }
 
-  .cat-2c2p .category-dot { background: #f5a623; }
-  .cat-2c2p .category-name { color: #f5a623; }
-  .cat-2c2p .doc-card-accent { background: #f5a623; }
+  @keyframes pulse-dot {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
 
-  .cat-nuvei .category-dot { background: #5bdb7a; }
-  .cat-nuvei .category-name { color: #5bdb7a; }
-  .cat-nuvei .doc-card-accent { background: #5bdb7a; }
+  .cat-shopify .category-dot { background: #96bf48; }
+  .cat-shopify .category-name { color: #96bf48; }
+  .cat-shopify .doc-card-accent { background: #96bf48; }
 
-  .cat-tools .category-dot { background: #5bdbb8; }
-  .cat-tools .category-name { color: #5bdbb8; }
-  .cat-tools .doc-card-accent { background: #5bdbb8; }
+  .cat-data .category-dot { background: #5b9bf5; }
+  .cat-data .category-name { color: #5b9bf5; }
+  .cat-data .doc-card-accent { background: #5b9bf5; }
 
-  .cat-reference .category-dot { background: #e85d5d; }
-  .cat-reference .category-name { color: #e85d5d; }
-  .cat-reference .doc-card-accent { background: #e85d5d; }
+  .cat-vendor .category-dot { background: #a78bfa; }
+  .cat-vendor .category-name { color: #a78bfa; }
+  .cat-vendor .doc-card-accent { background: #a78bfa; }
 
   .empty-card {
     background: #0e1018;
@@ -296,127 +303,106 @@
 
   <div class="page-header">
     <div class="header-left">
-      <h1>Payment Operations</h1>
-      <div class="subtitle">Gateway evaluations, integration specs, strategy roadmaps, and operational tools</div>
+      <h1><span class="sop-accent">SOPs</span> & Playbooks</h1>
+      <div class="subtitle">Standard operating procedures, emergency playbooks, and process documentation</div>
       <div class="updated">howkoz.github.io/workflow</div>
     </div>
     <div class="hub-nav">
       <a href="2025-deliverables.html">2025 Deliverables</a>
       <a href="index.html">Shopify Hub</a>
-      <a href="payments-hub.html" class="active">Payment Ops Hub</a>
-      <a href="sop-hub.html">SOPs &amp; Playbooks</a>
+      <a href="payments-hub.html">Payment Ops Hub</a>
+      <a href="sop-hub.html" class="active">SOPs &amp; Playbooks</a>
     </div>
   </div>
 
   <div class="search-box">
     <div class="search-icon">&#x2315;</div>
-    <input type="text" id="searchInput" placeholder="Filter documents..." oninput="filterDocs()">
+    <input type="text" id="searchInput" placeholder="Filter SOPs & playbooks..." oninput="filterDocs()">
   </div>
 
-  <!-- ============ 2026 STRATEGY ============ -->
-  <div class="category cat-strategy" data-category>
+  <!-- ============ PROVIDER INTEGRATION ============ -->
+  <div class="category cat-provider" data-category>
     <div class="category-header">
       <div class="category-dot"></div>
-      <div class="category-name">2026 Strategy</div>
-      <div class="category-count">Roadmaps, strategic planning, global rollout</div>
+      <div class="category-name">Provider Integration</div>
+      <div class="category-count">End-to-end processor onboarding lifecycle</div>
     </div>
     <div class="doc-grid">
-      <a href="2026_Payment_Operations_Strategic_Roadmap.html" class="doc-card" data-doc data-search="2026 strategy roadmap payment operations strategic initiatives global rollout subscription optimization worldpay nuvei checkout infrastructure quarterly plan raci">
+      <a href="payment_sop_v5.html" class="doc-card" data-doc data-search="payment provider integration sop v5 processor onboarding discovery underwriting testing deployment monitoring optimization decision gates emergency response worldpay nuvei 2c2p checkout settlement reconciliation chargeback fraud 3ds rdr ethoca phases lifecycle">
         <div class="doc-card-accent"></div>
-        <div class="doc-card-title">2026 Payment Operations Strategic Roadmap</div>
-        <div class="doc-card-desc">10 strategic initiatives across 40+ markets. $16M-$43M target value, global subscription optimization, data infrastructure, processor partner rollout plans</div>
+        <div class="doc-card-title">Payment Provider Integration SOP</div>
+        <div class="doc-card-desc">v5.0 | 6 phases, 4 decision gates, 100+ tasks. Discovery through optimization with emergency playbooks, benchmarks, and escalation matrix</div>
         <div class="doc-card-meta">
+          <span class="doc-tag tag-v5">v5.0</span>
+          <span class="doc-tag tag-sop">SOP</span>
           <span class="doc-tag tag-html">HTML</span>
           <span class="doc-date">Feb 2026</span>
         </div>
       </a>
       <div class="empty-card" data-doc data-search="">
-        <span>More strategy docs coming soon</span>
+        <span>More provider SOPs as processors onboard</span>
       </div>
     </div>
   </div>
 
-  <!-- ============ WORLDPAY ============ -->
-  <div class="category cat-worldpay" data-category>
+  <!-- ============ EMERGENCY & INCIDENT ============ -->
+  <div class="category cat-emergency" data-category>
     <div class="category-header">
       <div class="category-dot"></div>
-      <div class="category-name">Worldpay</div>
-      <div class="category-count">MCP implementation, MENA expansion</div>
+      <div class="category-name">Emergency & Incident</div>
+      <div class="category-count">Outage response, fraud attacks, chargeback spikes</div>
     </div>
     <div class="doc-grid">
       <div class="empty-card" data-doc data-search="">
-        <span>Worldpay docs coming soon</span>
+        <span>Standalone emergency playbooks coming soon</span>
       </div>
     </div>
   </div>
 
-  <!-- ============ 2C2P ============ -->
-  <div class="category cat-2c2p" data-category>
+  <!-- ============ SHOPIFY OPERATIONS ============ -->
+  <div class="category cat-shopify" data-category>
     <div class="category-header">
       <div class="category-dot"></div>
-      <div class="category-name">2C2P</div>
-      <div class="category-count">Southeast Asia gateway</div>
+      <div class="category-name">Shopify Operations</div>
+      <div class="category-count">POS setup, market launch, store configuration</div>
     </div>
     <div class="doc-grid">
       <div class="empty-card" data-doc data-search="">
-        <span>2C2P docs coming soon</span>
+        <span>Shopify SOPs coming soon</span>
       </div>
     </div>
   </div>
 
-  <!-- ============ NUVEI ============ -->
-  <div class="category cat-nuvei" data-category>
+  <!-- ============ VENDOR MANAGEMENT ============ -->
+  <div class="category cat-vendor" data-category>
     <div class="category-header">
       <div class="category-dot"></div>
-      <div class="category-name">Nuvei</div>
-      <div class="category-count">Secondary processor</div>
+      <div class="category-name">Vendor Management</div>
+      <div class="category-count">Contract renewal, rate negotiation, QBR prep</div>
     </div>
     <div class="doc-grid">
       <div class="empty-card" data-doc data-search="">
-        <span>Nuvei docs coming soon</span>
+        <span>Vendor SOPs coming soon</span>
       </div>
     </div>
   </div>
 
-  <!-- ============ TOOLS ============ -->
-  <div class="category cat-tools" data-category>
+  <!-- ============ DATA & RECONCILIATION ============ -->
+  <div class="category cat-data" data-category>
     <div class="category-header">
       <div class="category-dot"></div>
-      <div class="category-name">Tools</div>
-      <div class="category-count">Interactive calculators and decision aids</div>
+      <div class="category-name">Data & Reconciliation</div>
+      <div class="category-count">Settlement matching, reporting, data pipelines</div>
     </div>
     <div class="doc-grid">
       <div class="empty-card" data-doc data-search="">
-        <span>Tools coming soon</span>
-      </div>
-    </div>
-  </div>
-
-  <!-- ============ REFERENCE ============ -->
-  <div class="category cat-reference" data-category>
-    <div class="category-header">
-      <div class="category-dot"></div>
-      <div class="category-name">Reference</div>
-      <div class="category-count">Guides and how-tos</div>
-    </div>
-    <div class="doc-grid">
-      <a href="github-pages-guide.html" class="doc-card" data-doc data-search="github pages deployment guide upload publish how to reference instructions">
-        <div class="doc-card-accent"></div>
-        <div class="doc-card-title">GitHub Pages Deployment Guide</div>
-        <div class="doc-card-desc">Step-by-step instructions for uploading and publishing HTML documents to this site</div>
-        <div class="doc-card-meta">
-          <span class="doc-tag tag-html">HTML</span>
-          <span class="doc-date">Feb 2026</span>
-        </div>
-      </a>
-      <div class="empty-card" data-doc data-search="">
-        <span>More reference docs coming soon</span>
+        <span>Data SOPs coming soon</span>
       </div>
     </div>
   </div>
 
   <div class="footer">
-    <div class="footer-left">Unicity Payment Operations | HowKoz</div>
+    <div class="footer-left">Unicity SOPs & Playbooks | HowKoz</div>
     <div class="footer-right"><a href="https://github.com/howkoz/workflow" target="_blank">github.com/howkoz/workflow</a></div>
   </div>
 

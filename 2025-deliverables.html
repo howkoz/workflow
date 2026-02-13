@@ -19,7 +19,15 @@
 
   .container { max-width: 1000px; margin: 0 auto; }
 
-  .page-header { margin-bottom: 48px; }
+  .page-header {
+    margin-bottom: 48px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 24px;
+  }
+
+  .header-left { flex: 1; }
 
   .page-header h1 {
     font-size: 36px;
@@ -47,8 +55,10 @@
 
   .hub-nav {
     display: flex;
-    gap: 8px;
-    margin-top: 14px;
+    flex-direction: column;
+    gap: 6px;
+    flex-shrink: 0;
+    margin-top: 4px;
   }
 
   .hub-nav a {
@@ -56,10 +66,12 @@
     font-size: 11px;
     color: #666;
     text-decoration: none;
-    padding: 5px 12px;
+    padding: 6px 14px;
     border: 1px solid #1e2030;
     border-radius: 6px;
     transition: all 0.2s;
+    text-align: right;
+    white-space: nowrap;
   }
 
   .hub-nav a:hover { border-color: #3a3d4a; color: #aaa; }
@@ -266,8 +278,10 @@
   @media (max-width: 700px) {
     body { padding: 24px 20px; }
     .doc-grid { grid-template-columns: 1fr; }
+    .page-header { flex-direction: column; }
     .page-header h1 { font-size: 28px; }
-    .hub-nav { flex-wrap: wrap; }
+    .hub-nav { flex-direction: row; flex-wrap: wrap; }
+    .hub-nav a { text-align: center; }
   }
 </style>
 </head>
@@ -276,13 +290,16 @@
 <div class="container">
 
   <div class="page-header">
-    <h1><span class="year-accent">2025</span> Deliverables</h1>
-    <div class="subtitle">Full year results, dashboards, and completed initiatives across Payment Operations and Shopify</div>
-    <div class="updated">howkoz.github.io/workflow</div>
+    <div class="header-left">
+      <h1><span class="year-accent">2025</span> Deliverables</h1>
+      <div class="subtitle">Full year results, dashboards, and completed initiatives across Payment Operations and Shopify</div>
+      <div class="updated">howkoz.github.io/workflow</div>
+    </div>
     <div class="hub-nav">
       <a href="2025-deliverables.html" class="active">2025 Deliverables</a>
       <a href="index.html">Shopify Hub</a>
       <a href="payments-hub.html">Payment Ops Hub</a>
+      <a href="sop-hub.html">SOPs &amp; Playbooks</a>
     </div>
   </div>
 
