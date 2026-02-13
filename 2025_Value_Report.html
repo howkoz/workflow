@@ -1,0 +1,1247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Payment Operations: 2025 Value Report</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,700&family=Playfair+Display:wght@700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-primary: #0a0e1a;
+    --bg-card: #111827;
+    --bg-card-hover: #1a2236;
+    --bg-tab: #151c2e;
+    --accent: #22d3a7;
+    --accent-dim: rgba(34, 211, 167, 0.12);
+    --accent-glow: rgba(34, 211, 167, 0.25);
+    --text-primary: #e8ecf4;
+    --text-secondary: #8892a8;
+    --text-muted: #5a6478;
+    --border: #1e293b;
+    --red: #ef4444;
+    --amber: #f59e0b;
+    --blue: #3b82f6;
+    --green: #22c55e;
+    --purple: #a78bfa;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html {
+    scroll-behavior: smooth;
+    background: var(--bg-primary);
+  }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    color: var(--text-primary);
+    background: var(--bg-primary);
+    line-height: 1.7;
+    min-height: 100vh;
+  }
+
+  /* ===== HERO ===== */
+  .hero {
+    position: relative;
+    padding: 80px 40px 60px;
+    text-align: center;
+    overflow: hidden;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -200px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 800px;
+    height: 800px;
+    background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+    opacity: 0.3;
+    pointer-events: none;
+  }
+
+  .hero-label {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent);
+    border: 1px solid rgba(34, 211, 167, 0.3);
+    padding: 6px 18px;
+    border-radius: 20px;
+    margin-bottom: 28px;
+    background: var(--accent-dim);
+  }
+
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(36px, 5vw, 60px);
+    font-weight: 900;
+    line-height: 1.1;
+    margin-bottom: 12px;
+    color: var(--text-primary);
+  }
+
+  .hero h1 span {
+    background: linear-gradient(135deg, var(--accent), #60e8c8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero-amount {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(48px, 7vw, 84px);
+    font-weight: 900;
+    background: linear-gradient(135deg, #fff, #c8d6e5);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 20px;
+    line-height: 1;
+  }
+
+  .hero-meta {
+    color: var(--text-secondary);
+    font-size: 14px;
+    line-height: 1.8;
+  }
+
+  .hero-meta strong {
+    color: var(--text-primary);
+    font-weight: 500;
+  }
+
+  /* ===== KPI STRIP ===== */
+  .kpi-strip {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+
+  @media (max-width: 900px) {
+    .kpi-strip { grid-template-columns: repeat(3, 1fr); }
+  }
+
+  @media (max-width: 500px) {
+    .kpi-strip { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  .kpi-item {
+    background: var(--bg-card);
+    padding: 28px 24px;
+    text-align: center;
+    transition: background 0.2s;
+  }
+
+  .kpi-item:hover { background: var(--bg-card-hover); }
+
+  .kpi-value {
+    font-family: 'Playfair Display', serif;
+    font-size: 32px;
+    font-weight: 800;
+    color: var(--accent);
+    margin-bottom: 4px;
+  }
+
+  .kpi-label {
+    font-size: 12px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
+  /* ===== TABS ===== */
+  .tab-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 24px 80px;
+  }
+
+  .tab-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    padding-bottom: 2px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 40px;
+  }
+
+  .tab-btn {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-muted);
+    background: none;
+    border: none;
+    padding: 14px 20px;
+    cursor: pointer;
+    white-space: nowrap;
+    position: relative;
+    transition: color 0.2s;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+  }
+
+  .tab-btn:hover { color: var(--text-secondary); }
+
+  .tab-btn.active {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+  }
+
+  .tab-panel {
+    display: none;
+    animation: fadeIn 0.35s ease;
+  }
+
+  .tab-panel.active { display: block; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ===== CONTENT STYLES ===== */
+  .section-header {
+    margin-bottom: 32px;
+  }
+
+  .section-header .tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 12px;
+  }
+
+  .section-header .tag .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+
+  .section-header h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 32px;
+    font-weight: 800;
+    margin-bottom: 8px;
+    color: var(--text-primary);
+  }
+
+  .section-header p {
+    color: var(--text-secondary);
+    font-size: 15px;
+    max-width: 700px;
+  }
+
+  .initiative-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+
+  .meta-chip {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 16px;
+    font-size: 13px;
+    color: var(--text-secondary);
+  }
+
+  .meta-chip strong {
+    color: var(--text-primary);
+    font-weight: 500;
+  }
+
+  .status-complete {
+    color: var(--green);
+  }
+
+  .status-progress {
+    color: var(--amber);
+  }
+
+  .card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 28px;
+    margin-bottom: 20px;
+  }
+
+  .card h3 {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .card h3 .icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+
+  .icon-red { background: rgba(239, 68, 68, 0.15); color: var(--red); }
+  .icon-green { background: rgba(34, 197, 94, 0.15); color: var(--green); }
+  .icon-blue { background: rgba(59, 130, 246, 0.15); color: var(--blue); }
+  .icon-amber { background: rgba(245, 158, 11, 0.15); color: var(--amber); }
+  .icon-purple { background: rgba(167, 139, 250, 0.15); color: var(--purple); }
+  .icon-accent { background: var(--accent-dim); color: var(--accent); }
+
+  .card ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  .card ul li {
+    padding: 6px 0;
+    padding-left: 20px;
+    position: relative;
+    color: var(--text-secondary);
+    font-size: 14px;
+  }
+
+  .card ul li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 14px;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--text-muted);
+  }
+
+  .card p {
+    color: var(--text-secondary);
+    font-size: 14px;
+    margin-bottom: 10px;
+  }
+
+  .card p:last-child { margin-bottom: 0; }
+
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  @media (max-width: 700px) {
+    .two-col { grid-template-columns: 1fr; }
+  }
+
+  /* ===== TABLES ===== */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+  }
+
+  thead th {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    text-align: left;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+    font-weight: 500;
+  }
+
+  tbody td {
+    padding: 14px 16px;
+    border-bottom: 1px solid rgba(30, 41, 59, 0.5);
+    color: var(--text-secondary);
+  }
+
+  tbody tr:last-child td { border-bottom: none; }
+
+  tbody tr:hover { background: rgba(34, 211, 167, 0.03); }
+
+  tbody td:first-child { color: var(--text-primary); font-weight: 500; }
+
+  .highlight-row td {
+    color: var(--accent) !important;
+    font-weight: 700 !important;
+    border-top: 1px solid rgba(34, 211, 167, 0.2);
+    background: var(--accent-dim);
+  }
+
+  /* ===== CODE BLOCKS ===== */
+  .code-block {
+    background: #0d1117;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px 24px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: #c9d1d9;
+    line-height: 1.8;
+    overflow-x: auto;
+    margin-bottom: 20px;
+  }
+
+  /* ===== BEFORE/AFTER ===== */
+  .before-after {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 20px;
+  }
+
+  @media (max-width: 700px) {
+    .before-after { grid-template-columns: 1fr; }
+  }
+
+  .ba-card {
+    border-radius: 12px;
+    padding: 24px;
+    border: 1px solid;
+  }
+
+  .ba-before {
+    background: rgba(239, 68, 68, 0.05);
+    border-color: rgba(239, 68, 68, 0.15);
+  }
+
+  .ba-after {
+    background: rgba(34, 197, 94, 0.05);
+    border-color: rgba(34, 197, 94, 0.15);
+  }
+
+  .ba-card h4 {
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+
+  .ba-before h4 { color: var(--red); }
+  .ba-after h4 { color: var(--green); }
+
+  .ba-card ul { list-style: none; padding: 0; }
+
+  .ba-card ul li {
+    padding: 5px 0;
+    font-size: 13px;
+    color: var(--text-secondary);
+    padding-left: 22px;
+    position: relative;
+  }
+
+  .ba-before ul li::before { content: '✕'; position: absolute; left: 0; color: var(--red); font-size: 11px; top: 7px; }
+  .ba-after ul li::before { content: '✓'; position: absolute; left: 0; color: var(--green); font-weight: 700; font-size: 13px; top: 5px; }
+
+  /* ===== CALLOUT ===== */
+  .callout {
+    border-left: 3px solid var(--accent);
+    background: var(--accent-dim);
+    padding: 20px 24px;
+    border-radius: 0 8px 8px 0;
+    margin-bottom: 20px;
+  }
+
+  .callout p {
+    color: var(--text-primary) !important;
+    font-size: 15px !important;
+    font-weight: 500;
+  }
+
+  .callout .big-number {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--accent);
+  }
+
+  /* ===== DIVIDER ===== */
+  .divider {
+    height: 1px;
+    background: var(--border);
+    margin: 40px 0;
+  }
+
+  /* ===== FOOTER ===== */
+  .footer {
+    text-align: center;
+    padding: 40px 24px;
+    border-top: 1px solid var(--border);
+    color: var(--text-muted);
+    font-size: 13px;
+  }
+
+  .footer strong {
+    color: var(--text-secondary);
+    font-weight: 500;
+  }
+
+  /* ===== PROGRESS BAR ===== */
+  .progress-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 14px;
+  }
+
+  .progress-label {
+    width: 140px;
+    font-size: 13px;
+    color: var(--text-secondary);
+    flex-shrink: 0;
+  }
+
+  .progress-bar {
+    flex: 1;
+    height: 8px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 4px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .progress-fill {
+    height: 100%;
+    border-radius: 4px;
+    background: linear-gradient(90deg, var(--accent), #60e8c8);
+    transition: width 1s ease;
+  }
+
+  .progress-value {
+    width: 50px;
+    text-align: right;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: var(--accent);
+    flex-shrink: 0;
+  }
+
+  /* ===== ROADMAP ===== */
+  .roadmap-item {
+    position: relative;
+    padding-left: 28px;
+    margin-bottom: 28px;
+  }
+
+  .roadmap-item::before {
+    content: '';
+    position: absolute;
+    left: 7px;
+    top: 24px;
+    bottom: -28px;
+    width: 1px;
+    background: var(--border);
+  }
+
+  .roadmap-item:last-child::before { display: none; }
+
+  .roadmap-item::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 8px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 2px solid var(--accent);
+    background: var(--bg-primary);
+  }
+
+  .roadmap-item h4 {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 8px;
+  }
+
+  .roadmap-item ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  .roadmap-item ul li {
+    font-size: 13px;
+    color: var(--text-secondary);
+    padding: 3px 0;
+    padding-left: 16px;
+    position: relative;
+  }
+
+  .roadmap-item ul li::before {
+    content: '>';
+    position: absolute;
+    left: 0;
+    color: var(--text-muted);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== HERO ===== -->
+<header class="hero">
+  <div class="hero-label">2025 Annual Report</div>
+  <h1>Payment Operations<br><span>Complete Value Report</span></h1>
+  <div class="hero-amount">$9.8M</div>
+  <div class="hero-meta">
+    <strong>Howard Koziara</strong> / Payment Operations Owner<br>
+    $200M+ annual revenue / 20+ countries / November 22, 2025
+  </div>
+</header>
+
+<!-- ===== KPI STRIP ===== -->
+<div class="kpi-strip">
+  <div class="kpi-item">
+    <div class="kpi-value">$6.1M</div>
+    <div class="kpi-label">Revenue Recovery</div>
+  </div>
+  <div class="kpi-item">
+    <div class="kpi-value">$2.5M</div>
+    <div class="kpi-label">Cost Savings</div>
+  </div>
+  <div class="kpi-item">
+    <div class="kpi-value">$1.2M</div>
+    <div class="kpi-label">Loss Prevention</div>
+  </div>
+  <div class="kpi-item">
+    <div class="kpi-value">7</div>
+    <div class="kpi-label">Major Initiatives</div>
+  </div>
+  <div class="kpi-item">
+    <div class="kpi-value">20+</div>
+    <div class="kpi-label">Countries Managed</div>
+  </div>
+</div>
+
+<!-- ===== TABS ===== -->
+<div class="tab-container">
+  <nav class="tab-nav">
+    <button class="tab-btn active" data-tab="overview">Overview</button>
+    <button class="tab-btn" data-tab="us-sub">US Subscriptions</button>
+    <button class="tab-btn" data-tab="smart-routing">Smart Routing</button>
+    <button class="tab-btn" data-tab="chargeback">Chargeback Defense</button>
+    <button class="tab-btn" data-tab="3ds2">3DS2 Optimization</button>
+    <button class="tab-btn" data-tab="applepay">Apple Pay Fix</button>
+    <button class="tab-btn" data-tab="nuvei-atdata">Rate & Vendor</button>
+    <button class="tab-btn" data-tab="ops">Daily Operations</button>
+    <button class="tab-btn" data-tab="roadmap">2026 Roadmap</button>
+  </nav>
+
+  <!-- =============================== OVERVIEW =============================== -->
+  <div class="tab-panel active" id="overview">
+    <div class="section-header">
+      <div class="tag"><span class="dot"></span> Executive Summary</div>
+      <h2>$9.8M in Documented Value</h2>
+      <p>In 2025 I identified and resolved critical payment processing issues that nobody else was managing, delivering $9.8 million in documented business value through revenue recovery, cost optimization, and risk management.</p>
+    </div>
+
+    <div class="callout">
+      <p>A lot of this was my initiative. Nobody asked me to audit the payment systems. Nobody asked me to fix the $30M in declines. I saw the problems, built the business cases, worked with IT and processors, and delivered the results.</p>
+    </div>
+
+    <div class="card">
+      <h3><span class="icon icon-accent">$</span> Total Value Breakdown</h3>
+      <table>
+        <thead>
+          <tr><th>Initiative</th><th>Impact</th><th>Type</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>US Subscription Enhancement</td><td>$4.6M</td><td>Revenue Recovery</td></tr>
+          <tr><td>Smart Routing Optimization</td><td>$2.05M</td><td>Cost Savings (2026)</td></tr>
+          <tr><td>Chargeback Alert Defense</td><td>$1.17M</td><td>Loss Prevention</td></tr>
+          <tr><td>3DS2 Global Optimization</td><td>$853K</td><td>Revenue Recovery</td></tr>
+          <tr><td>ApplePay Subscription Fix</td><td>$642K</td><td>Revenue Recovery</td></tr>
+          <tr><td>Nuvei Rate Negotiation</td><td>$265K</td><td>Cost Savings</td></tr>
+          <tr><td>AtData Vendor Termination</td><td>$187K</td><td>Cost Elimination</td></tr>
+          <tr><td>Canada OTI Implementation</td><td>TBD</td><td>Revenue Recovery (in progress)</td></tr>
+          <tr class="highlight-row"><td>TOTAL DOCUMENTED VALUE</td><td>$9.8M+</td><td>Multiple categories</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <h3><span class="icon icon-green">&#x2191;</span> Operational Improvements</h3>
+      <div style="padding: 8px 0;">
+        <div class="progress-row">
+          <span class="progress-label">US Approval</span>
+          <div class="progress-bar"><div class="progress-fill" style="width:76%"></div></div>
+          <span class="progress-value">67>76%</span>
+        </div>
+        <div class="progress-row">
+          <span class="progress-label">Japan Approval</span>
+          <div class="progress-bar"><div class="progress-fill" style="width:92%"></div></div>
+          <span class="progress-value">55>92%</span>
+        </div>
+        <div class="progress-row">
+          <span class="progress-label">Europe Approval</span>
+          <div class="progress-bar"><div class="progress-fill" style="width:90%"></div></div>
+          <span class="progress-value">44>90%</span>
+        </div>
+        <div class="progress-row">
+          <span class="progress-label">Apple Pay</span>
+          <div class="progress-bar"><div class="progress-fill" style="width:82%"></div></div>
+          <span class="progress-value">18>82%</span>
+        </div>
+        <div class="progress-row">
+          <span class="progress-label">CB Prevention</span>
+          <div class="progress-bar"><div class="progress-fill" style="width:62%"></div></div>
+          <span class="progress-value">0>62%</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3><span class="icon icon-purple">&#x2605;</span> Strategic Achievements</h3>
+      <ul>
+        <li>Identified $30M in unmanaged declines that nobody was tracking</li>
+        <li>Built data-driven business cases for all major initiatives</li>
+        <li>Worked cross-functionally with IT, Finance, and Processors</li>
+        <li>Delivered measurable results with full documentation</li>
+        <li>Created sustainable, ongoing improvements rather than one-time fixes</li>
+        <li>Scaled solutions across markets (US to Canada rollout)</li>
+        <li>Maintained chargeback rate under termination threshold</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- =============================== US SUBSCRIPTIONS =============================== -->
+  <div class="tab-panel" id="us-sub">
+    <div class="section-header">
+      <div class="tag"><span class="dot"></span> Initiative 1</div>
+      <h2>US Subscription Payment Enhancement</h2>
+      <p>$4.6M Annual Revenue Recovery through systematic audit and optimization of the US payment infrastructure.</p>
+    </div>
+
+    <div class="initiative-meta">
+      <div class="meta-chip"><strong>Timeline:</strong> Jan - Oct 2025</div>
+      <div class="meta-chip"><strong>Impact:</strong> $4.6M Annual</div>
+      <div class="meta-chip"><strong>Status:</strong> <span class="status-complete">Complete</span></div>
+    </div>
+
+    <div class="two-col">
+      <div class="card">
+        <h3><span class="icon icon-red">!</span> What I Discovered (Jan 2025)</h3>
+        <ul>
+          <li>US market: $100M+ in annual transaction volume</li>
+          <li>$30M in monthly declined transactions, completely untracked</li>
+          <li>Approval rate stuck at 67%</li>
+          <li>No decline recovery program</li>
+          <li>No card updater service</li>
+          <li>No subscription optimization</li>
+          <li>APIs sending incomplete data to processors</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3><span class="icon icon-blue">&#x1F50D;</span> 3-Month System Audit Findings</h3>
+        <ul>
+          <li>Missing full billing address in API submissions</li>
+          <li>No device fingerprint (device ID) collected</li>
+          <li>Insufficient fraud signals sent to banks</li>
+          <li>No automatic card refresh program (card updater)</li>
+          <li>Subscription renewals flagged as new transactions (no OTI)</li>
+          <li>Banks treating recurring charges as suspicious</li>
+          <li>Paying 2.5% + $0.25, market standard was 1.5%</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3><span class="icon icon-accent">&#x2191;</span> Approval Rate Progression</h3>
+      <table>
+        <thead>
+          <tr><th>Period</th><th>Rate</th><th>Improvement</th><th>Driver</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Jan-Apr 2025</td><td>67%</td><td>Baseline</td><td>Pre-optimization</td></tr>
+          <tr><td>May 2025</td><td>70%</td><td>+3 pts</td><td>Card updater deployed</td></tr>
+          <tr><td>Jun-Jul 2025</td><td>73%</td><td>+6 pts</td><td>API enhancements</td></tr>
+          <tr><td>Aug-Sep 2025</td><td>76%</td><td>+9 pts</td><td>OTI implemented</td></tr>
+          <tr class="highlight-row"><td>Current</td><td>76%</td><td>+9 pts</td><td>Sustained</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout">
+      <p><span class="big-number">$383K</span> per month in ongoing, permanent revenue recovery. Every 1% improvement in approval rate equals $1M+ in recovered revenue.</p>
+    </div>
+
+    <div class="code-block">
+US Transaction Volume: $100M annually
+Approval Rate Increase: 67% → 76% (+9 percentage points)
+Additional Approvals: $9M annually
+Margin (MLM typical): 51%
+Revenue Recovered: $4.6M annually
+    </div>
+
+    <div class="before-after">
+      <div class="ba-card ba-before">
+        <h4>Before (January 2025)</h4>
+        <ul>
+          <li>67% approval rate</li>
+          <li>$30M monthly declines unmanaged</li>
+          <li>No card updater</li>
+          <li>Incomplete API data</li>
+          <li>No OTI for subscriptions</li>
+          <li>Paying 2.5% processing fees</li>
+        </ul>
+      </div>
+      <div class="ba-card ba-after">
+        <h4>After (October 2025)</h4>
+        <ul>
+          <li>76% approval rate (+9 points)</li>
+          <li>Decline recovery actively managed</li>
+          <li>Card updater operational</li>
+          <li>Clean, complete API submissions</li>
+          <li>OTI implemented for all subscriptions</li>
+          <li>Paying 1.5% processing fees</li>
+          <li>Monthly monitoring and optimization</li>
+          <li>$4.6M annual revenue recovered</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- =============================== SMART ROUTING =============================== -->
+  <div class="tab-panel" id="smart-routing">
+    <div class="section-header">
+      <div class="tag"><span class="dot"></span> Initiative 2</div>
+      <h2>Smart Routing Optimization</h2>
+      <p>$2.05M annual cost savings by routing transactions to the optimal processor based on geography.</p>
+    </div>
+
+    <div class="initiative-meta">
+      <div class="meta-chip"><strong>Timeline:</strong> Ongoing through 2026</div>
+      <div class="meta-chip"><strong>Impact:</strong> $2.05M Annual</div>
+      <div class="meta-chip"><strong>Status:</strong> <span class="status-complete">Operational</span></div>
+    </div>
+
+    <div class="two-col">
+      <div class="card">
+        <h3><span class="icon icon-red">!</span> The Problem</h3>
+        <ul>
+          <li>Using primarily Nuvei for all markets</li>
+          <li>Nuvei rate: 1.5% IC++ (Interchange Plus Plus)</li>
+          <li>One-size-fits-all approach</li>
+          <li>Not optimized by geographic market</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3><span class="icon icon-green">&#x2713;</span> Smart Routing Logic</h3>
+        <ul>
+          <li>US, Canada, Europe, ANZ go to Worldpay (IC+0.15%)</li>
+          <li>APAC (Japan, Korea, Thailand, Singapore, HK) go to Nuvei (IC+1.5%)</li>
+          <li>Worldpay: 48% cheaper for US/Europe</li>
+          <li>Nuvei: 41% cheaper for APAC</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3><span class="icon icon-accent">$</span> Cost Analysis</h3>
+      <table>
+        <thead>
+          <tr><th>Strategy</th><th>Annual Cost</th><th>vs Current</th></tr>
+        </thead>
+        <tbody>
+          <tr class="highlight-row"><td>Hybrid Routing (implemented)</td><td>$12.9M</td><td>Baseline</td></tr>
+          <tr><td>100% Nuvei (before)</td><td>$14.9M</td><td>+$2.0M</td></tr>
+          <tr><td>100% Worldpay</td><td>$15.4M</td><td>+$2.5M</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout">
+      <p><span class="big-number">$170K</span> saved per month. Automatic failover means each processor serves as backup for the other.</p>
+    </div>
+  </div>
+
+  <!-- =============================== CHARGEBACK =============================== -->
+  <div class="tab-panel" id="chargeback">
+    <div class="section-header">
+      <div class="tag"><span class="dot"></span> Initiative 3</div>
+      <h2>Chargeback Alert Defense System</h2>
+      <p>$1.17M in prevented losses with a 62.1% prevention rate. Without this system, the merchant account would have been terminated.</p>
+    </div>
+
+    <div class="initiative-meta">
+      <div class="meta-chip"><strong>Timeline:</strong> Full Year 2025</div>
+      <div class="meta-chip"><strong>Impact:</strong> $1.17M Prevented</div>
+      <div class="meta-chip"><strong>Status:</strong> <span class="status-complete">Operational</span></div>
+    </div>
+
+    <div class="two-col">
+      <div class="card">
+        <h3><span class="icon icon-blue">V</span> RDR (Visa Cards)</h3>
+        <p>Rapid Dispute Resolution via Verifi. Auto-refund disputes under $200 within 72 hours before chargeback posts.</p>
+        <ul>
+          <li>789 alerts processed, 100% success rate</li>
+          <li>$711K saved</li>
+          <li>Average: $901 per alert prevented</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3><span class="icon icon-amber">E</span> Ethoca (MC/Discover)</h3>
+        <p>Real-time alerts for Mastercard and Discover disputes. Immediate refund processing before chargeback.</p>
+        <ul>
+          <li>754 alerts received, 96.3% success rate</li>
+          <li>$457K saved</li>
+          <li>Average: $630 per alert prevented</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="before-after">
+      <div class="ba-card ba-before">
+        <h4>Without Alerts</h4>
+        <ul>
+          <li>2,439 chargebacks</li>
+          <li>$1.37M in losses</li>
+          <li>1.27% chargeback rate</li>
+          <li>Merchant account terminated</li>
+        </ul>
+      </div>
+      <div class="ba-card ba-after">
+        <h4>With Alerts</h4>
+        <ul>
+          <li>924 chargebacks posted</li>
+          <li>$203K in losses</li>
+          <li>0.48% chargeback rate (under 0.50% threshold)</li>
+          <li>Merchant account safe</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="callout">
+      <p><span class="big-number">6.8x ROI</span> on alert system investment. Every $1 spent on alerts saves $6.80. Total 1,515 alerts processed in 2025.</p>
+    </div>
+  </div>
+
+  <!-- =============================== 3DS2 =============================== -->
+  <div class="tab-panel" id="3ds2">
+    <div class="section-header">
+      <div class="tag"><span class="dot"></span> Initiative 4</div>
+      <h2>Global 3DS2 Optimization</h2>
+      <p>$853K recovered by switching from 3DS2 Direct to Split Authentication, rescuing Japan and Europe approval rates.</p>
+    </div>
+
+    <div class="initiative-meta">
+      <div class="meta-chip"><strong>Timeline:</strong> Jan - Aug 2025</div>
+      <div class="meta-chip"><strong>Impact:</strong> $853K Annual</div>
+      <div class="meta-chip"><strong>Status:</strong> <span class="status-complete">Complete</span></div>
+    </div>
+
+    <div class="card">
+      <h3><span class="icon icon-red">!</span> Root Cause</h3>
+      <p>WorldPay 3DS2 Direct sent ALL transactions for authorization, including failed authentications. Banks declined heavily due to poor authentication results. Japan crashed from 89% to 55%. Europe stuck at 44%.</p>
+    </div>
+
+    <div class="card">
+      <h3><span class="icon icon-green">&#x2713;</span> Split Authentication Model</h3>
+      <p>Separate authentication from authorization. Evaluate the authentication result BEFORE sending to the bank. Only forward clean, trustworthy transactions.</p>
+      <div class="code-block" style="margin-top: 16px; margin-bottom: 0;">
+IF authentication fails:
+  IF (device fingerprint present
+      AND billing address present
+      AND browser info present
+      AND ECI = 05 or 02):
+    ALLOW authorization
+  ELSE:
+    BLOCK transaction
+      </div>
+    </div>
+
+    <div class="two-col">
+      <div class="card">
+        <h3><span class="icon icon-accent">JP</span> Japan Market</h3>
+        <table>
+          <thead><tr><th>Metric</th><th>Before</th><th>After</th></tr></thead>
+          <tbody>
+            <tr><td>Approval Rate</td><td>55%</td><td>92%</td></tr>
+            <tr class="highlight-row"><td>Improvement</td><td colspan="2">+37 points</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="card">
+        <h3><span class="icon icon-accent">EU</span> Europe Market</h3>
+        <table>
+          <thead><tr><th>Metric</th><th>Before</th><th>After</th></tr></thead>
+          <tbody>
+            <tr><td>Approval Rate</td><td>44%</td><td>90%</td></tr>
+            <tr class="highlight-row"><td>Improvement</td><td colspan="2">+46 points</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="callout">
+      <p>2,377 transactions recovered annually at $359 average value = <span class="big-number">$853K</span></p>
+    </div>
+  </div>
+
+  <!-- =============================== APPLE PAY =============================== -->
+  <div class="tab-panel" id="applepay">
+    <div class="section-header">
+      <div class="tag"><span class="dot"></span> Initiative 5</div>
+      <h2>Apple Pay Subscription Recovery</h2>
+      <p>$642K recovered by fixing WorldPay Vantiv configuration and address formatting for Apple Pay recurring orders.</p>
+    </div>
+
+    <div class="initiative-meta">
+      <div class="meta-chip"><strong>Timeline:</strong> Jan - May 2025</div>
+      <div class="meta-chip"><strong>Impact:</strong> $642K (6 months)</div>
+      <div class="meta-chip"><strong>Status:</strong> <span class="status-complete">Complete</span></div>
+    </div>
+
+    <div class="card">
+      <h3><span class="icon icon-red">!</span> The Problem</h3>
+      <p>Apple Pay subscriptions running at only 12-25% approval rate. $194K in failed transactions Jan-Apr 2025, only $36K collected. WorldPay Vantiv platform blocking recurring orders due to improper address formatting and missing subscription flags.</p>
+    </div>
+
+    <div class="card">
+      <h3><span class="icon icon-green">&#x2713;</span> Two-Part Fix</h3>
+      <ul>
+        <li>Part 1: Fixed WorldPay Vantiv recurring order flags and platform configuration</li>
+        <li>Part 2: Implemented proper US/Canada address formatting with required prefix/postfix</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3><span class="icon icon-accent">&#x2191;</span> Approval Rate Recovery</h3>
+      <table>
+        <thead><tr><th>Period</th><th>Approval Rate</th><th>Monthly Orders</th></tr></thead>
+        <tbody>
+          <tr><td>Jan-Apr 2025</td><td>12-25%</td><td>30-124 orders</td></tr>
+          <tr><td>May 2025</td><td>63%</td><td>326 orders</td></tr>
+          <tr class="highlight-row"><td>Jun-Oct 2025</td><td>75-88%</td><td>800-1,270 orders</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout">
+      <p><span class="big-number">$107K</span> per month sustained recovery. Annual run rate of $1.3M ongoing.</p>
+    </div>
+  </div>
+
+  <!-- =============================== NUVEI & ATDATA =============================== -->
+  <div class="tab-panel" id="nuvei-atdata">
+    <div class="section-header">
+      <div class="tag"><span class="dot"></span> Initiatives 6 & 7</div>
+      <h2>Rate Negotiation & Vendor Cleanup</h2>
+      <p>$452K combined savings from Nuvei rate reduction and AtData vendor termination.</p>
+    </div>
+
+    <div class="two-col">
+      <div class="card">
+        <h3><span class="icon icon-accent">$</span> Nuvei Rate Negotiation</h3>
+        <div class="initiative-meta" style="margin-bottom: 16px;">
+          <div class="meta-chip"><strong>Impact:</strong> $265K/year</div>
+          <div class="meta-chip"><strong>Status:</strong> <span class="status-complete">Complete</span></div>
+        </div>
+        <p>Built negotiation case using 12 months of transaction data, low chargeback rate (0.48%), and competitive alternatives.</p>
+        <div style="margin-top: 16px;">
+          <table>
+            <tbody>
+              <tr><td>Old Rate</td><td>2.5% + $0.25</td></tr>
+              <tr><td>New Rate</td><td>1.5% + $0.25</td></tr>
+              <tr class="highlight-row"><td>Reduction</td><td>40% (1% absolute)</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="card">
+        <h3><span class="icon icon-red">&#x2715;</span> AtData Vendor Termination</h3>
+        <div class="initiative-meta" style="margin-bottom: 16px;">
+          <div class="meta-chip"><strong>Impact:</strong> $187K/year</div>
+          <div class="meta-chip"><strong>Status:</strong> <span class="status-complete">Complete</span></div>
+        </div>
+        <p>Terminated AtData (The Strategy IO LLC) services that were fully redundant. Email Rules Engine ($12K/month) and Managed Fraud Services ($3.5K/month) replaced by internal tools.</p>
+        <div style="margin-top: 16px;">
+          <table>
+            <tbody>
+              <tr><td>Monthly Savings</td><td>$15,549</td></tr>
+              <tr class="highlight-row"><td>Annual Savings</td><td>$186,591</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =============================== DAILY OPS =============================== -->
+  <div class="tab-panel" id="ops">
+    <div class="section-header">
+      <div class="tag"><span class="dot"></span> Ongoing Operations</div>
+      <h2>Daily Payment Management</h2>
+      <p>Managing $250M+ in annual processing volume across 100,000 monthly transactions in 20+ countries.</p>
+    </div>
+
+    <div class="two-col">
+      <div class="card">
+        <h3><span class="icon icon-accent">&#x26A1;</span> Transaction Monitoring</h3>
+        <ul>
+          <li>Daily approval rate tracking (target: 85%+)</li>
+          <li>Immediate investigation if rate drops below 82%</li>
+          <li>Weekly reporting by market</li>
+          <li>Monthly optimization cycles</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3><span class="icon icon-amber">&#x26A0;</span> Chargeback Management</h3>
+        <ul>
+          <li>Daily chargeback review</li>
+          <li>1,515 alerts processed annually (RDR + Ethoca)</li>
+          <li>Response within 24 hours (requirement: 7 days)</li>
+          <li>Maintaining 0.48% rate (threshold: 0.50%)</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3><span class="icon icon-blue">&#x1F91D;</span> Processor Relationships</h3>
+        <ul>
+          <li>Monthly check-ins with account managers</li>
+          <li>Quarterly business reviews</li>
+          <li>Annual rate negotiations</li>
+          <li>Technical escalations as needed</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3><span class="icon icon-purple">&#x1F50D;</span> Payment Auditing</h3>
+        <ul>
+          <li>Reviewing Payment APIs for data completeness</li>
+          <li>Ensuring 100% of required data sent for best approval rates</li>
+          <li>Uncovering flaws in payments ordering model</li>
+          <li>Working with IT teams to resolve issues</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3><span class="icon icon-green">&#x1F4AC;</span> Communication</h3>
+      <ul>
+        <li>IT Teams: discussing programs needing improvement (subscription engine, retry program)</li>
+        <li>Leadership: helping understand areas for improvement</li>
+        <li>Outside Parties: leveraging payment tools for optimization, fraud prevention, and mobile payments</li>
+      </ul>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="section-header">
+      <div class="tag"><span class="dot"></span> The Bottleneck Question</div>
+      <h2>MID Application Context</h2>
+    </div>
+
+    <div class="card">
+      <h3><span class="icon icon-amber">&#x23F3;</span> What Controls the Timeline</h3>
+      <p>MID (Merchant ID) applications require specific Finance documentation: incorporation documents, banking letters (less than 30 days old), financial statements, and tax documentation. Processor underwriting takes 2-4 weeks once docs are complete. The bottleneck is Finance documentation preparation, not processor relationships.</p>
+      <p style="margin-top: 16px; color: var(--text-primary); font-weight: 500;">While MIDs were pending, I was recovering $4.6M in US market, optimizing approval rates globally, saving $2.05M in processing costs, and preventing $1.17M in chargebacks.</p>
+      <p style="color: var(--accent); font-weight: 500;">I focus on what I can control. And I deliver results.</p>
+    </div>
+  </div>
+
+  <!-- =============================== ROADMAP =============================== -->
+  <div class="tab-panel" id="roadmap">
+    <div class="section-header">
+      <div class="tag"><span class="dot"></span> Looking Forward</div>
+      <h2>2026 Roadmap</h2>
+      <p>Expected additional value: $1.1M+ in 2026.</p>
+    </div>
+
+    <div class="card" style="padding: 36px;">
+      <div class="roadmap-item">
+        <h4>Q1 2026</h4>
+        <ul>
+          <li>Implement Kount/Signifyd fraud detection ($80K investment, $43K+ return)</li>
+          <li>Complete Canada OTI rollout ($500K+ expected recovery)</li>
+          <li>Integrate OTI in Europe and Japan</li>
+          <li>Reduce fraud chargebacks by 40%</li>
+          <li>Finish dynamic payment routing</li>
+        </ul>
+      </div>
+      <div class="roadmap-item">
+        <h4>Q2 2026</h4>
+        <ul>
+          <li>Implement account updater in all markets ($20K investment, $500K recovery)</li>
+          <li>Add Apple Pay + Google Pay to more markets</li>
+          <li>Add BNPL methods across all markets</li>
+          <li>Add cryptocurrency to US market</li>
+          <li>Finish redundant payment processor model</li>
+        </ul>
+      </div>
+      <div class="roadmap-item">
+        <h4>Q3-Q4 2026</h4>
+        <ul>
+          <li>Expand smart routing to additional markets</li>
+          <li>Negotiate faster settlement (T+1 or same-day)</li>
+          <li>Target 75% alert prevention rate (vs 62% current)</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="card">
+      <h3><span class="icon icon-green">&#x2713;</span> Documentation Available</h3>
+      <ul>
+        <li>Transaction data showing approval rate improvements</li>
+        <li>Processor statements showing rate reductions</li>
+        <li>Alert system reports showing prevention metrics</li>
+        <li>Monthly performance reports to leadership</li>
+        <li>Quarterly business reviews with processors</li>
+        <li>PowerPoint presentations: revenue-recovery-combined.pptx, apple pay-optimization.pptx, payment-optimization.pptx, Subscription_Payment_Risk_Prevention_Presentation.pptx</li>
+        <li>Financial analysis documents and technical implementation docs</li>
+        <li>Before/after comparisons with data</li>
+      </ul>
+      <p style="margin-top: 16px; color: var(--accent); font-weight: 500;">All claims are documented, measurable, and verifiable.</p>
+    </div>
+  </div>
+
+</div>
+
+<!-- ===== FOOTER ===== -->
+<footer class="footer">
+  <strong>Howard Koziara</strong> / Payment Operations Manager<br>
+  November 22, 2025 / Internal Audit & Performance Review<br><br>
+  Available for questions or additional documentation.
+</footer>
+
+<script>
+  // Tab switching
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById(btn.dataset.tab).classList.add('active');
+      window.scrollTo({ top: document.querySelector('.tab-nav').offsetTop - 20, behavior: 'smooth' });
+    });
+  });
+</script>
+</body>
+</html>
