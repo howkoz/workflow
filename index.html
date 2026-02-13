@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Payment Operations | Document Hub</title>
+<title>Shopify Operations | Document Hub</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Outfit:wght@300;400;500;600;700;800&display=swap');
 
@@ -29,6 +29,8 @@
     margin-bottom: 6px;
   }
 
+  .page-header h1 .shopify-accent { color: #96bf48; }
+
   .page-header .subtitle {
     font-size: 14px;
     color: #555;
@@ -42,6 +44,26 @@
     margin-top: 10px;
     letter-spacing: 0.5px;
   }
+
+  .hub-nav {
+    display: flex;
+    gap: 8px;
+    margin-top: 14px;
+  }
+
+  .hub-nav a {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: #666;
+    text-decoration: none;
+    padding: 5px 12px;
+    border: 1px solid #1e2030;
+    border-radius: 6px;
+    transition: all 0.2s;
+  }
+
+  .hub-nav a:hover { border-color: #3a3d4a; color: #aaa; }
+  .hub-nav a.active { border-color: #96bf48; color: #96bf48; background: #96bf4810; }
 
   .category {
     margin-bottom: 36px;
@@ -135,6 +157,7 @@
   .tag-html { background: #1a1a0d; color: #f5a623; border: 1px solid #3a2a10; }
   .tag-pdf { background: #1a0d0d; color: #e85d5d; border: 1px solid #3a1010; }
   .tag-tool { background: #0d1a1a; color: #5bdbb8; border: 1px solid #103a2a; }
+  .tag-v3 { background: #0d1a14; color: #96bf48; border: 1px solid #2a3a10; }
 
   .doc-date {
     font-family: 'JetBrains Mono', monospace;
@@ -163,33 +186,29 @@
     50% { opacity: 0.4; }
   }
 
-  .cat-strategy .category-dot { background: #f5c542; }
-  .cat-strategy .category-name { color: #f5c542; }
-  .cat-strategy .doc-card-accent { background: #f5c542; }
+  .cat-pos .category-dot { background: #a78bfa; }
+  .cat-pos .category-name { color: #a78bfa; }
+  .cat-pos .doc-card-accent { background: #a78bfa; }
 
-  .cat-shopify .category-dot { background: #a78bfa; }
-  .cat-shopify .category-name { color: #a78bfa; }
-  .cat-shopify .doc-card-accent { background: #a78bfa; }
+  .cat-market .category-dot { background: #96bf48; }
+  .cat-market .category-name { color: #96bf48; }
+  .cat-market .doc-card-accent { background: #96bf48; }
 
-  .cat-worldpay .category-dot { background: #5b9bf5; }
-  .cat-worldpay .category-name { color: #5b9bf5; }
-  .cat-worldpay .doc-card-accent { background: #5b9bf5; }
+  .cat-architecture .category-dot { background: #5b9bf5; }
+  .cat-architecture .category-name { color: #5b9bf5; }
+  .cat-architecture .doc-card-accent { background: #5b9bf5; }
 
-  .cat-2c2p .category-dot { background: #f5a623; }
-  .cat-2c2p .category-name { color: #f5a623; }
-  .cat-2c2p .doc-card-accent { background: #f5a623; }
+  .cat-payments .category-dot { background: #f5a623; }
+  .cat-payments .category-name { color: #f5a623; }
+  .cat-payments .doc-card-accent { background: #f5a623; }
 
-  .cat-tools .category-dot { background: #5bdbb8; }
-  .cat-tools .category-name { color: #5bdbb8; }
-  .cat-tools .doc-card-accent { background: #5bdbb8; }
+  .cat-config .category-dot { background: #5bdbb8; }
+  .cat-config .category-name { color: #5bdbb8; }
+  .cat-config .doc-card-accent { background: #5bdbb8; }
 
   .cat-reference .category-dot { background: #e85d5d; }
   .cat-reference .category-name { color: #e85d5d; }
   .cat-reference .doc-card-accent { background: #e85d5d; }
-
-  .cat-nuvei .category-dot { background: #5bdb7a; }
-  .cat-nuvei .category-name { color: #5bdb7a; }
-  .cat-nuvei .doc-card-accent { background: #5bdb7a; }
 
   .empty-card {
     background: #0e1018;
@@ -267,6 +286,7 @@
     body { padding: 24px 20px; }
     .doc-grid { grid-template-columns: 1fr; }
     .page-header h1 { font-size: 28px; }
+    .hub-nav { flex-wrap: wrap; }
   }
 </style>
 </head>
@@ -275,27 +295,31 @@
 <div class="container">
 
   <div class="page-header">
-    <h1>Payment Operations</h1>
-    <div class="subtitle">Document hub for payment gateway evaluations, integration specs, and operational tools</div>
+    <h1><span class="shopify-accent">Shopify</span> Operations</h1>
+    <div class="subtitle">POS pilots, market tools, payment configuration, and platform architecture for Unicity Shopify</div>
     <div class="updated">howkoz.github.io/workflow</div>
+    <div class="hub-nav">
+      <a href="index.html" class="active">Shopify Hub</a>
+      <a href="payments-hub.html">Payment Ops Hub</a>
+    </div>
   </div>
 
   <div class="search-box">
     <div class="search-icon">&#x2315;</div>
-    <input type="text" id="searchInput" placeholder="Filter documents..." oninput="filterDocs()">
+    <input type="text" id="searchInput" placeholder="Filter Shopify documents..." oninput="filterDocs()">
   </div>
 
-  <!-- ============ URGENT PROJECTS ============ -->
+  <!-- ============ ACTIVE PILOTS ============ -->
   <div class="category cat-urgent" data-category>
     <div class="category-header">
       <div class="category-dot"></div>
-      <div class="category-name">Urgent Projects</div>
-      <div class="category-count">Active pilots and time-sensitive deliverables</div>
+      <div class="category-name">Active Pilots</div>
+      <div class="category-count">Live rollouts and time-sensitive deliverables</div>
     </div>
     <div class="doc-grid">
       <a href="shopify-pos-pilot-dashboard.html" class="doc-card" data-doc data-search="shopify pos pilot dashboard distributor usa tkt-5793 sprint tickets hardware subscriptions onboarding go-live monitoring urgent active">
         <div class="doc-card-accent"></div>
-        <div class="doc-card-title">Shopify POS Distributor Pilot — USA</div>
+        <div class="doc-card-title">Shopify POS Distributor Pilot &mdash; USA</div>
         <div class="doc-card-desc">TKT-5793 | 1 regional manager, 10 distributors, 17 active tickets. Dashboard covers data flow, permissions, sprint plan, hardware, subscriptions, onboarding, and go-live</div>
         <div class="doc-card-meta">
           <span class="doc-tag tag-html">HTML</span>
@@ -303,40 +327,41 @@
         </div>
       </a>
       <div class="empty-card" data-doc data-search="">
-        <span>More urgent projects as needed</span>
+        <span>More pilots as markets launch</span>
       </div>
     </div>
   </div>
 
-  <!-- ============ 2026 STRATEGY ============ -->
-  <div class="category cat-strategy" data-category>
+  <!-- ============ MARKET TOOLS ============ -->
+  <div class="category cat-market" data-category>
     <div class="category-header">
       <div class="category-dot"></div>
-      <div class="category-name">2026 Strategy</div>
-      <div class="category-count">Roadmaps, strategic planning, global rollout</div>
+      <div class="category-name">Market Tools</div>
+      <div class="category-count">Market analysis, decision tools, global rollout</div>
     </div>
     <div class="doc-grid">
-      <a href="2026_Payment_Operations_Strategic_Roadmap.html" class="doc-card" data-doc data-search="2026 strategy roadmap payment operations strategic initiatives global rollout subscription optimization worldpay nuvei checkout infrastructure quarterly plan raci">
+      <a href="Unicity_Shopify_Market_Decision_Tool_v3_6.html" class="doc-card" data-doc data-search="shopify market decision tool payment processing shop pay subscriptions worldpay mcp country currency rate fees gateway comparison global unicity analyze evaluate">
         <div class="doc-card-accent"></div>
-        <div class="doc-card-title">2026 Payment Operations Strategic Roadmap</div>
-        <div class="doc-card-desc">10 strategic initiatives across 40+ markets. $16M-$43M target value, global subscription optimization, data infrastructure, processor partner rollout plans</div>
+        <div class="doc-card-title">Unicity Shopify Market Decision Tool</div>
+        <div class="doc-card-desc">v3.6 | Evaluate payment processing options for any global market. Shop Pay availability, subscription support, Worldpay MCP comparison, fee analysis per country</div>
         <div class="doc-card-meta">
-          <span class="doc-tag tag-html">HTML</span>
-          <span class="doc-date">Feb 2026</span>
+          <span class="doc-tag tag-v3">v3.6</span>
+          <span class="doc-tag tag-tool">TOOL</span>
+          <span class="doc-date">Jan 2026</span>
         </div>
       </a>
       <div class="empty-card" data-doc data-search="">
-        <span>More strategy docs coming soon</span>
+        <span>More market tools coming soon</span>
       </div>
     </div>
   </div>
 
-  <!-- ============ SHOPIFY ============ -->
-  <div class="category cat-shopify" data-category>
+  <!-- ============ POS ============ -->
+  <div class="category cat-pos" data-category>
     <div class="category-header">
       <div class="category-dot"></div>
-      <div class="category-name">Shopify</div>
-      <div class="category-count">POS, payments, platform evaluation</div>
+      <div class="category-name">POS</div>
+      <div class="category-count">Point of sale setup, flows, distributor management</div>
     </div>
     <div class="doc-grid">
       <a href="shopify-pos-mermaid-flows-final.html" class="doc-card" data-doc data-search="shopify pos mermaid flows ownership permissions order lifecycle payment settlement integration architecture distributor">
@@ -360,58 +385,44 @@
     </div>
   </div>
 
-  <!-- ============ WORLDPAY ============ -->
-  <div class="category cat-worldpay" data-category>
+  <!-- ============ ARCHITECTURE ============ -->
+  <div class="category cat-architecture" data-category>
     <div class="category-header">
       <div class="category-dot"></div>
-      <div class="category-name">Worldpay</div>
-      <div class="category-count">MCP implementation, MENA expansion</div>
+      <div class="category-name">Architecture</div>
+      <div class="category-count">Platform design, integrations, API flows</div>
     </div>
     <div class="doc-grid">
       <div class="empty-card" data-doc data-search="">
-        <span>Worldpay docs coming soon</span>
+        <span>Architecture docs coming soon</span>
       </div>
     </div>
   </div>
 
-  <!-- ============ 2C2P ============ -->
-  <div class="category cat-2c2p" data-category>
+  <!-- ============ PAYMENTS & CHECKOUT ============ -->
+  <div class="category cat-payments" data-category>
     <div class="category-header">
       <div class="category-dot"></div>
-      <div class="category-name">2C2P</div>
-      <div class="category-count">Southeast Asia gateway</div>
+      <div class="category-name">Payments & Checkout</div>
+      <div class="category-count">Shopify Payments, gateways, subscriptions</div>
     </div>
     <div class="doc-grid">
       <div class="empty-card" data-doc data-search="">
-        <span>2C2P docs coming soon</span>
+        <span>Payment docs coming soon</span>
       </div>
     </div>
   </div>
 
-  <!-- ============ NUVEI ============ -->
-  <div class="category cat-nuvei" data-category>
+  <!-- ============ CONFIG & SETUP ============ -->
+  <div class="category cat-config" data-category>
     <div class="category-header">
       <div class="category-dot"></div>
-      <div class="category-name">Nuvei</div>
-      <div class="category-count">Secondary processor</div>
+      <div class="category-name">Config & Setup</div>
+      <div class="category-count">Store configuration, permissions, theme setup</div>
     </div>
     <div class="doc-grid">
       <div class="empty-card" data-doc data-search="">
-        <span>Nuvei docs coming soon</span>
-      </div>
-    </div>
-  </div>
-
-  <!-- ============ TOOLS ============ -->
-  <div class="category cat-tools" data-category>
-    <div class="category-header">
-      <div class="category-dot"></div>
-      <div class="category-name">Tools</div>
-      <div class="category-count">Interactive calculators and decision aids</div>
-    </div>
-    <div class="doc-grid">
-      <div class="empty-card" data-doc data-search="">
-        <span>Tools coming soon</span>
+        <span>Config docs coming soon</span>
       </div>
     </div>
   </div>
@@ -440,7 +451,7 @@
   </div>
 
   <div class="footer">
-    <div class="footer-left">Unicity Payment Operations | HowKoz</div>
+    <div class="footer-left">Unicity Shopify Operations | HowKoz</div>
     <div class="footer-right"><a href="https://github.com/howkoz/workflow" target="_blank">github.com/howkoz/workflow</a></div>
   </div>
 
