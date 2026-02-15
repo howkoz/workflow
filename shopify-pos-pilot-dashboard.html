@@ -596,17 +596,19 @@ const tabs = [
 // URL hash routing: #overview, #payments, #permissions, etc.
 function tabSlug(label) { return label.toLowerCase().replace(/[^a-z0-9]+/g, '-'); }
 function getTabFromHash() {
-  const hash = location.hash.replace('#','').toLowerCase();
-  if (!hash) return 0;
-  const idx = tabs.findIndex(t => tabSlug(t.label) === hash);
-  return idx >= 0 ? idx : 0;
+  try {
+    const hash = location.hash.replace('#','').toLowerCase();
+    if (!hash) return 0;
+    const idx = tabs.findIndex(t => tabSlug(t.label) === hash);
+    return idx >= 0 ? idx : 0;
+  } catch(e) { return 0; }
 }
 function setTab(i) {
   state.activeTab = i;
-  history.replaceState(null, '', '#' + tabSlug(tabs[i].label));
+  try { history.replaceState(null, '', '#' + tabSlug(tabs[i].label)); } catch(e) {}
   render();
 }
-window.addEventListener('hashchange', () => { state.activeTab = getTabFromHash(); render(); });
+try { window.addEventListener('hashchange', () => { state.activeTab = getTabFromHash(); render(); }); } catch(e) {}
 
 // ================================================
 // RENDER HELPERS
