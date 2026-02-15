@@ -767,25 +767,6 @@ function renderOverview() {
         h('div', null, h('div', { className: 'role-name' }, 'Distributor'), h('div', { className: 'role-detail' }, 'No admin access. POS checkout only.')),
         h('div', null, h('span', { className: 'badge badge-green' }, '10 people, $0'))
       )
-    ),
-
-    h('div', { className: 'section-title' }, 'Cost Comparison'),
-    h('div', { className: 'cost-compare' },
-      h('div', { className: 'cost-bar-container' },
-        h('div', { className: 'cost-bar-label' }, 'Current Setup (~7.5%)'),
-        h('div', { className: 'cost-bar-wrap' },
-          h('div', { className: 'cost-bar-fill', style: { width:'100%', background:'var(--red)' } }, '$11.25M at $150M vol')
-        )
-      ),
-      h('div', { className: 'cost-bar-container' },
-        h('div', { className: 'cost-bar-label' }, 'Shopify Pilot (~2.4%)'),
-        h('div', { className: 'cost-bar-wrap' },
-          h('div', { className: 'cost-bar-fill', style: { width:'34%', background:'var(--green)' } }, '$3.9M')
-        )
-      )
-    ),
-    h('div', { className: 'info-box success' },
-      h('strong', null, 'Savings potential: '), '$7.2-7.4M annually at $150M volume. Pilot incremental cost: $490 one-time for 10 card readers.'
     )
   );
 }
