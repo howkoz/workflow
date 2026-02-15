@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Shopify POS Pilot - Project Dashboard</title>
+<title>Shopify POS Pilot - Project Dashboard (Updated Feb 14, 2026)</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -429,7 +429,12 @@ tr:hover td { background: rgba(255,255,255,0.015); }
 // ================================================
 const state = {
   activeTab: 0,
-  checks: {},
+  checks: {
+    'tkt1': true, 'tkt2': true, 'tkt3': true, 'tkt8': true,
+    'tkt20': true, 'tkt21': true, 'tkt22': true,
+    'gl_platform_0': true, 'gl_platform_1': true, 'gl_platform_2': true,
+    'gl_roles_0': true, 'gl_roles_1': true
+  },
   collapsed: {}
 };
 
@@ -554,6 +559,10 @@ const tickets = [
   { n:7, name:'Configure Product Catalog for POS Location', pri:'Normal', dep:'Ticket 1', effort:'1-2 hours', phase:1, link:'86dztj2r3' },
   { n:8, name:'Verify Shopify Payments Configuration', pri:'High', dep:'Plus plan active', effort:'30 min', phase:1, link:'86dztj2un' },
   { n:18, name:'Set Up and Pair 10 Shopify Card Readers', pri:'High', dep:'Tickets 6, 8', effort:'2-3 hours', phase:1, link:'86dztj5bf' },
+  { n:20, name:'Install Headless Sales Channel + Storefront API', pri:'High', dep:'Plus plan active', effort:'30 min', phase:1, link:'86dztjaur', done:true },
+  { n:21, name:'Send Storefront API Credentials to Colby Cook', pri:'High', dep:'Ticket 20', effort:'10 min', phase:1, link:'86dztjaur', done:true },
+  { n:22, name:'Team Architecture Alignment', pri:'High', dep:'Ticket 20', effort:'30 min', phase:1, link:'86dztjaur', done:true },
+  { n:23, name:'Delete KnockBase Dev Dashboard App', pri:'Low', dep:'None', effort:'5 min', phase:1, link:'86dztjaur' },
   { n:9, name:'Configure POS Sales Attribution', pri:'High', dep:'Tickets 2, 6', effort:'30 min', phase:2, link:'86dztj2x3' },
   { n:12, name:'Configure Subscriptions / Autoship', pri:'High', dep:'Ticket 8', effort:'1 week', phase:2, link:'86dztj390' },
   { n:19, name:'CSV Export Process and Unity Database Import', pri:'High', dep:'Tickets 6, 9', effort:'1-2 days', phase:2, link:'86dztjaur' },
@@ -571,6 +580,7 @@ const tickets = [
 // ================================================
 const tabs = [
   { label: 'Overview', icon: '◉' },
+  { label: 'Payments', icon: '💳' },
   { label: 'Data Flow', icon: '↓' },
   { label: 'Permissions', icon: '🔒' },
   { label: 'Tickets', icon: '#' },
@@ -660,10 +670,10 @@ function renderOverview() {
         { label:'Manager', value:'1', sub:'Regional' },
         { label:'Distributors', value:'10', sub:'POS-only staff' },
         { label:'Card Readers', value:'10', sub:'$49 each' },
-        { label:'Gateway Rate', value:'2.15%', sub:'+ 30¢' },
+        { label:'POS Rate', value:'2.3%', sub:'+ 10¢ card present' },
         { label:'Incremental Cost', value:'$490', sub:'One-time only' },
         { label:'Timeline', value:'~1 wk', sub:'Was 6 weeks' },
-        { label:'Active Tickets', value:'17', sub:'2 descoped' },
+        { label:'Active Tickets', value:'21', sub:'2 descoped' },
       ].map(s => h('div', { className: 'stat' },
         h('div', { className: 'stat-label' }, s.label),
         h('div', { className: 'stat-value' }, s.value),
@@ -673,7 +683,9 @@ function renderOverview() {
 
     h('div', { className: 'info-box' },
       h('strong', null, 'Executive Summary: '),
-      'This pilot validates the Shopify POS distributor model with 1 regional manager, 10 distributors, and subscription (autoship) capability in the US market. Distributors use the Shopify POS app on iPhones with Bluetooth card readers. Every sale auto-attributes to the distributor via staff_id. No commission engine on Shopify. No middleware. Daily CSV export to Unity database.'
+      'This pilot validates the Shopify POS distributor model with 1 regional manager, 10 distributors, and subscription (autoship) capability in the US market. Distributors use the Shopify POS app on iPhones with Bluetooth card readers. Every sale auto-attributes to the distributor via staff_id. No commission engine on Shopify. No middleware. Daily CSV export to Unity database. ',
+      h('span', { style: { color:'var(--green)' } }, 'Completed: Location, POS Pro, Roles, Payments, Headless API, Team Alignment. '),
+      h('span', { style: { color:'var(--yellow)' } }, 'Blocked: Product catalog (waiting on team).')
     ),
 
     h('div', { className: 'section-title' }, 'Architecture Stack'),
@@ -690,7 +702,7 @@ function renderOverview() {
               ['Location','POS Pro territory','1 location (US-Pilot)'],
               ['Hardware','Shopify Tap & Chip readers','10 readers ($49 each)'],
               ['Backup','iPhone Tap to Pay (NFC)','Distributor phone, $0'],
-              ['Payment','Shopify Payments (Stripe)','2.15% + 30¢'],
+              ['Payment','Shopify Payments (Stripe)','POS: 2.3%+10¢ / Online: 2.25%+30¢'],
               ['Subscriptions','Selling Plan APIs + token vault','Auto-charge vaulted cards'],
               ['Attribution','POS Pro sales by staff','Staff name on each order'],
               ['Data Export','CSV from Shopify Admin','Daily manual export'],
@@ -759,6 +771,129 @@ function renderOverview() {
     ),
     h('div', { className: 'info-box success' },
       h('strong', null, 'Savings potential: '), '$7.2-7.4M annually at $150M volume. Pilot incremental cost: $490 one-time for 10 card readers.'
+    )
+  );
+}
+
+function renderPayments() {
+  return h('div', null,
+    h('div', { className: 'info-box success' },
+      h('strong', null, 'Ticket 8 COMPLETE '), '— Shopify Payments verified on both Online and In-person tabs. Shop Pay Installments disabled for POS (BNPL not appropriate for Unicity products). All card types and NFC wallets enabled.'
+    ),
+
+    h('div', { className: 'stats' },
+      ...[
+        { label:'POS Card Present', value:'2.3%', sub:'+ $0.10' },
+        { label:'POS Manual Entry', value:'3.4%', sub:'+ $0.10' },
+        { label:'Online Domestic', value:'2.25%', sub:'+ $0.30 (standard)' },
+        { label:'Online International', value:'3.25%', sub:'+ $0.30' },
+        { label:'PayPal Domestic', value:'3.49%', sub:'+ $0.49' },
+        { label:'ACH Direct Debit', value:'1.0%', sub:'Cap $7.50' },
+      ].map(s => h('div', { className: 'stat' },
+        h('div', { className: 'stat-label' }, s.label),
+        h('div', { className: 'stat-value' }, s.value),
+        h('div', { className: 'stat-sub' }, s.sub)
+      ))
+    ),
+
+    h('div', { className: 'section-title' }, 'In-Person Payment Rates (POS Card Readers)'),
+    h('div', { className: 'card' },
+      h('div', { className: 'card-body', style: { paddingTop:'16px' } },
+        h('table', null,
+          h('thead', null, h('tr', null, h('th', null, 'Method'), h('th', null, 'Rate'), h('th', null, 'Status'))),
+          h('tbody', null, ...([
+            ['Card present (tap/chip/swipe)','2.3% + $0.10','Enabled'],
+            ['Manual card entry','3.4% + $0.10','Enabled'],
+            ['American Express','2.3% + $0.10','Enabled'],
+            ['Apple Pay (NFC)','2.3% + $0.10','Enabled'],
+            ['Google Pay (NFC)','2.3% + $0.10','Enabled'],
+            ['Shop Pay','2.3% + $0.10','Enabled'],
+            ['Shop Pay Installments','5.0% + $0.30','DISABLED'],
+          ].map(r => h('tr', null,
+            h('td', { style: { fontWeight:'500' } }, r[0]),
+            h('td', { className: 'mono', style: { fontSize:'13px' } }, r[1]),
+            h('td', null, h('span', { className: 'badge ' + (r[2]==='Enabled'?'badge-green':'badge-high') }, r[2]))
+          ))))
+        )
+      )
+    ),
+
+    h('div', { className: 'section-title' }, 'Online Payment Rates (Headless API + Online Store)'),
+    h('div', { className: 'card' },
+      h('div', { className: 'card-body', style: { paddingTop:'16px' } },
+        h('table', null,
+          h('thead', null, h('tr', null, h('th', null, 'Method'), h('th', null, 'Domestic'), h('th', null, 'International'), h('th', null, 'Status'))),
+          h('tbody', null, ...([
+            ['Cards and wallets (Standard)','2.25% + $0.30','3.25% + $0.30','Enabled'],
+            ['Cards and wallets (Premium)','2.95% + $0.30','3.95% + $0.30','Enabled'],
+            ['American Express','2.95% + $0.30','3.95% + $0.30','Enabled'],
+            ['PayPal Wallet','3.49% + $0.49','4.99% + $0.49','Enabled'],
+            ['Shop Pay','2.25% + $0.30','3.25% + $0.30','Enabled'],
+            ['Shop Pay Installments','5.0% + $0.30','—','DISABLED'],
+            ['USDC (Crypto)','2.25% + $0.30','—','Disabled'],
+            ['ACH Direct Debit (B2B)','1.0% + $0.00 (cap $7.50)','—','Enabled'],
+          ].map(r => h('tr', null,
+            h('td', { style: { fontWeight:'500' } }, r[0]),
+            h('td', { className: 'mono', style: { fontSize:'12px' } }, r[1]),
+            h('td', { className: 'mono', style: { fontSize:'12px' } }, r[2]),
+            h('td', null, h('span', { className: 'badge ' + (r[3]==='Enabled'?'badge-green':'badge-high') }, r[3]))
+          ))))
+        )
+      )
+    ),
+
+    h('div', { className: 'section-title' }, 'Payment Methods Enabled by Channel'),
+    h('div', { className: 'card' },
+      h('div', { className: 'card-body', style: { paddingTop:'16px' } },
+        h('table', null,
+          h('thead', null, h('tr', null, h('th', null, 'Payment Method'), h('th', null, 'POS (In-Person)'), h('th', null, 'Online Store'), h('th', null, 'Headless API'))),
+          h('tbody', null, ...([
+            ['Visa','Yes','Yes','Yes'],
+            ['Mastercard','Yes','Yes','Yes'],
+            ['American Express','Yes','Yes','Yes'],
+            ['Diners Club','Yes','Yes','Yes'],
+            ['Discover','Yes','Yes','Yes'],
+            ['Apple Pay','Yes (NFC)','Yes','Yes'],
+            ['Google Pay','Yes (NFC)','Yes','Yes'],
+            ['Shop Pay','Yes','Yes','Yes'],
+            ['PayPal Wallet','No','Yes','Yes'],
+            ['Amazon Pay','No','No','No'],
+            ['ACH Direct Debit','No','Yes (B2B)','Yes (B2B)'],
+            ['USDC Crypto','No','No','No'],
+          ].map(r => h('tr', null,
+            h('td', { style: { fontWeight:'500' } }, r[0]),
+            ...r.slice(1).map(c => {
+              const isYes = c.startsWith('Yes');
+              return h('td', { style: { color: isYes?'var(--green)':'var(--red)', fontWeight:'500' } }, (isYes?'✓ ':'✕ ') + c);
+            })
+          ))))
+        )
+      )
+    ),
+
+    h('div', { className: 'section-title' }, 'Decisions and Notes'),
+    h('div', { className: 'card' },
+      h('div', { className: 'card-body', style: { paddingTop:'16px' } },
+        h('table', null,
+          h('thead', null, h('tr', null, h('th', null, 'Item'), h('th', null, 'Decision'), h('th', null, 'Reason'))),
+          h('tbody', null, ...([
+            ['Shop Pay Installments (POS)','Disabled','BNPL not appropriate for Unicity health products at POS without leadership approval'],
+            ['Shop Pay Installments (Online)','Disabled','Same rationale as POS. Re-enable if leadership requests.'],
+            ['Amazon Pay','Disabled (both)','Not supported on physical POS card readers. Not needed for pilot online.'],
+            ['USDC Crypto','Disabled','Not needed for pilot. Can enable later if requested.'],
+            ['ACH Direct Debit','Enabled (online B2B)','Useful for large B2B distributor orders. Lower rate (1% cap $7.50).'],
+            ['PayPal Wallet','Enabled (online only)','Available for Headless checkout. Not available at POS hardware.'],
+          ].map(r => h('tr', null,
+            h('td', { style: { fontWeight:'500' } }, r[0]),
+            h('td', null, h('span', { className: 'badge ' + (r[1].startsWith('Disabled')?'badge-high':'badge-green') }, r[1])),
+            h('td', { style: { fontSize:'12px', color:'var(--text-muted)' } }, r[2])
+          ))))
+        )
+      )
+    ),
+
+    h('div', { className: 'info-box' },
+      h('strong', null, 'Rate note: '), 'Shopify Plus rates are fixed by Shopify/Stripe. No interchange-plus pricing available. These rates apply to all transactions at the plan level. Premium card rates (2.95%) apply to cards like corporate and rewards cards with higher interchange.'
     )
   );
 }
@@ -984,7 +1119,7 @@ function renderTickets() {
 
   return h('div', null,
     h('div', { className: 'info-box' },
-      h('strong', null, 'Epic: '), 'Shopify POS Distributor Pilot — USA  |  17 active tickets, 2 descoped  |  ',
+      h('strong', null, 'Epic: '), 'Shopify POS Distributor Pilot — USA  |  21 active tickets, 2 descoped  |  ',
       h('a', { href:'https://app.clickup.com/t/86dztj228', target:'_blank', style: { color:'var(--accent)' } }, 'Open in ClickUp')
     ),
 
@@ -1530,7 +1665,7 @@ function renderMonitoring() {
           h('tbody', null,
             h('tr', null, h('td', null, 'TKT-5784'), h('td', null, 'Shopify - USA - POS'), h('td', null, 'Parent initiative')),
             h('tr', null, h('td', null, 'TKT-5656'), h('td', null, 'Shopify Payments + Shop Pay Implementation'), h('td', null, 'Payment platform')),
-            h('tr', null, h('td', null, 'TKT-5793'), h('td', null, 'Shopify POS Distributor Pilot (this epic)'), h('td', null, '17 active + 2 descoped'))
+            h('tr', null, h('td', null, 'TKT-5793'), h('td', null, 'Shopify POS Distributor Pilot (this epic)'), h('td', null, '21 active + 2 descoped'))
           )
         )
       )
@@ -1539,7 +1674,7 @@ function renderMonitoring() {
 }
 
 const panelRenderers = [
-  renderOverview, renderDataFlow, renderPermissions, renderTickets, renderSprint,
+  renderOverview, renderPayments, renderDataFlow, renderPermissions, renderTickets, renderSprint,
   renderHardware, renderSubscriptions, renderOnboarding, renderTesting, renderGoLive, renderMonitoring
 ];
 
