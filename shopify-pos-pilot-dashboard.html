@@ -907,6 +907,139 @@ function renderPayments() {
 
     h('div', { className: 'info-box' },
       h('strong', null, 'Rate note: '), 'Shopify Plus rates are fixed by Shopify/Stripe. No interchange-plus pricing available. These rates apply to all transactions at the plan level. Premium card rates (2.95%) apply to cards like corporate and rewards cards with higher interchange.'
+    ),
+
+    // ── Shopify Plus Plan Fees ──
+    h('div', { className: 'section-title' }, 'Shopify Plus Plan Fees (from Settings > Plan)'),
+    h('div', { className: 'card' },
+      h('div', { className: 'card-body', style: { paddingTop:'16px' } },
+        h('table', null,
+          h('thead', null, h('tr', null, h('th', null, 'Fee Type'), h('th', null, 'Amount'), h('th', null, 'Notes'))),
+          h('tbody', null, ...([
+            ['Fixed Platform Fee','$2,500 USD/month','1-year term, renews Jan 30, 2027'],
+            ['Variable: Online transactions','0.40%','Applies above $625K/month threshold'],
+            ['Variable: Retail (POS) transactions','0.25%','Applies above $625K/month threshold'],
+            ['Variable: B2B transactions','0.18%','Applies above $625K/month threshold'],
+          ].map(r => h('tr', null,
+            h('td', { style: { fontWeight:'500' } }, r[0]),
+            h('td', { className: 'mono', style: { fontWeight:'600' } }, r[1]),
+            h('td', { style: { fontSize:'12px', color:'var(--text-muted)' } }, r[2])
+          ))))
+        )
+      )
+    ),
+    h('div', { className: 'info-box warn', style: { marginTop:'16px' } },
+      h('strong', null, 'Variable platform fees: '), 'At the end of each billing cycle you pay whichever is greater: the $2,500 fixed fee OR the variable percentage of sales. Variable fees only kick in if monthly sales exceed roughly $625,000 (depending on revenue source split). For the pilot this will not apply.'
+    ),
+
+    // ── Fee Layers Explained ──
+    h('div', { className: 'section-title' }, 'Understanding the Fee Layers (They Stack)'),
+    h('div', { className: 'card' },
+      h('div', { className: 'card-body', style: { paddingTop:'16px' } },
+        h('table', null,
+          h('thead', null, h('tr', null, h('th', null, 'Layer'), h('th', null, 'What It Is'), h('th', null, 'Paid To'), h('th', null, 'When It Applies'))),
+          h('tbody', null, ...([
+            ['1. Platform Fee','$2,500/mo or variable %','Shopify','Always (monthly subscription)'],
+            ['2. Payment Processing','2.3% + $0.10 (POS) or 2.25% + $0.30 (online)','Shopify Payments (Stripe)','Every transaction through Shopify Payments'],
+            ['3. Third-Party Surcharge','+ 0.20% per transaction','Shopify','ONLY if NOT using Shopify Payments as primary gateway'],
+            ['4. International Surcharge','+ 1.0% on top of domestic rate','Shopify Payments','ONLY on cards issued outside US'],
+            ['5. Currency Conversion','1.5% of converted amount','Shopify Payments','ONLY when payout currency differs from payment currency'],
+          ].map(r => h('tr', null,
+            h('td', { style: { fontWeight:'600' } }, r[0]),
+            h('td', { className: 'mono', style: { fontSize:'12px' } }, r[1]),
+            h('td', null, r[2]),
+            h('td', { style: { fontSize:'12px', color:'var(--text-muted)' } }, r[3])
+          ))))
+        )
+      )
+    ),
+
+    // ── Scenario Comparison ──
+    h('div', { className: 'section-title' }, 'Scenario Comparison: What Changes by Setup'),
+    h('div', { className: 'card' },
+      h('div', { className: 'card-body', style: { paddingTop:'16px' } },
+        h('table', null,
+          h('thead', null, h('tr', null,
+            h('th', null, 'Fee Component'),
+            h('th', null, 'A: Standard Storefront + Shopify Payments'),
+            h('th', null, 'B: Headless API + Shopify Payments (CURRENT)'),
+            h('th', null, 'C: Any Storefront + Third-Party Gateway')
+          )),
+          h('tbody', null, ...([
+            ['Platform fee', '$2,500/mo', '$2,500/mo', '$2,500/mo'],
+            ['POS card present', '2.3% + $0.10', '2.3% + $0.10', 'Processor rate (varies)'],
+            ['Online domestic', '2.25% + $0.30', '2.25% + $0.30', 'Processor rate (varies)'],
+            ['Online premium cards', '2.95% + $0.30', '2.95% + $0.30', 'Processor rate (varies)'],
+            ['Shopify surcharge', '0%', '0%', '+ 0.20% per transaction'],
+            ['Variable platform (>$625K)', '0.25% POS / 0.40% online', '0.25% POS / 0.40% online', '0.25% POS / 0.40% online'],
+            ['Third-party fees waived?', 'Yes (Plus + Shopify Payments)', 'Yes (Plus + Shopify Payments)', 'No, 0.20% on every sale'],
+            ['PayPal surcharge', 'None (Plus waives)', 'None (Plus waives)', 'None (Plus waives)'],
+          ].map(r => h('tr', null,
+            h('td', { style: { fontWeight:'500' } }, r[0]),
+            h('td', { className: 'mono', style: { fontSize:'12px' } }, r[1]),
+            h('td', { className: 'mono', style: { fontSize:'12px', background:'rgba(0,200,100,0.06)' } }, r[2]),
+            h('td', { className: 'mono', style: { fontSize:'12px' } }, r[3])
+          ))))
+        )
+      )
+    ),
+    h('div', { className: 'info-box success', style: { marginTop:'16px' } },
+      h('strong', null, 'Key takeaway: '), 'Standard storefront and Headless API have identical payment rates. The storefront type (standard vs headless) does NOT change your Shopify Payments processing fees. Headless costs no extra for payments. Switching to a third-party gateway adds 0.20% to every transaction on top of whatever that processor charges.'
+    ),
+
+    // ── Real Cost Examples ──
+    h('div', { className: 'section-title' }, 'Real Cost Example: $100 POS Sale'),
+    h('div', { className: 'card' },
+      h('div', { className: 'card-body', style: { paddingTop:'16px' } },
+        h('table', null,
+          h('thead', null, h('tr', null,
+            h('th', null, 'Cost Component'),
+            h('th', null, 'Shopify Payments (Current)'),
+            h('th', null, 'Third-Party (e.g. Stripe Direct)')
+          )),
+          h('tbody', null, ...([
+            ['Processing fee', '$2.30 + $0.10 = $2.40', '~$2.90 + $0.30 = $3.20'],
+            ['Shopify surcharge (0.20%)', '$0.00', '$0.20'],
+            ['Total per-transaction cost', '$2.40 (2.40%)', '$3.40 (3.40%)'],
+            ['Savings with Shopify Payments', '—', '$1.00 more per $100 sale'],
+          ].map(r => h('tr', null,
+            h('td', { style: { fontWeight:'500' } }, r[0]),
+            h('td', { className: 'mono', style: { fontSize:'12px', color:'var(--green)' } }, r[1]),
+            h('td', { className: 'mono', style: { fontSize:'12px', color:'var(--red)' } }, r[2])
+          ))))
+        )
+      )
+    ),
+
+    h('div', { className: 'section-title' }, 'Real Cost Example: $100 Online Sale'),
+    h('div', { className: 'card' },
+      h('div', { className: 'card-body', style: { paddingTop:'16px' } },
+        h('table', null,
+          h('thead', null, h('tr', null,
+            h('th', null, 'Cost Component'),
+            h('th', null, 'Shopify Payments (Current)'),
+            h('th', null, 'Third-Party (e.g. Authorize.net)')
+          )),
+          h('tbody', null, ...([
+            ['Processing fee', '$2.25 + $0.30 = $2.55', '~$2.90 + $0.30 = $3.20'],
+            ['Shopify surcharge (0.20%)', '$0.00', '$0.20'],
+            ['Total per-transaction cost', '$2.55 (2.55%)', '$3.40 (3.40%)'],
+            ['Savings with Shopify Payments', '—', '$0.85 more per $100 sale'],
+          ].map(r => h('tr', null,
+            h('td', { style: { fontWeight:'500' } }, r[0]),
+            h('td', { className: 'mono', style: { fontSize:'12px', color:'var(--green)' } }, r[1]),
+            h('td', { className: 'mono', style: { fontSize:'12px', color:'var(--red)' } }, r[2])
+          ))))
+        )
+      )
+    ),
+
+    h('div', { className: 'info-box', style: { marginTop:'16px' } },
+      h('strong', null, 'Volume impact: '), 'At $50K/month in POS sales, the difference between Shopify Payments ($1,200) and a third-party gateway (~$1,700) is roughly $500/month or $6,000/year. At $500K/month the gap grows to ~$5,000/month.'
+    ),
+
+    h('div', { className: 'info-box warn', style: { marginTop:'16px' } },
+      h('strong', null, '3-year term option: '), 'Shopify suggests renewing on a 3-year term to save on the monthly platform fee. Current: $2,500/mo (1-year). Contact Shopify support for 3-year pricing. Renewal date: January 30, 2027.'
     )
   );
 }
