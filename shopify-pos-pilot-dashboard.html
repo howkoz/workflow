@@ -1024,6 +1024,120 @@ function renderDataFlow() {
 }
 
 function renderPermissions() {
+  // ── Helper: permission table with color-coded cells ──
+  function permTable(title, headers, data) {
+    return h('div', null,
+      h('div', { className: 'section-title' }, title),
+      h('div', { className: 'card' },
+        h('div', { className: 'card-body', style: { paddingTop:'16px' } },
+          h('table', null,
+            h('thead', null, h('tr', null,
+              ...headers.map(hdr => h('th', null, hdr))
+            )),
+            h('tbody', null, ...data.map(r => h('tr', null,
+              h('td', { style: { fontWeight:'500' } }, r[0]),
+              ...r.slice(1).map(c => {
+                const s = String(c);
+                const isYes = s === 'Allowed' || s.startsWith('Yes') || s === '✓';
+                const isNo = s === 'Denied' || s === 'No' || s.startsWith('NO') || s === '✕';
+                const isOn = s === 'ON';
+                const isOff = s === 'OFF';
+                return h('td', { style: { color: (isYes||isOn)?'var(--green)':(isNo||isOff)?'var(--red)':'var(--text)', fontWeight:'500' } },
+                  (isYes ? '✓ ' : isNo ? '✕ ' : isOn ? '● ' : isOff ? '○ ' : '') + s
+                );
+              })
+            )))
+          )
+        )
+      )
+    );
+  }
+
+  // ── 1. API Credentials ──
+  const apiCreds = [
+    ['App Name', 'KnockBase'],
+    ['Created Via', 'Shopify Dev Dashboard (new flow, not legacy custom app)'],
+    ['Store Domain', 'unicity-international-2.myshopify.com'],
+    ['Client ID (public token)', 'd2c0ef567f998839295caad508319d35'],
+    ['Storefront Access Token', 'Not applicable (Plus Dev Dashboard uses Client ID as public token)'],
+    ['Storefront API Endpoint', 'https://unicity-international-2.myshopify.com/api/2024-10/graphql.json'],
+    ['Sent To', 'Colby Cook (Ticket #21, completed Feb 14)'],
+  ];
+
+  // ── 2. Storefront API Permissions (from Shopify settings screenshot) ──
+  const sfPerms = [
+    ['Products', 'unauthenticated_read_product_listings', 'Read products, variants, collections', 'ON'],
+    ['Products', 'unauthenticated_read_product_tags', 'Read product tags', 'ON'],
+    ['Products', 'unauthenticated_read_product_inventory', 'Read inventory of products/variants', 'OFF'],
+    ['Products', 'unauthenticated_read_product_pickup_locations', 'Read in-store pickup availability', 'OFF'],
+    ['Customers', 'unauthenticated_read_customers', 'Read customer details', 'OFF'],
+    ['Customers', 'unauthenticated_write_customers', 'Modify customer details', 'OFF'],
+    ['Customers', 'unauthenticated_read_customer_tags', 'Read customer tags', 'OFF'],
+    ['Content', 'unauthenticated_read_content', 'Read articles, blogs, comments', 'OFF'],
+    ['Checkout', 'unauthenticated_read_checkouts', 'Read checkouts', 'ON'],
+    ['Checkout', 'unauthenticated_write_checkouts', 'Modify checkouts', 'ON'],
+    ['Selling plans', 'unauthenticated_read_selling_plans', 'Read selling plans', 'ON'],
+    ['Bulk operations', 'unauthenticated_read_bulk_operations', 'Read bulk operations', 'OFF'],
+    ['Bulk operations', 'unauthenticated_write_bulk_operations', 'Write bulk operations', 'OFF'],
+    ['Product bundles', 'unauthenticated_read_bundles', 'Read product bundles', 'OFF'],
+    ['Shop Pay', 'unauthenticated_read_shop_pay_installments_pricing', 'Read installments pricing', 'OFF'],
+    ['Metaobjects', 'unauthenticated_read_metaobjects', 'Read metaobjects', 'OFF'],
+  ];
+
+  // ── 3. POS Roles Summary ──
+  const posRoles = [
+    ['Associate', 'Default', '13 of 42', '0 staff'],
+    ['Full permissions', '', '42 of 42', '3 staff'],
+    ['Limited permissions', '', '13 of 42', '0 staff'],
+    ['Manager', 'Regional Mgr', '25 of 42', '0 staff'],
+    ['Sales', 'Distributor', '5 of 42', '0 staff'],
+  ];
+
+  // ── 4. Detailed POS Role Permissions: Manager vs Sales (Distributor) ──
+  // From actual Shopify screenshots Feb 14, 2026
+  const posDetailPerms = [
+    // [Category, Permission, Manager, Sales(Distributor)]
+    ['Checkout', 'Manager approval', 'Denied', 'Denied'],
+    ['Checkout', 'Add custom sales', 'Allowed', 'Allowed'],
+    ['Checkout', 'Ship to customer', 'Allowed', 'Denied'],
+    ['Checkout', 'Edit taxes', 'Allowed', 'Denied'],
+    ['Checkout', 'Accept offline credit/debit', 'Disabled', 'Disabled'],
+    ['Discounts', 'Apply custom discounts', 'Allowed', 'Denied'],
+    ['Discounts', 'Apply discount codes', 'Allowed', 'Allowed'],
+    ['Orders', 'Manage orders at all locations', 'Allowed', 'Denied'],
+    ['Orders', 'Manage sales attribution', 'Allowed', 'Allowed'],
+    ['Orders', 'Return and exchange orders', 'Allowed', 'Denied'],
+    ['Orders', 'Return ineligible items', 'Allowed', 'Denied'],
+    ['Orders', 'Create unverified returns', 'Allowed', 'Denied'],
+    ['Orders', 'Cancel orders', 'Allowed', 'Allowed'],
+    ['Orders', 'Manage draft orders (all loc)', 'Denied', 'Denied'],
+    ['Orders', 'Fulfill shipping orders', 'Denied', 'Denied'],
+    ['Orders', 'Reassign/cancel fulfillment', 'Denied', 'Denied'],
+    ['Customers', 'Edit customer details', 'Allowed', 'Denied'],
+    ['Customers', 'View metafields', 'Allowed', 'Denied'],
+    ['Customers', 'Edit metafields', 'Allowed', 'Denied'],
+    ['Customers', 'Create new customers', 'Allowed', 'Denied'],
+    ['Customers', 'Delete customers', 'Allowed', 'Denied'],
+    ['Customers', 'Manage store credit', 'Allowed', 'Denied'],
+    ['Customers', 'Redeem store credit', 'Allowed', 'Denied'],
+    ['Inventory', 'Manage transfers', 'Denied', 'Denied'],
+    ['Apps', 'Use apps with Shopify POS', 'Denied', 'Denied'],
+    ['Apps', 'Manage POS UI extensions', 'Denied', 'Denied'],
+    ['Analytics', 'View analytics (device loc)', 'Allowed', 'Denied'],
+    ['Register', 'Manage payment tracking', 'Denied', 'Denied'],
+    ['Register', 'Open drawer', 'Denied', 'Denied'],
+    ['Staff', 'Manage POS staff', 'Allowed', 'Denied'],
+    ['Staff', 'Manage POS roles', 'Allowed', 'Denied'],
+    ['Settings', 'Customize smart grid', 'Allowed', 'Denied'],
+    ['Settings', 'Manage payment settings', 'Denied', 'Denied'],
+    ['Settings', 'Manage offline payments', 'Denied', 'Denied'],
+    ['Settings', 'Manage receipt settings', 'Denied', 'Denied'],
+    ['Settings', 'Manage required checkout info', 'Denied', 'Denied'],
+    ['Settings', 'Switch device location', 'Denied', 'Denied'],
+    ['Settings', 'Log out from POS app', 'Allowed', 'Allowed'],
+  ];
+
+  // ── 5. Store-Level Permissions (Web Admin) ──
   const storePerms = [
     ['Access Shopify Admin','No','Yes (limited)','Yes (full)'],
     ['Products: View','No','Yes','Yes'],
@@ -1038,58 +1152,118 @@ function renderPermissions() {
     ['Settings / Payment config','No','No','Yes'],
     ['Users / Permissions','No','No','Yes'],
   ];
-  const posPerms = [
-    ['Process sales / checkout','Yes','Yes','Yes'],
-    ['Accept card payments','Yes','Yes','Yes'],
-    ['Capture customer email/phone','Yes','Yes','Yes'],
-    ['Apply discounts (with approval)','Yes','Yes','Yes'],
-    ['Apply discounts (without approval)','No','Yes','Yes'],
-    ['Process returns / exchanges','No','Yes','Yes'],
-    ['Cash tracking','No','Yes','Yes'],
-    ['Manage POS staff','No','Yes (own loc)','Yes'],
-    ['View POS sales reports','No','Yes','Yes'],
-    ['Manage orders at all locations','No','No','Yes'],
-  ];
-  function permTable(title, data) {
-    return h('div', null,
-      h('div', { className: 'section-title' }, title),
-      h('div', { className: 'card' },
-        h('div', { className: 'card-body', style: { paddingTop:'16px' } },
-          h('table', null,
-            h('thead', null, h('tr', null,
-              h('th', null, 'Permission'),
-              h('th', null, 'Distributor'),
-              h('th', null, 'Regional Manager'),
-              h('th', null, 'HQ Admin')
-            )),
-            h('tbody', null, ...data.map(r => h('tr', null,
-              h('td', { style: { fontWeight:'500' } }, r[0]),
-              ...r.slice(1).map(c => {
-                const isYes = c.startsWith('Yes');
-                const isNo = c === 'No' || c.startsWith('NO');
-                return h('td', { style: { color: isYes?'var(--green)':isNo?'var(--red)':'var(--text)', fontWeight:'500' } },
-                  (isYes ? '✓ ' : isNo ? '✕ ' : '') + c
-                );
-              })
-            )))
-          )
+
+  // ── Build the page ──
+  return h('div', null,
+
+    // API Credentials Card
+    h('div', { className: 'section-title' }, 'Headless API Credentials (KnockBase App)'),
+    h('div', { className: 'card' },
+      h('div', { className: 'card-body', style: { paddingTop:'16px' } },
+        h('table', null,
+          h('tbody', null, ...apiCreds.map(r => h('tr', null,
+            h('td', { style: { fontWeight:'600', width:'260px', whiteSpace:'nowrap' } }, r[0]),
+            h('td', { style: { fontFamily: r[0].includes('Client ID') || r[0].includes('Endpoint') || r[0].includes('Domain') ? 'monospace' : 'inherit', fontSize: r[0].includes('Client ID') || r[0].includes('Endpoint') ? '12px' : '13px', wordBreak:'break-all' } }, r[1])
+          )))
         )
       )
-    );
-  }
-  return h('div', null,
-    permTable('Store-Level Permissions (Web Admin)', storePerms),
+    ),
+    h('div', { className: 'info-box', style: { marginTop:'16px' } },
+      h('strong', null, 'Shopify Plus Dev Dashboard: '), 'No separate Storefront Access Token. The Client ID serves as the public token for unauthenticated Storefront API requests. Pass it as the X-Shopify-Storefront-Access-Token header.'
+    ),
+
+    // Storefront API Permissions
+    h('div', { className: 'section-title' }, 'Storefront API Permissions'),
+    h('div', { className: 'card' },
+      h('div', { className: 'card-body', style: { paddingTop:'16px' } },
+        h('table', null,
+          h('thead', null, h('tr', null,
+            h('th', null, 'Category'),
+            h('th', null, 'Scope'),
+            h('th', null, 'Description'),
+            h('th', null, 'Status')
+          )),
+          h('tbody', null, ...sfPerms.map(r => h('tr', null,
+            h('td', { style: { fontWeight:'500' } }, r[0]),
+            h('td', { style: { fontFamily:'monospace', fontSize:'11px' } }, r[1]),
+            h('td', null, r[2]),
+            h('td', { style: { color: r[3]==='ON'?'var(--green)':'var(--red)', fontWeight:'600' } },
+              (r[3]==='ON' ? '● ' : '○ ') + r[3])
+          )))
+        )
+      )
+    ),
+    h('div', { className: 'info-box warn', style: { marginTop:'16px' } },
+      h('strong', null, 'Shared across all Headless storefronts. '), 'These permissions apply to every Headless channel. Customer read/write left OFF for now. Enable if Colby needs customer lookup in the headless checkout.'
+    ),
+
+    // POS Roles Summary
+    h('div', { className: 'section-title' }, 'POS Roles Summary (5 roles configured)'),
+    h('div', { className: 'card' },
+      h('div', { className: 'card-body', style: { paddingTop:'16px' } },
+        h('table', null,
+          h('thead', null, h('tr', null,
+            h('th', null, 'Role'),
+            h('th', null, 'Pilot Mapping'),
+            h('th', null, 'Permissions'),
+            h('th', null, 'Staff Assigned')
+          )),
+          h('tbody', null, ...posRoles.map(r => h('tr', null,
+            h('td', { style: { fontWeight:'600' } }, r[0]),
+            h('td', { style: { color: r[1] ? 'var(--accent)' : 'var(--muted)', fontStyle: r[1]?'normal':'italic' } }, r[1] || 'Not used in pilot'),
+            h('td', null, r[2]),
+            h('td', { style: { fontWeight:'500' } }, r[3])
+          )))
+        )
+      )
+    ),
+
+    // Detailed POS Permissions: Manager vs Sales
+    h('div', { className: 'section-title' }, 'POS Role Permissions Detail: Manager vs Sales (Distributor)'),
+    h('div', { className: 'card' },
+      h('div', { className: 'card-body', style: { paddingTop:'16px' } },
+        h('table', null,
+          h('thead', null, h('tr', null,
+            h('th', null, 'Category'),
+            h('th', null, 'Permission'),
+            h('th', null, 'Manager (25/42)'),
+            h('th', null, 'Sales / Distributor (5/42)')
+          )),
+          h('tbody', null, ...posDetailPerms.map((r, i) => {
+            const prevCat = i > 0 ? posDetailPerms[i-1][0] : '';
+            const showCat = r[0] !== prevCat;
+            return h('tr', null,
+              h('td', { style: { fontWeight: showCat?'600':'400', color: showCat?'var(--text)':'var(--muted)', borderTop: showCat && i>0 ? '2px solid var(--border)' : 'none' } }, showCat ? r[0] : ''),
+              h('td', { style: { fontWeight:'500', borderTop: showCat && i>0 ? '2px solid var(--border)' : 'none' } }, r[1]),
+              ...[r[2], r[3]].map(c => {
+                const isA = c === 'Allowed';
+                const isD = c === 'Denied';
+                const isDis = c === 'Disabled';
+                return h('td', { style: { color: isA?'var(--green)':isD?'var(--red)':isDis?'var(--muted)':'var(--text)', fontWeight:'500', borderTop: showCat && i>0 ? '2px solid var(--border)' : 'none' } },
+                  (isA ? '✓ ' : isD ? '✕ ' : '◌ ') + c);
+              })
+            );
+          }))
+        )
+      )
+    ),
+    h('div', { className: 'info-box', style: { marginTop:'16px' } },
+      h('strong', null, 'Key difference: '), 'Sales (Distributor) can only process sales, apply discount codes, manage their own sales attribution, cancel orders, and log out. Manager adds full customer management, returns, analytics, staff management, and custom discounts.'
+    ),
+
+    // Store-Level Permissions
+    permTable('Store-Level Permissions (Web Admin)', ['Permission','Distributor','Regional Manager','HQ Admin'], storePerms),
     h('div', { className: 'info-box warn', style: { marginTop:'16px' } },
       h('strong', null, 'Pricing constraint: '), 'Product prices are store-wide in Shopify. If a regional manager edits a price, it affects every location. Enforce by policy that pricing changes go through HQ only.'
     ),
-    permTable('POS App Permissions', posPerms),
 
+    // What the Distributor Sees
     h('div', { className: 'section-title' }, 'What the Distributor Sees'),
     h('div', { style: { display:'grid', gridTemplateColumns:'1fr 1fr', gap:'16px' } },
       h('div', { className: 'card' },
-        h('div', { className: 'card-header' }, h('h3', null, '✓ CAN Do')),
+        h('div', { className: 'card-header' }, h('h3', null, '✓ CAN Do (5 of 42 POS permissions)')),
         h('div', { className: 'card-body' },
-          ...['Process sales','Accept card payments','Capture customer email/phone','See product catalog','See their active cart/transaction'].map(t =>
+          ...['Process sales (add custom sales)','Accept card payments (tap/chip/swipe)','Apply discount codes (pre-set only)','Manage their own sales attribution','Cancel orders','Log out from POS app'].map(t =>
             h('div', { style: { padding:'6px 0', fontSize:'13px', color:'var(--green)' } }, '✓ ' + t)
           )
         )
@@ -1097,7 +1271,7 @@ function renderPermissions() {
       h('div', { className: 'card' },
         h('div', { className: 'card-header' }, h('h3', null, '✕ CANNOT Do')),
         h('div', { className: 'card-body' },
-          ...['See other distributors\' sales','Access Shopify admin','View revenue or reports','Change prices or products','See inventory levels or costs','See financial settings or payouts','Export data or view analytics'].map(t =>
+          ...['Apply custom discounts (manager only)','Process returns or exchanges','Edit customer details or create customers','View analytics or sales reports','Manage POS staff or roles','Change payment or receipt settings','Ship to customer','Edit taxes','Switch device location','Access Shopify admin','See other distributors\' sales','See financial settings or payouts'].map(t =>
             h('div', { style: { padding:'6px 0', fontSize:'13px', color:'var(--red)' } }, '✕ ' + t)
           )
         )
