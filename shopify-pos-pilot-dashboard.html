@@ -70,7 +70,7 @@ body {
   position: sticky; top: 53px; z-index: 99;
   background: var(--surface);
   border-bottom: 1px solid var(--border);
-  display: flex; overflow-x: auto; gap: 0;
+  display: flex; justify-content: center; overflow-x: auto; gap: 0;
   scrollbar-width: none;
 }
 .tab-bar::-webkit-scrollbar { display: none; }
@@ -414,8 +414,9 @@ tr:hover td { background: rgba(255,255,255,0.015); }
     <h1>Shopify POS Distributor Pilot &mdash; USA</h1>
   </div>
   <div class="topbar-right">
-    <div class="progress-ring" style="display:flex;gap:16px;align-items:center">
+    <div class="progress-ring">
       <div style="text-align:center"><div style="font-size:10px;color:var(--text-dim)">Tickets</div><strong id="ticketProgress">0%</strong></div>
+      <div style="width:1px;height:24px;background:var(--border)"></div>
       <div style="text-align:center"><div style="font-size:10px;color:var(--text-dim)">Go-Live</div><strong id="globalProgress">0%</strong></div>
     </div>
     <div style="font-size:12px;color:var(--text-dim)">Launch: Feb 21</div>
@@ -436,7 +437,9 @@ const state = {
     'tkt1': true, 'tkt2': true, 'tkt3': true, 'tkt4': true, 'tkt5': true, 'tkt7': true, 'tkt8': true,
     'tkt19': true, 'tkt20': true, 'tkt21': true, 'tkt22': true, 'tkt23': true, 'tkt25': true,
     'gl_platform_0': true, 'gl_platform_1': true, 'gl_platform_2': true, 'gl_platform_3': true,
-    'gl_roles_0': true, 'gl_roles_1': true
+    'gl_platform_4': true, 'gl_platform_5': true,
+    'gl_roles_0': true, 'gl_roles_1': true, 'gl_roles_2': true, 'gl_roles_3': true, 'gl_roles_5': true,
+    'gl_csv_0': true, 'gl_csv_1': true
   },
   collapsed: {}
 };
