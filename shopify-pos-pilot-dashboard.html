@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Shopify POS Pilot - Project Dashboard (Updated Feb 14, 2026)</title>
+<title>Shopify POS Pilot - Project Dashboard (Updated Feb 15, 2026)</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -369,6 +369,8 @@ tr:hover td { background: rgba(255,255,255,0.015); }
   white-space: nowrap;
 }
 .sprint-task.crit { border-color: var(--red); color: var(--red); }
+.sprint-task.done { border-color: var(--green); color: var(--green); opacity: 0.8; }
+.sprint-day-label.done { color: var(--green); }
 
 /* ROLE DIAGRAM */
 .role-stack { display: flex; flex-direction: column; gap: 8px; margin: 16px 0; }
@@ -415,7 +417,7 @@ tr:hover td { background: rgba(255,255,255,0.015); }
     <div class="progress-ring">
       Overall: <strong id="globalProgress">0%</strong>
     </div>
-    <div style="font-size:12px;color:var(--text-dim)">1-Week Sprint</div>
+    <div style="font-size:12px;color:var(--text-dim)">Launch: Feb 21</div>
   </div>
 </div>
 
@@ -430,9 +432,9 @@ tr:hover td { background: rgba(255,255,255,0.015); }
 const state = {
   activeTab: 0,
   checks: {
-    'tkt1': true, 'tkt2': true, 'tkt3': true, 'tkt8': true,
-    'tkt20': true, 'tkt21': true, 'tkt22': true,
-    'gl_platform_0': true, 'gl_platform_1': true, 'gl_platform_2': true,
+    'tkt1': true, 'tkt2': true, 'tkt3': true, 'tkt4': true, 'tkt5': true, 'tkt7': true, 'tkt8': true,
+    'tkt19': true, 'tkt20': true, 'tkt21': true, 'tkt22': true, 'tkt23': true, 'tkt25': true,
+    'gl_platform_0': true, 'gl_platform_1': true, 'gl_platform_2': true, 'gl_platform_3': true,
     'gl_roles_0': true, 'gl_roles_1': true
   },
   collapsed: {}
@@ -459,7 +461,9 @@ const goLiveChecks = {
     'Shopify Plus plan active',
     'Shopify Payments enabled and bank verified',
     'POS Pro active on US-Pilot location',
-    'Products available at pilot location with correct pricing'
+    'Products available at pilot location with correct pricing',
+    '711 MS customers preloaded with metafields',
+    'Password protection removed from Online Store'
   ],
   hardware: [
     'All 10 readers received and unboxed',
@@ -483,7 +487,9 @@ const goLiveChecks = {
     'Sales attribution enabled (auto-attribution mode)',
     'Staff name to Unicity ID mapping table complete',
     'Test sale shows correct "Attributed to" on order',
-    'Sales by Staff report accurate'
+    'Sales by Staff report accurate',
+    'Customer email matching validated (Scenario A)',
+    'Orphan handling confirmed (Scenario B/C)'
   ],
   csv: [
     'CSV export process documented and tested',
@@ -553,19 +559,21 @@ const tickets = [
   { n:1, name:'Create Regional POS Location', pri:'High', dep:'Plus plan active', effort:'15 min', phase:1, link:'86dztj289' },
   { n:2, name:'Activate POS Pro on Pilot Location', pri:'High', dep:'Ticket 1', effort:'5 min', phase:1, link:'86dztj2dq' },
   { n:3, name:'Create POS Roles', pri:'High', dep:'Ticket 2', effort:'30 min', phase:1, link:'86dztj2h0' },
-  { n:4, name:'Create Store-Level Role for Regional Manager', pri:'High', dep:'None', effort:'20 min', phase:1, link:'86dztj2jx' },
-  { n:5, name:'Add Regional Manager User Account', pri:'High', dep:'Tickets 3, 4', effort:'15 min + 7d invite', phase:1, link:'86dztj2mn' },
+  { n:4, name:'Create Store-Level Role for Regional Manager', pri:'High', dep:'None', effort:'20 min', phase:1, link:'86dztj2jx', done:true },
+  { n:5, name:'Add Regional Manager User Account', pri:'High', dep:'Tickets 3, 4', effort:'15 min + 7d invite', phase:1, link:'86dztj2mn', done:true },
   { n:6, name:'Onboard 10 Distributors as POS-Only Staff', pri:'High', dep:'Tickets 1, 3', effort:'1 hour', phase:1, link:'86dztj2pn' },
-  { n:7, name:'Configure Product Catalog for POS Location', pri:'Normal', dep:'Ticket 1', effort:'1-2 hours', phase:1, link:'86dztj2r3' },
+  { n:7, name:'Configure Product Catalog for POS Location', pri:'Normal', dep:'Ticket 1', effort:'1-2 hours', phase:1, link:'86dztj2r3', done:true },
   { n:8, name:'Verify Shopify Payments Configuration', pri:'High', dep:'Plus plan active', effort:'30 min', phase:1, link:'86dztj2un' },
   { n:18, name:'Set Up and Pair 10 Shopify Card Readers', pri:'High', dep:'Tickets 6, 8', effort:'2-3 hours', phase:1, link:'86dztj5bf' },
   { n:20, name:'Install Headless Sales Channel + Storefront API', pri:'High', dep:'Plus plan active', effort:'30 min', phase:1, link:'86dztjaur', done:true },
   { n:21, name:'Send Storefront API Credentials to Colby Cook', pri:'High', dep:'Ticket 20', effort:'10 min', phase:1, link:'86dztjaur', done:true },
   { n:22, name:'Team Architecture Alignment', pri:'High', dep:'Ticket 20', effort:'30 min', phase:1, link:'86dztjaur', done:true },
-  { n:23, name:'Delete KnockBase Dev Dashboard App', pri:'Low', dep:'None', effort:'5 min', phase:1, link:'86dztjaur' },
+  { n:23, name:'Delete KnockBase Dev Dashboard App', pri:'Low', dep:'None', effort:'5 min', phase:1, link:'86dztjaur', done:true },
+  { n:25, name:'Bulk Import MS Customers (711 preloaded)', pri:'High', dep:'Ticket 1', effort:'4 hours', phase:1, link:'86dztj228', done:true },
   { n:9, name:'Configure POS Sales Attribution', pri:'High', dep:'Tickets 2, 6', effort:'30 min', phase:2, link:'86dztj2x3' },
   { n:12, name:'Configure Subscriptions / Autoship', pri:'High', dep:'Ticket 8', effort:'1 week', phase:2, link:'86dztj390' },
-  { n:19, name:'CSV Export Process and Unity Database Import', pri:'High', dep:'Tickets 6, 9', effort:'1-2 days', phase:2, link:'86dztjaur' },
+  { n:19, name:'CSV Export Process and Unity Database Import', pri:'High', dep:'Tickets 6, 9', effort:'1-2 days', phase:2, link:'86dztjaur', done:true },
+  { n:26, name:'Shopify-Unity Order Sync Automation', pri:'High', dep:'Ticket 19', effort:'1-2 weeks', phase:2, link:'86dzugv8m' },
   { n:10, name:'Build Attribution Middleware', pri:'DESCOPED', dep:'—', effort:'—', phase:'X', link:'86dztj2zy' },
   { n:11, name:'Commission Engine Integration', pri:'DESCOPED', dep:'—', effort:'—', phase:'X', link:'86dztj33q' },
   { n:13, name:'Data Isolation Validation', pri:'High', dep:'Ticket 6', effort:'2-3 hours', phase:3, link:'86dztj3az' },
@@ -682,13 +690,13 @@ function renderOverview() {
     h('div', { className: 'stats' },
       ...[
         { label:'Location', value:'1', sub:'US-Pilot' },
-        { label:'Manager', value:'1', sub:'Regional' },
+        { label:'Customers', value:'711', sub:'MS preloaded' },
+        { label:'Products', value:'4', sub:'Pilot SKUs' },
         { label:'Distributors', value:'10', sub:'POS-only staff' },
         { label:'Card Readers', value:'10', sub:'$49 each' },
         { label:'POS Rate', value:'2.3%', sub:'+ 10¢ card present' },
-        { label:'Incremental Cost', value:'$490', sub:'One-time only' },
-        { label:'Timeline', value:'~1 wk', sub:'Was 6 weeks' },
-        { label:'Active Tickets', value:'21', sub:'2 descoped' },
+        { label:'Timeline', value:'6 days', sub:'Due Feb 21' },
+        { label:'Tickets Done', value:'13/23', sub:'2 descoped' },
       ].map(s => h('div', { className: 'stat' },
         h('div', { className: 'stat-label' }, s.label),
         h('div', { className: 'stat-value' }, s.value),
@@ -698,9 +706,9 @@ function renderOverview() {
 
     h('div', { className: 'info-box' },
       h('strong', null, 'Executive Summary: '),
-      'This pilot validates the Shopify POS distributor model with 1 regional manager, 10 distributors, and subscription (autoship) capability in the US market. Distributors use the Shopify POS app on iPhones with Bluetooth card readers. Every sale auto-attributes to the distributor via staff_id. No commission engine on Shopify. No middleware. Daily CSV export to Unity database. ',
-      h('span', { style: { color:'var(--green)' } }, 'Completed: Location, POS Pro, Roles, Payments, Headless API, Team Alignment. '),
-      h('span', { style: { color:'var(--yellow)' } }, 'Blocked: Product catalog (waiting on team).')
+      'This pilot validates the Shopify POS distributor model with 1 regional manager, 10 distributors, and subscription (autoship) capability in the US market. Distributors use the Shopify POS app on iPhones with Bluetooth card readers. Every sale auto-attributes to the distributor via staff_id. No commission engine on Shopify. No middleware. Daily CSV export to Unity database. Email is the join key between Shopify and Unity. ',
+      h('span', { style: { color:'var(--green)' } }, 'Completed (13/23): Location, POS Pro, Roles, Store Role, Manager Account, Payments, Headless API, Team Alignment, Products (4 SKUs), Customers (711 MS imported), CSV Export, KnockBase deleted, Architecture. '),
+      h('span', { style: { color:'var(--yellow)' } }, 'Remaining: Distributor onboarding, card readers, attribution, subscriptions, testing, password removal.')
     ),
 
     h('div', { className: 'section-title' }, 'Architecture Stack'),
@@ -715,6 +723,10 @@ function renderOverview() {
               ['Distributor','POS-only staff, PIN access, zero admin','10 accounts, $0 each'],
               ['Manager','Admin + POS staff, limited store access','1 account, $0'],
               ['Location','POS Pro territory','1 location (US-Pilot)'],
+              ['Products','4 pilot SKUs, active on all channels','Balance Orange/Berry, Diamond, Unimate'],
+              ['Customers','711 MS accounts preloaded via CSV','Email matching for POS attribution'],
+              ['Metafields','4 custom fields on customer records','unicity_id, status, subscription, origin'],
+              ['Pricing','Compare at dual-tier strategy','Wholesale=Price, Retail=Compare at'],
               ['Hardware','Shopify Tap & Chip readers','10 readers ($49 each)'],
               ['Backup','iPhone Tap to Pay (NFC)','Distributor phone, $0'],
               ['Payment','Shopify Payments (Stripe)','POS: 2.3%+10¢ / Online: 2.25%+30¢'],
@@ -1029,6 +1041,119 @@ function renderPayments() {
 
 function renderDataFlow() {
   return h('div', null,
+    h('div', { className: 'info-box success' },
+      h('strong', null, 'Core Insight (Session 2): '),
+      'Shopify does NOT need Unicity distributor IDs. Data flows one direction: Shopify captures orders and staff attribution, daily export enriches with distributor ID via lookup, Unity handles customer IDs, commissions, PV/BV, and fulfillment. Email is the join key. This eliminates the round-trip sync concern entirely.'
+    ),
+
+    h('div', { className: 'section-title' }, 'Two Sales Channels at Launch'),
+    h('div', { className: 'card' },
+      h('div', { className: 'card-body', style: { paddingTop:'16px' } },
+        h('table', null,
+          h('thead', null, h('tr', null, h('th', null, 'Channel'), h('th', null, 'How It Works'), h('th', null, 'Attribution'))),
+          h('tbody', null,
+            h('tr', null, h('td', { style: { fontWeight:'500' } }, 'POS Card Reader'), h('td', null, 'Distributor enters PIN, customer taps card'), h('td', null, 'Automatic via Shopify staff PIN')),
+            h('tr', null, h('td', { style: { fontWeight:'500' } }, 'Unicity Retail Site'), h('td', null, 'Customer browses Colby\'s frontend, redirects to Shopify checkout'), h('td', null, 'None at checkout, email match post-sale'))
+          )
+        )
+      )
+    ),
+
+    h('div', { className: 'section-title' }, 'Customer Matching Scenarios'),
+    h('div', { className: 'card' },
+      h('div', { className: 'card-body', style: { paddingTop:'16px' } },
+        h('table', null,
+          h('thead', null, h('tr', null, h('th', null, 'Scenario'), h('th', null, 'Condition'), h('th', null, 'Action'), h('th', null, 'Count'))),
+          h('tbody', null,
+            h('tr', null,
+              h('td', { style: { fontWeight:'600', color:'var(--green)' } }, 'A: Existing + Sponsor'),
+              h('td', null, 'Email match in Unity, sponsor assigned'),
+              h('td', null, 'Auto-import, sponsor gets commission. No manual work.'),
+              h('td', null, h('span', { className: 'badge badge-green' }, '711 preloaded'))
+            ),
+            h('tr', null,
+              h('td', { style: { fontWeight:'600', color:'var(--yellow)' } }, 'B: Existing Orphan'),
+              h('td', null, 'Email match in Unity, no sponsor'),
+              h('td', null, 'Flag for CSR orphan queue. Same process as today.'),
+              h('td', null, h('span', { className: 'badge badge-normal' }, 'Edge case'))
+            ),
+            h('tr', null,
+              h('td', { style: { fontWeight:'600', color:'var(--red)' } }, 'C: New Customer'),
+              h('td', null, 'No email match in Unity'),
+              h('td', null, 'POS: distributor becomes sponsor. Retail: orphan tree (ID=2).'),
+              h('td', null, h('span', { className: 'badge badge-high' }, 'New sales'))
+            )
+          )
+        ),
+        h('div', { className: 'info-box', style: { marginTop:'12px', marginBottom:'0' } },
+          h('strong', null, 'Why preload matters: '), '711 MS customers were bulk-imported before launch (Session 3). When a distributor processes a POS sale and the customer\'s email matches a preloaded record, it resolves as Scenario A (automatic commission) instead of Scenario C (orphan tree). This is the primary value of the import.'
+        )
+      )
+    ),
+
+    h('div', { className: 'section-title' }, 'Customer Import Status (Session 3)'),
+    h('div', { className: 'card' },
+      h('div', { className: 'card-body', style: { paddingTop:'16px' } },
+        h('table', null,
+          h('thead', null, h('tr', null, h('th', null, 'Metric'), h('th', null, 'Value'))),
+          h('tbody', null, ...([
+            ['CSV rows submitted', '729'],
+            ['Successfully imported', '711'],
+            ['Duplicates skipped', '18 (email already in store)'],
+            ['Failed', '0'],
+            ['Metafields validated', 'All 4 populated (spot-checked Florine Bennett, ID 271117101)'],
+          ].map(r => h('tr', null, h('td', { style: { fontWeight:'500' } }, r[0]), h('td', null, r[1])))))
+        ),
+        h('div', { style: { marginTop:'12px' } },
+          h('table', null,
+            h('thead', null, h('tr', null, h('th', null, 'Metafield'), h('th', null, 'Namespace.Key'), h('th', null, 'Type'))),
+            h('tbody', null, ...([
+              ['unicity_id', 'custom.unicity_id', 'Single line text'],
+              ['unicity_customer_status', 'custom.unicity_customer_status', 'Single line text'],
+              ['existing_subscription', 'custom.existing_subscription', 'True or false'],
+              ['origin', 'custom.origin', 'Single line text'],
+            ].map(r => h('tr', null, ...r.map((c,i) => h('td', i===1 ? { className:'mono', style:{fontSize:'12px'} } : null, c))))))
+          )
+        ),
+        h('div', { className: 'info-box', style: { marginTop:'12px', marginBottom:'0' } },
+          h('strong', null, 'Namespace note: '), 'NZL store uses account_info namespace (API-created). US store uses custom namespace (Admin UI limitation). CSV headers must use customer.metafields.custom.* format.'
+        )
+      )
+    ),
+
+    h('div', { className: 'section-title' }, 'Product Catalog (Session 3)'),
+    h('div', { className: 'card' },
+      h('div', { className: 'card-body', style: { paddingTop:'16px' } },
+        h('table', null,
+          h('thead', null, h('tr', null, h('th', null, 'Product'), h('th', null, 'SKU'), h('th', null, 'Wholesale (Price)'), h('th', null, 'Retail (Compare at)'), h('th', null, 'Discount'))),
+          h('tbody', null, ...([
+            ['Balance Natural Orange', '35830', '$49.00', '$79.00', '38%'],
+            ['Balance Mixed Berry', '35932', '$49.00', '$79.00', '38%'],
+            ['Diamond Bottle 500ml', '32015', '$8.00', '$12.00', '33%'],
+            ['Unimate Lemon Ginger', '35290', '$79.00', '$115.00', '31%'],
+          ].map(r => h('tr', null,
+            h('td', { style: { fontWeight:'500' } }, r[0]),
+            h('td', { className:'mono', style:{fontSize:'12px'} }, r[1]),
+            h('td', { style: { color:'var(--green)' } }, r[2]),
+            h('td', { style: { color:'var(--text-muted)' } }, r[3]),
+            h('td', null, r[4])
+          ))))
+        ),
+        h('div', { style: { marginTop:'12px' } },
+          h('table', null,
+            h('thead', null, h('tr', null, h('th', null, 'Customer Status'), h('th', null, 'Price Tier'), h('th', null, 'Count'), h('th', null, 'Coverage'))),
+            h('tbody', null,
+              h('tr', null, h('td', null, 'A/M/H (Wholesale)'), h('td', null, 'Price field = wholesale'), h('td', null, '720'), h('td', null, h('span', { className: 'badge badge-green' }, '98%'))),
+              h('tr', null, h('td', null, 'C (Retail)'), h('td', null, 'Compare at field = retail'), h('td', null, '9'), h('td', null, h('span', { className: 'badge badge-high' }, 'Needs fix')))
+            )
+          )
+        ),
+        h('div', { className: 'info-box warn', style: { marginTop:'12px', marginBottom:'0' } },
+          h('strong', null, 'Retail gap: '), '9 status-C customers see wholesale price by default. Future fix: Shopify Functions or manual POS override at checkout.'
+        )
+      )
+    ),
+
     h('div', { className: 'section-title' }, 'Order Data Flow'),
     h('div', { className: 'card' },
       h('div', { className: 'card-body', style: { paddingTop:'16px' } },
@@ -1135,17 +1260,43 @@ function renderDataFlow() {
       )
     ),
 
-    h('div', { className: 'section-title' }, 'Automation Path (Post-Pilot)'),
+    h('div', { className: 'section-title' }, 'Automation Path (Phased, Session 2)'),
     h('div', { className: 'card' },
       h('div', { className: 'card-body', style: { paddingTop:'16px' } },
         h('table', null,
-          h('thead', null, h('tr', null, h('th', null, 'Scale'), h('th', null, 'Approach'), h('th', null, 'Effort'))),
+          h('thead', null, h('tr', null, h('th', null, 'Phase'), h('th', null, 'Timeline'), h('th', null, 'Approach'), h('th', null, 'Effort'))),
           h('tbody', null, ...([
-            ['Current (10)','Manual CSV, 15-30 min/day','Done'],
-            ['50+','Shopify Flow + Google Sheet auto-append','1-2 days setup'],
-            ['200+','Scheduled script via Admin API (hourly)','2-3 days dev'],
-            ['500+','Full middleware (original Ticket 10 scope)','2-3 weeks dev'],
-          ].map(r => h('tr', null, ...r.map(c => h('td', null, c))))))
+            ['Launch (Feb 21)', 'Week 1', 'Manual CSV + staff name lookup (10 rows)', '15 min/day'],
+            ['Post-launch', 'Mar 3-7', 'Google Apps Script webhook receiver (no code)', '1-2 day setup'],
+            ['Scale-up', 'Month 2+', 'Node.js sync service on Replit with HMAC verification', '3-5 dev days'],
+            ['500+ distributors', 'If needed', 'Full middleware (original Ticket 10 scope)', '2-3 weeks'],
+          ].map(r => h('tr', null,
+            h('td', { style: { fontWeight:'500' } }, r[0]),
+            h('td', { style: { fontSize:'12px', color:'var(--text-muted)' } }, r[1]),
+            h('td', null, r[2]),
+            h('td', null, r[3])
+          ))))
+        )
+      )
+    ),
+
+    h('div', { className: 'section-title' }, 'Distributor Mapping Strategy'),
+    h('div', { className: 'card' },
+      h('div', { className: 'card-body', style: { paddingTop:'16px' } },
+        h('table', null,
+          h('thead', null, h('tr', null, h('th', null, 'Phase'), h('th', null, 'Method'), h('th', null, 'Status'))),
+          h('tbody', null, ...([
+            ['Launch', 'Option 2: Staff name lookup table (VLOOKUP or SQL, 10 rows)', 'Active'],
+            ['Week 2', 'Option 3: Shopify Flow + Google Sheets (no code)', 'Planned'],
+            ['Month 2+', 'Option 4: Admin API scheduled pull (developer builds)', 'Future'],
+          ].map(r => h('tr', null,
+            h('td', { style: { fontWeight:'500' } }, r[0]),
+            h('td', null, r[1]),
+            h('td', null, h('span', { className: 'badge ' + (r[2]==='Active'?'badge-green':r[2]==='Planned'?'badge-normal':'') }, r[2]))
+          ))))
+        ),
+        h('div', { className: 'info-box', style: { marginTop:'12px', marginBottom:'0' } },
+          h('strong', null, 'Note: '), 'Option 1 (customer tags as distributor store) was evaluated and rejected. Distributors sell TO customers, not as customers.'
         )
       )
     )
@@ -1422,7 +1573,7 @@ function renderTickets() {
 
   return h('div', null,
     h('div', { className: 'info-box' },
-      h('strong', null, 'Epic: '), 'Shopify POS Distributor Pilot — USA  |  21 active tickets, 2 descoped  |  ',
+      h('strong', null, 'Epic: '), 'Shopify POS Distributor Pilot — USA  |  23 active tickets, 2 descoped  |  ',
       h('a', { href:'https://app.clickup.com/t/86dztj228', target:'_blank', style: { color:'var(--accent)' } }, 'Open in ClickUp')
     ),
 
@@ -1490,6 +1641,8 @@ function renderTickets() {
             ['17. Go-Live Checklist','All previous','Launch'],
             ['18. Card Readers','6, 8','14, 17'],
             ['19. CSV Export + Unity','6, 9','14, 15'],
+            ['25. Customer Import','1','14'],
+            ['26. Sync Automation','19','Post-launch (Mar 7)'],
           ].map(r => h('tr', null, ...r.map((c,i) => h('td', i===0 ? { style:{fontWeight:'500'} } : { style: { fontSize:'12px', color:'var(--text-muted)' } }, c))))))
         )
       )
@@ -1503,75 +1656,81 @@ function renderTickets() {
 
 function renderSprint() {
   const days = [
-    { day: 'Day 1', label: 'Mon', tasks: [
-      { t: '#1 Create Location', crit: true },
-      { t: '#2 Activate POS Pro', crit: true },
-      { t: '#4 Create Store Role' },
-      { t: '#8 Verify Payments', crit: true },
+    { day: 'Feb 14 (Sat) ✓', done: true, tasks: [
+      { t: '#1 Create Location ✓', done: true },
+      { t: '#2 Activate POS Pro ✓', done: true },
+      { t: '#8 Verify Payments ✓', done: true },
+      { t: '#20 Headless Channel ✓', done: true },
+      { t: '#21 Credentials to Colby ✓', done: true },
+      { t: '#22 Team Alignment ✓', done: true },
     ]},
-    { day: 'Day 2', label: 'Tue', tasks: [
-      { t: '#3 Create POS Roles', crit: true },
-      { t: '#5 Add Manager (send invite)', crit: true },
-      { t: '#7 Configure Products' },
-      { t: '#12 Start Subscription Config' },
+    { day: 'Feb 15 (Sun) ✓', done: true, tasks: [
+      { t: '#3 Create POS Roles ✓', done: true },
+      { t: '#7 Load 4 Products ✓', done: true },
+      { t: '#25 Import 711 Customers ✓', done: true },
+      { t: 'Order flow architecture ✓', done: true },
+      { t: 'Sync automation spec ✓', done: true },
+      { t: 'Dashboard + docs ✓', done: true },
     ]},
-    { day: 'Day 3', label: 'Wed', tasks: [
+    { day: 'Feb 17 (Mon)', tasks: [
+      { t: '#4 Store Role for Manager' },
+      { t: '#5 Add Regional Manager', crit: true },
+      { t: 'Fix metafield type (ID→Integer)', crit: true },
+      { t: 'Populate distributor mapping table' },
+    ]},
+    { day: 'Feb 18 (Tue)', tasks: [
       { t: '#6 Onboard 10 Distributors', crit: true },
-      { t: '#18 Pair Card Readers', crit: true },
-      { t: '#12 Continue Subscriptions' },
+      { t: '#18 Pair Card Readers' },
+      { t: '#9 Configure Attribution' },
     ]},
-    { day: 'Day 4', label: 'Thu', tasks: [
-      { t: '#9 Configure Attribution', crit: true },
-      { t: '#19 CSV Export + Unity Import', crit: true },
+    { day: 'Feb 19 (Wed)', tasks: [
+      { t: '#12 Configure Subscriptions' },
+      { t: '#19 CSV Export Process' },
       { t: '#13 Data Isolation Validation' },
+      { t: 'Remove password protection' },
     ]},
-    { day: 'Day 5', label: 'Fri', tasks: [
-      { t: '#14 E2E Testing', crit: true },
+    { day: 'Feb 20 (Thu)', tasks: [
+      { t: '#14 End-to-End Testing', crit: true },
       { t: '#15 Reconciliation Setup' },
       { t: '#16 Training Materials' },
     ]},
-    { day: 'Day 6', label: 'Sat', tasks: [
-      { t: '#14 Continue E2E Testing' },
-      { t: '#16 Distribute Training' },
-      { t: 'Buffer / Catch-up' },
-    ]},
-    { day: 'Day 7', label: 'Sun', tasks: [
+    { day: 'Feb 21 (Fri)', tasks: [
       { t: '#17 Go-Live Checklist', crit: true },
       { t: 'Stakeholder Sign-off' },
-      { t: 'PILOT LIVE 🚀', crit: true },
+      { t: 'PILOT LIVE', crit: true },
     ]},
   ];
 
   return h('div', null,
-    h('div', { className: 'info-box' },
-      h('strong', null, '1-Week Sprint Plan: '), 'Aggressive but achievable. Critical path items marked in red. Manager invite (Ticket #5) has a 7-day acceptance window but work continues in parallel.'
+    h('div', { className: 'info-box success' },
+      h('strong', null, 'Sessions 1-3 completed Feb 14-15 (weekend). '), '9 of 23 tickets done. Critical path: onboard distributors (Feb 18) and E2E testing (Feb 20). Manager invite (Ticket #5) has a 7-day acceptance window but work continues in parallel.'
     ),
-    h('div', { className: 'section-title' }, '7-Day Sprint Timeline'),
+    h('div', { className: 'section-title' }, 'Sprint Timeline (Feb 14-21)'),
     h('div', { style: { borderRadius:'8px', overflow:'hidden', border:'1px solid var(--border)' } },
-      ...days.map((d, i) => h('div', { className: 'sprint-day', style: { borderBottom: i < days.length-1 ? '1px solid var(--border)' : 'none' } },
-        h('div', { className: 'sprint-day-label' }, d.day),
+      ...days.map((d, i) => h('div', { className: 'sprint-day', style: { borderBottom: i < days.length-1 ? '1px solid var(--border)' : 'none', opacity: d.done ? 0.8 : 1 } },
+        h('div', { className: 'sprint-day-label' + (d.done ? ' done' : '') }, d.day),
         h('div', { className: 'sprint-day-tasks' },
-          ...d.tasks.map(t => h('span', { className: 'sprint-task' + (t.crit ? ' crit' : '') }, t.t))
+          ...d.tasks.map(t => h('span', { className: 'sprint-task' + (t.crit ? ' crit' : '') + (t.done ? ' done' : '') }, t.t))
         )
       ))
     ),
 
     h('div', { className: 'section-title' }, 'Phase Breakdown'),
     h('div', { className: 'timeline' },
-      h('div', { className: 'tl-item' },
+      h('div', { className: 'tl-item done' },
         h('div', { className: 'tl-phase' }, 'Phase 1: Shopify Setup'),
-        h('div', { className: 'tl-title' }, 'Days 1-3: Tickets 1-8, 18'),
-        h('div', { className: 'tl-detail' }, 'Location, roles, staff, readers configured. 1-2 days actual work.')
+        h('div', { className: 'tl-title' }, 'Feb 14-18: Tickets 1-8, 18, 20-23, 25'),
+        h('div', { className: 'tl-detail' }, '12 of 14 done. Remaining: #6 Distributors, #18 Card Readers.')
       ),
       h('div', { className: 'tl-item' },
         h('div', { className: 'tl-phase' }, 'Phase 2: Configuration'),
-        h('div', { className: 'tl-title' }, 'Days 3-4: Tickets 9, 12, 19'),
-        h('div', { className: 'tl-detail' }, 'Attribution, subscriptions, CSV process ready.')
+        h('div', { className: 'tl-title' }, 'Feb 18-19: Tickets 9, 12, 19, 26'),
+        h('div', { className: 'tl-detail' }, '1 of 4 done (#19 CSV Export). Remaining: Attribution, subscriptions. Sync automation (Ticket 26) due Mar 7.')
       ),
       h('div', { className: 'tl-item' },
-        h('div', { className: 'tl-phase' }, 'Phase 3: Validation'),
-        h('div', { className: 'tl-title' }, 'Days 5-7: Tickets 13-17'),
-        h('div', { className: 'tl-detail' }, 'E2E tests pass, training complete, go-live.')
+        h('div', { className: 'tl-phase' }, 'Phase 3: Validation & Launch'),
+        h('div', { className: 'tl-title' }, 'Feb 20-21: Tickets 13-17'),
+        h('div', { className: 'tl-detail' }, 'E2E tests, training, go-live checklist.')
       )
     ),
 
@@ -1890,6 +2049,7 @@ function renderMonitoring() {
           h('tbody', null, ...([
             ['Order count reconciliation','Daily','Howard','Any mismatch'],
             ['Attribution accuracy','Daily','Howard','Below 99%'],
+            ['Customer email match rate','Daily','Howard','Below 90% Scenario A'],
             ['Payment failure rate','Daily','Howard','Above 3%'],
             ['Subscription renewal success','Per cycle','Howard','Below 90%'],
             ['Card reader connectivity','Daily','Regional Manager','> 2 incidents/day'],
@@ -1921,6 +2081,8 @@ function renderMonitoring() {
             ['Subscription token migration','High (10-20% churn)','N/A','Pilot = new customers only'],
             ['200 location cap','Low','N/A','1 loc. At scale: 200 territories, unlimited dists'],
             ['Card reader Bluetooth','Low','Medium','iPhone Tap to Pay backup'],
+            ['9 retail customers at wholesale price','Low','Certain','Shopify Functions or manual POS override. Only 1.2% of customers.'],
+            ['Metafield type needs fix (ID→Integer)','Medium','Certain','Delete and recreate custom.customer_id before launch. Write-back will fail without this.'],
             ['Rate negotiation ceiling','Low','Certain','Fixed by Shopify/Stripe. No interchange-plus.'],
             ['Distributor loses/breaks reader','Low','Medium','$49 replacement + Tap to Pay backup'],
           ].map(r => h('tr', null,
@@ -1952,6 +2114,10 @@ function renderMonitoring() {
             ['View Sales by Staff','POS channel → Analytics → Sales by staff'],
             ['Manage Subscriptions','Apps → [Subscription app]'],
             ['Check Payouts','Settings → Payments → View payouts'],
+            ['Customer Metafields','Settings → Metafields and metaobjects → Customers'],
+            ['Import Customers CSV','Customers → Import'],
+            ['Product Pricing','Products → [Product Name] → Price / Compare at'],
+            ['Customer List (711 MS)','Customers'],
           ].map(r => h('tr', null,
             h('td', { style: { fontWeight:'500' } }, r[0]),
             h('td', { className: 'mono', style: { fontSize:'12px' } }, r[1])
@@ -1968,7 +2134,8 @@ function renderMonitoring() {
           h('tbody', null,
             h('tr', null, h('td', null, 'TKT-5784'), h('td', null, 'Shopify - USA - POS'), h('td', null, 'Parent initiative')),
             h('tr', null, h('td', null, 'TKT-5656'), h('td', null, 'Shopify Payments + Shop Pay Implementation'), h('td', null, 'Payment platform')),
-            h('tr', null, h('td', null, 'TKT-5793'), h('td', null, 'Shopify POS Distributor Pilot (this epic)'), h('td', null, '21 active + 2 descoped'))
+            h('tr', null, h('td', null, 'TKT-5793'), h('td', null, 'Shopify POS Distributor Pilot (this epic)'), h('td', null, '23 active + 2 descoped')),
+            h('tr', null, h('td', null, '86dzugv8m'), h('td', null, 'Shopify-Unity Order Sync Automation'), h('td', null, 'Subtask, due Mar 7'))
           )
         )
       )
